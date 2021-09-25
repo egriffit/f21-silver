@@ -7,7 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "goal_type")
 data class GoalTypeEntity(
     @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    var id: Int,
 
     @ColumnInfo(name = "goal")
-    var goal: String
+    var goal: String,
 )
