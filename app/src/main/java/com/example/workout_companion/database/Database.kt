@@ -2,12 +2,15 @@ package com.example.workout_companion.database
 
 import android.content.Context
 import androidx.room.*
+import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.dao.UserDao
+import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
 @Database(entities = [
-    UserEntity::class
+    UserEntity::class,
+    GoalTypeEntity::class
     //Add all entities to this list
 ],
 version = 1,
@@ -16,6 +19,7 @@ exportSchema = false)
 abstract class WCDatabase: RoomDatabase() {
     //Insert all DAOs here
     abstract fun userDao(): UserDao
+    abstract fun goalTypeDao(): GoalTypeDao
 
     companion object{
         @Volatile
