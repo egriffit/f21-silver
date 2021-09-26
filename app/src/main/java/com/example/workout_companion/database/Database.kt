@@ -1,11 +1,10 @@
 package com.example.workout_companion.database
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.utility.DateTimeConverter
 
 @Database(entities = [
     UserEntity::class
@@ -13,6 +12,7 @@ import com.example.workout_companion.entity.UserEntity
 ],
 version = 1,
 exportSchema = false)
+@TypeConverters(DateTimeConverter::class)
 abstract class WCDatabase: RoomDatabase() {
     //Insert all DAOs here
     abstract fun userDao(): UserDao

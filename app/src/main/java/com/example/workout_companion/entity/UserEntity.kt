@@ -1,8 +1,10 @@
 package com.example.workout_companion.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.example.workout_companion.utility.DateTimeConverter
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
 
 @Entity(tableName = "user")
 data class UserEntity(
@@ -16,8 +18,10 @@ data class UserEntity(
         @ColumnInfo(name = "sex")
         var sex: String,
 
-        @ColumnInfo(name = "age")
-        var age: Int,
+        @ColumnInfo(name = "birth_date")
+        @TypeConverters(DateTimeConverter::class)
+        //var birth_date: Date,
+        var birth_date: LocalDate,
 
         @ColumnInfo(name = "max_workouts_per_week")
         var max_workouts_per_week: Int,
