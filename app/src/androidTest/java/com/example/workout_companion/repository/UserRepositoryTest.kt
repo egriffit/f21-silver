@@ -1,7 +1,6 @@
 package com.example.workout_companion.repository
 
 import android.content.Context
-import androidx.compose.ui.text.resolveDefaults
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -13,7 +12,6 @@ import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,7 +39,7 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
-    fun TestWriteAndReadUser() = runBlocking(){
+    fun testWriteAndReadUser() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         repository.addUser(user)
@@ -50,7 +48,7 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
-    fun TestGetCount() = runBlocking(){
+    fun testGetCount() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         repository.addUser(user)
@@ -59,7 +57,7 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
-    fun TestGetCountWithName() = runBlocking(){
+    fun testGetCountWithName() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         repository.addUser(user)
@@ -68,7 +66,7 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
-    fun TestCheckIfUserExsits() = runBlocking(){
+    fun testCheckIfUserExists() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         repository.addUser(user)
@@ -78,7 +76,7 @@ class UserRepositoryTest : TestCase() {
 
 
     @Test
-    fun TestUpdateUser() = runBlocking(){
+    fun testUpdateUser() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         val newUser = UserEntity("John Smith", "experienced", "male", birthDate, 2, "moderate")
@@ -90,7 +88,7 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
-    fun TestDelete() = runBlocking(){
+    fun testDelete() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         repository.addUser(user)
@@ -100,7 +98,7 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
-    fun TestDeleteAll() = runBlocking(){
+    fun testDeleteAll() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
         repository.addUser(user)
@@ -111,7 +109,7 @@ class UserRepositoryTest : TestCase() {
 
 
     @Test
-    fun TestAge() = runBlocking(){
+    fun testAge() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
 
