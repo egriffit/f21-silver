@@ -15,7 +15,7 @@ import java.util.*
 interface UserDao {
 
     /**
-     * Retrieves a List of UserEntity objects from User's table
+     * Retrieves a List of UserEntity objects from the user table
      *
      * @return LiveData<List<UserEntity> a list of UserEntity objects
      */
@@ -23,7 +23,7 @@ interface UserDao {
     fun getAll(): LiveData<List<UserEntity>>
 
     /**
-     * Retrieves a UserEntity object from user Table where
+     * Retrieves a UserEntity object from user table where
      * the name column matches the provided string.
      *
      * @param name, a string equal to the name of the user
@@ -31,6 +31,25 @@ interface UserDao {
      */
     @Query("SELECT * FROM user WHERE name = :name")
     suspend fun getByName(name: String): UserEntity
+
+    /**
+     * Retrieves the row count for the total of records in the users table
+     *
+     * @param name, a string equal to the name of the user
+     * @return  Int total number of rows found
+     */
+    @Query("SELECT COUNT(*) FROM user")
+    fun getCount(): Int
+
+    /**
+     * Retrieves the row count for the number of records with
+     * the name equal to the string provided in the user table
+     *
+     * @param name, a string equal to the name of the user
+     * @return  Int total number of rows found
+     */
+    @Query("SELECT COUNT(*) FROM user WHERE name = :name")
+    suspend fun getCountWithName(name: String): Int
 
     /**
      * Insert a UserEntity object into the user table
@@ -58,6 +77,14 @@ interface UserDao {
      */
     @Delete
     suspend fun delete(item: UserEntity)
+
+    /**
+     * Delete all user records in the user table
+     *
+     * @return void
+     */
+    @Query("DELETE FROM user")
+    suspend fun deleteAll()
 
     /**
      * Retrieve the birthdate for the record in the user table with the name equal to the string provided

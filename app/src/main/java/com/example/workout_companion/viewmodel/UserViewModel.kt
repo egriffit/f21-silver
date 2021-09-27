@@ -32,7 +32,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     init{
         val userDao = WCDatabase.getInstance(application).userDao()
         repository = UserRepository(userDao = userDao)
-        readAll = repository.readAll
+        readAll = repository.getAll
     }
 
     /**
