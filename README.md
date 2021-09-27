@@ -8,6 +8,3 @@ Team Silver - Fall 2021
   - hplemmon - Hayden Plemmons - hplem001@odu.edu
   - daniel-simmons - Daniel Simmons - dsimm008@odu.edu
   - gunsblazingfundraising - Peter Whitfield - pwhit011@odu.edu
-
-# Documentation
-[Dokka Documentation](documentation/html/app/index.html)
