@@ -35,7 +35,6 @@ interface UserDao {
     /**
      * Retrieves the row count for the total of records in the users table
      *
-     * @param name, a string equal to the name of the user
      * @return  Int total number of rows found
      */
     @Query("SELECT COUNT(*) FROM user")
