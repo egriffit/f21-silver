@@ -13,7 +13,7 @@ interface GoalTypeDao {
     fun getAllGoals(): LiveData<List<GoalTypeEntity>>
 
     @Query("SELECT * FROM goal_type WHERE id=:goalId")
-    fun getGoalById(goalId: Int): GoalTypeEntity
+    fun getGoalById(goalId: Int): GoalTypeEntity?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addGoal(goal: GoalTypeEntity)

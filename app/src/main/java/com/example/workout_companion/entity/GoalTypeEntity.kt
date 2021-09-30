@@ -10,6 +10,6 @@ data class GoalTypeEntity(
     @ColumnInfo(name = "id")
     var id: Int,
 
-    @ColumnInfo(name = "goal")
-    var goal: String,
+    @ColumnInfo(name = "name")
+    var name: String,
 )
