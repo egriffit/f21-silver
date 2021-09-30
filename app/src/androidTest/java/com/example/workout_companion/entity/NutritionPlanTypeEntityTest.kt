@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.database.WCDatabase
 import junit.framework.TestCase
@@ -19,12 +20,13 @@ import org.junit.runner.RunWith
 class NutritionPlanTypeEntityTest: TestCase(){
     private lateinit var db: WCDatabase
     private lateinit var dao: NutritionPlanTypeDao
-
+    private lateinit var goalDao: GoalTypeDao
     @Before
     public override fun setUp(){
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         dao = db.nutritionPlanTypeDao()
+        goalDao = db.goalTypeDao()
     }
 
     @After
@@ -33,54 +35,119 @@ class NutritionPlanTypeEntityTest: TestCase(){
     }
 
     @Test
-    fun TestWriteAndReadNutritionPlanType() = runBlocking(){
+    fun testWriteAndReadNutritionPlanType() = runBlocking{
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
-        dao.insert(plan)
+        dao.addPlan(plan)
         val byId = dao.getById(1)
         MatcherAssert.assertThat(byId, CoreMatchers.equalTo(plan))
     }
 
     @Test
-    fun TestCount() = runBlocking(){
+    fun testCount() = runBlocking{
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
         val plan2 = NutritionPlanTypeEntity(2, 2, 2500.0, 0.45, .30, .25)
 
-        dao.insert(plan)
-        dao.insert(plan2)
+        dao.addPlan(plan)
+        dao.addPlan(plan2)
         val count: Int = dao.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(2))
     }
 
     @Test
-    fun TestDelete() = runBlocking(){
+    fun testDelete() = runBlocking{
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
 
-        dao.insert(plan)
+        dao.addPlan(plan)
         dao.delete(plan)
         val count: Int = dao.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
     }
 
     @Test
-    fun TestDeleteAll() = runBlocking(){
+    fun testDeleteAll() = runBlocking{
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
         val plan2 = NutritionPlanTypeEntity(2, 2, 2500.0, 0.45, .30, .25)
 
-        dao.insert(plan)
-        dao.insert(plan2)
+        dao.addPlan(plan)
+        dao.addPlan(plan2)
         dao.deleteAll()
         val count: Int = dao.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
     }
 
     @Test
-    fun TestUpdateNutritionPlanTyp2() = runBlocking(){
+    fun testUpdateNutritionPlanType() = runBlocking{
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
         val newPlan = NutritionPlanTypeEntity(1, 1, 2200.0, 0.40, .35, .25)
 
-        dao.insert(plan)
+        dao.addPlan(plan)
         dao.update(newPlan)
         val byName = dao.getById(1)
         MatcherAssert.assertThat(byName.calorie, CoreMatchers.equalTo(2200.0))
+    }
+
+    @Test
+    fun testGetNutritionPlansWithGoals() = runBlocking{
+        val goal = listOf(
+            GoalTypeEntity(1, "Lose Weight"),
+            GoalTypeEntity(2, "Gain Mass"),
+            GoalTypeEntity(3, "Gain Strength"),
+        )
+        val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
+        goalDao.addGoal(goal[0])
+        goalDao.addGoal(goal[1])
+        goalDao.addGoal(goal[2])
+        dao.addPlan(plan)
+        val nutritionPlans: List<GoalAndNutritionPlanTypeEntity> = dao.getNutritionPlansWithGoals()
+        val goalName = nutritionPlans[0].goalType.goal
+        MatcherAssert.assertThat(goalName, CoreMatchers.equalTo("Lose Weight"))
+    }
+
+    @Test
+    fun testGetNutritionPlansByGoal() = runBlocking{
+        val goal = listOf(
+            GoalTypeEntity(1, "Lose Weight"),
+            GoalTypeEntity(2, "Gain Mass"),
+            GoalTypeEntity(3, "Gain Strength"),
+        )
+        val plans = listOf(NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(2, 2, 2200.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(3, 3, 2500.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(4, 1, 1900.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(5, 2, 2100.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(6, 2, 2300.0, 0.45, .30, .25),
+        )
+
+
+        goalDao.addGoal(goal[0])
+        goalDao.addGoal(goal[1])
+        goalDao.addGoal(goal[2])
+        dao.addPlan(plans)
+        val gainMassPlans: List<GoalAndNutritionPlanTypeEntity> = dao.getNutritionPlansByGoal("Gain Mass")
+        MatcherAssert.assertThat(gainMassPlans.size, CoreMatchers.equalTo(3))
+    }
+
+    @Test
+    fun testGetNutritionPlanCountByGoal() = runBlocking{
+        val goal = listOf(
+            GoalTypeEntity(1, "Lose Weight"),
+            GoalTypeEntity(2, "Gain Mass"),
+            GoalTypeEntity(3, "Gain Strength"),
+        )
+        val plans = listOf(NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(2, 2, 2200.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(3, 3, 2500.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(4, 1, 1900.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(5, 2, 2100.0, 0.45, .30, .25),
+            NutritionPlanTypeEntity(6, 2, 2300.0, 0.45, .30, .25),
+        )
+
+
+        goalDao.addGoal(goal[0])
+        goalDao.addGoal(goal[1])
+        goalDao.addGoal(goal[2])
+        dao.addPlan(plans)
+        val gainMassPlanCount = dao.getNutritionPlanCountByGoal("Gain Mass")
+        MatcherAssert.assertThat(gainMassPlanCount, CoreMatchers.equalTo(3))
     }
 }

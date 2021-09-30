@@ -11,6 +11,6 @@ data class GoalAndNutritionPlanTypeEntity (
     @Relation(
         parentColumn = "goal_id",
         entityColumn = "id"
-    ),
+    )
     val goalType: GoalTypeEntity
 )

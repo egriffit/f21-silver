@@ -60,6 +60,15 @@ interface UserDao {
     suspend fun insert(item: UserEntity)
 
     /**
+     * Insert a list of UserEntity objects into the user table
+     *
+     * @param item, a userEntity
+     * @return void
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: List<UserEntity>)
+
+    /**
      * Update a the user record with the values in the provided UserEntity object
      *
      * @param item, a userEntity

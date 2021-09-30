@@ -2,8 +2,10 @@ package com.example.workout_companion.database
 
 import android.content.Context
 import androidx.room.*
+import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.dao.UserDao
+import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.DateTimeConverter
@@ -13,7 +15,8 @@ import com.example.workout_companion.utility.DateTimeConverter
  */
 @Database(entities = [
     UserEntity::class,
-    NutritionPlanTypeEntity::class
+    NutritionPlanTypeEntity::class,
+    GoalTypeEntity::class
     //Add all entities to this list
 ],
 version = 1,
@@ -25,7 +28,7 @@ abstract class WCDatabase: RoomDatabase() {
      */
     abstract fun userDao(): UserDao
     abstract fun nutritionPlanTypeDao(): NutritionPlanTypeDao
-
+    abstract fun goalTypeDao(): GoalTypeDao
 
     companion object{
         @Volatile

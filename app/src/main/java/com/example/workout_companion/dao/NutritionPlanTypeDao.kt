@@ -2,6 +2,7 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.GoalAndNutritionPlanTypeEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import java.util.*
 
@@ -47,7 +48,16 @@ interface NutritionPlanTypeDao {
      * @return void
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: NutritionPlanTypeEntity)
+    suspend fun addPlan(item: NutritionPlanTypeEntity)
+
+    /**
+     * Insert a list of NutritionPlanTypeEntity objects into the nutrition_plan_type table
+     *
+     * @param item, a List<NutritionPlanTypeEntity>
+     * @return void
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addPlan(item: List<NutritionPlanTypeEntity>)
 
     /**
      * Update a the nutrition_plan_type record with the values in the provided NutritionPlanTypeEntity object
@@ -74,4 +84,33 @@ interface NutritionPlanTypeDao {
      */
     @Query("DELETE FROM nutrition_plan_type")
     suspend fun deleteAll()
+
+    /**
+     * Retrieve all nutrition plans with an inner join with the goal_type table
+     * to get the goal name
+     *
+     * @return List<GoalAndNutritionPlanTypeEntity>
+     */
+    @Transaction
+    @Query("SELECT * FROM nutrition_plan_type")
+    fun getNutritionPlansWithGoals(): List<GoalAndNutritionPlanTypeEntity>
+
+    /**
+     * Retrieve all nutrition plans where goal_name is equal to the string
+     * provided.
+     *@parm String name of goal
+     * @return List<GoalAndNutritionPlanTypeEntity>
+     */
+    @Query("SELECT * FROM nutrition_plan_type INNER JOIN goal_type ON nutrition_plan_type.goal_id = goal_type.id WHERE goal_type.goal = :goal")
+    fun getNutritionPlansByGoal(goal: String): List<GoalAndNutritionPlanTypeEntity>
+
+    /**
+     * Retrieve the number of rows with nutrition plans where goal_name is equal to the string
+     * provided.
+     *
+     * @param String name of goal
+     * @return Int total of rows
+     */
+    @Query("SELECT COUNT(*) as INTEGER FROM nutrition_plan_type INNER JOIN goal_type ON nutrition_plan_type.goal_id = goal_type.id WHERE goal_type.goal = :goal")
+    fun getNutritionPlanCountByGoal(goal: String): Int
 }
