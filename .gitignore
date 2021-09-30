@@ -11,10 +11,14 @@
 /captures
 .externalNativeBuild
 local.properties
+<<<<<<< HEAD
 
 # Gradle build files
 /build
 .gradle
+=======
+/app/src/main/java/com/example/workout_companion/mock
+>>>>>>> main
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -28,3 +32,5 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+/app/src/main/java/com/example/workout_companion/mock/
+/app/src/main/java/com/example/workout_companion/mock/dao/

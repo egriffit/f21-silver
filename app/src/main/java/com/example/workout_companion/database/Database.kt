@@ -2,10 +2,23 @@ package com.example.workout_companion.database
 
 import android.content.Context
 import androidx.room.*
+<<<<<<< HEAD
 import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.entity.GoalTypeEntity
+=======
+import com.example.workout_companion.mock.dao.GoalTypeDao
+import com.example.workout_companion.dao.NutritionPlanTypeDao
+import com.example.workout_companion.dao.UserDao
+import com.example.workout_companion.entity.CurrentUserGoalEntity
+import com.example.workout_companion.entity.NutritionPlanTypeEntity
+>>>>>>> main
 import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.mock.dao.CurrentUserGoalDao
+import com.example.workout_companion.mock.dao.FrameworkTypeDao
+import com.example.workout_companion.mock.entity.FrameworkTypeEntity
+import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.mock.entity.GoalTypeEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
 /**
@@ -13,9 +26,17 @@ import com.example.workout_companion.utility.DateTimeConverter
  */
 @Database(entities = [
     UserEntity::class,
+<<<<<<< HEAD
     GoalTypeEntity::class
+=======
+    NutritionPlanTypeEntity::class,
+    GoalTypeEntity::class,
+    CurrentUserGoalEntity::class,
+    FrameworkTypeEntity::class
+>>>>>>> main
     //Add all entities to this list
 ],
+    views = [FrameworkWithGoalEntity::class],
 version = 1,
 exportSchema = false)
 @TypeConverters(DateTimeConverter::class)
@@ -24,7 +45,14 @@ abstract class WCDatabase: RoomDatabase() {
      * Functions to retrieve the Data Abstraction objects for the entities in the database
      */
     abstract fun userDao(): UserDao
+<<<<<<< HEAD
     abstract fun goalTypeDao(): GoalTypeDao
+=======
+    abstract fun nutritionPlanTypeDao(): NutritionPlanTypeDao
+    abstract fun goalTypeDao(): GoalTypeDao
+    abstract fun currentUserDao(): CurrentUserGoalDao
+    abstract fun frameworkTypeDao(): FrameworkTypeDao
+>>>>>>> main
 
     companion object{
         @Volatile

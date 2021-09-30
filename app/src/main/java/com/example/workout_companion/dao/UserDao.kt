@@ -35,7 +35,6 @@ interface UserDao {
     /**
      * Retrieves the row count for the total of records in the users table
      *
-     * @param name, a string equal to the name of the user
      * @return  Int total number of rows found
      */
     @Query("SELECT COUNT(*) FROM user")
@@ -59,6 +58,15 @@ interface UserDao {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: UserEntity)
+
+    /**
+     * Insert a list of UserEntity objects into the user table
+     *
+     * @param item, a userEntity
+     * @return void
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: List<UserEntity>)
 
     /**
      * Update a the user record with the values in the provided UserEntity object
