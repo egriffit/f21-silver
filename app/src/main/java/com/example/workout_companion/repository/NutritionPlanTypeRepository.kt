@@ -3,7 +3,6 @@ package com.example.workout_companion.repository
 import androidx.lifecycle.LiveData
 import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.entity.GoalAndNutritionPlanTypeEntity
-import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
 
 /**
