@@ -7,7 +7,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.utility.getGoalTestValues
 import com.example.workout_companion.utility.getOrAwaitValue
+import com.example.workout_companion.utility.getSingleGoalTestValue
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -39,7 +41,7 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun writeAndReadGoalTest() = runBlocking() {
-        val goal = GoalTypeEntity(0, "Test Goal")
+        val goal = getSingleGoalTestValue(0)
         dao.addGoal(goal)
 
         assertTrue(dao.getAllGoals().getOrAwaitValue().contains(goal))
@@ -47,15 +49,16 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun addTwoGoalsTest() = runBlocking() {
-        val goal1 = GoalTypeEntity(0, "Goal 1")
-        dao.addGoal(goal1)
-        val goal2 = GoalTypeEntity(1, "Goal 2")
-        dao.addGoal(goal2)
+        val goals = getGoalTestValues(2)
+        for (goal in goals) {
+            dao.addGoal(goal)
+        }
 
-        val allGoals = dao.getAllGoals().getOrAwaitValue()
-        assertEquals(allGoals.size, 2)
-        assertTrue(allGoals.contains(goal1))
-        assertTrue(allGoals.contains(goal2))
+        val loadedGoals = dao.getAllGoals().getOrAwaitValue()
+        assertEquals(loadedGoals.size, 2)
+        for (goal in goals) {
+            assertTrue(loadedGoals.contains(goal))
+        }
     }
 
     @Test
@@ -73,23 +76,33 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun getGoalByIDTest() = runBlocking() {
-        val goal1 = GoalTypeEntity(0, "Goal 1")
-        dao.addGoal(goal1)
-        val goal2 = GoalTypeEntity(1, "Goal 2")
-        dao.addGoal(goal2)
+        val goals = getGoalTestValues(2)
+        for (goal in goals) {
+            dao.addGoal(goal)
+        }
 
-        val retrievedGoal: GoalTypeEntity? = dao.getGoalById(1)
+        val retrievedGoal: GoalTypeEntity? = dao.getGoalById(2)
         assertNotNull(retrievedGoal)
-        assertEquals(retrievedGoal, goal2)
+        assertEquals(retrievedGoal, goals[1])
     }
 
     @Test
     fun getMissingGoalByIDTest() = runBlocking() {
-        val goal1 = GoalTypeEntity(0, "Goal 0")
-        val goal2 = GoalTypeEntity(1, "Goal 1")
-        dao.addGoal(goal1)
-        dao.addGoal(goal2)
+        val goals = getGoalTestValues(2)
+        for (goal in goals) {
+            dao.addGoal(goal)
+        }
 
-        assertNull(dao.getGoalById(2))
+        assertNull(dao.getGoalById(51))
+    }
+
+    @Test
+    fun addALotOfGoalsTest() = runBlocking() {
+        val goals = getGoalTestValues(100)
+        for (goal in goals) {
+            dao.addGoal(goal)
+        }
+
+        assertEquals(dao.getAllGoals().getOrAwaitValue(), goals)
     }
 }

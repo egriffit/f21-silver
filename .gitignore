@@ -1,12 +1,6 @@
 # Android Studio / Intellij files
 *.iml
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-/.idea/gradle.xml
+/.idea/
 
 # Mac OS X specific
 .DS_Store
