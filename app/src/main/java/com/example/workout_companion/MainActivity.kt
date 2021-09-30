@@ -30,8 +30,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String) {
-    //Text(text = "Hello $name!")
-    recommendFrameworkView(user, currentUser, FrameWorkList)
+    Text(text = "Hello $name!")
 }
 
 @Preview(showBackground = true)
