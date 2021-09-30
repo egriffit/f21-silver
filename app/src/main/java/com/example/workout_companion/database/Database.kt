@@ -2,17 +2,31 @@ package com.example.workout_companion.database
 
 import android.content.Context
 import androidx.room.*
+import com.example.workout_companion.mock.dao.GoalTypeDao
+import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.dao.UserDao
+import com.example.workout_companion.entity.CurrentUserGoalEntity
+import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.mock.dao.CurrentUserGoalDao
+import com.example.workout_companion.mock.dao.FrameworkTypeDao
+import com.example.workout_companion.mock.entity.FrameworkTypeEntity
+import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.mock.entity.GoalTypeEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
 /**
  * Class used to instantiate the workout_companion_database Database
  */
 @Database(entities = [
-    UserEntity::class
+    UserEntity::class,
+    NutritionPlanTypeEntity::class,
+    GoalTypeEntity::class,
+    CurrentUserGoalEntity::class,
+    FrameworkTypeEntity::class
     //Add all entities to this list
 ],
+    views = [FrameworkWithGoalEntity::class],
 version = 1,
 exportSchema = false)
 @TypeConverters(DateTimeConverter::class)
@@ -21,6 +35,10 @@ abstract class WCDatabase: RoomDatabase() {
      * Functions to retrieve the Data Abstraction objects for the entities in the database
      */
     abstract fun userDao(): UserDao
+    abstract fun nutritionPlanTypeDao(): NutritionPlanTypeDao
+    abstract fun goalTypeDao(): GoalTypeDao
+    abstract fun currentUserDao(): CurrentUserGoalDao
+    abstract fun frameworkTypeDao(): FrameworkTypeDao
 
     companion object{
         @Volatile
