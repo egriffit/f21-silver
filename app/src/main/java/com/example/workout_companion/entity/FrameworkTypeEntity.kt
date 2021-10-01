@@ -5,6 +5,14 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+/**
+ * An entity representing a workout framework table in the database
+ *
+ * @property id             the primary key of the framework.
+ * @property name           the descriptive name of the framework.
+ * @property goal_id        the foreign key to this framework's main goal.
+ * @property numWorkouts    the number of workouts this framework prescribes per week.
+ */
 @Entity(
     tableName = "framework_type",
     foreignKeys = [ForeignKey(entity = GoalTypeEntity::class,
