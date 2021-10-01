@@ -1,31 +1,19 @@
 # Android Studio / Intellij files
 *.iml
-<<<<<<< HEAD
 /.idea/
 
 # Mac OS X specific
-=======
-.gradle
-/local.properties
-/.idea
-
->>>>>>> main
 .DS_Store
 
 # Local config files
 /local.properties
-
 /captures
 .externalNativeBuild
-local.properties
-<<<<<<< HEAD
 
 # Gradle build files
 /build
 .gradle
-=======
 /app/src/main/java/com/example/workout_companion/mock
->>>>>>> main
 
 # Ignore Gradle GUI config
 gradle-app.setting
