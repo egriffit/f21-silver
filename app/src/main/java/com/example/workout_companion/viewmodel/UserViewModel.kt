@@ -37,7 +37,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     /**
      * Function to initialize a coroutine to add a userEntity to the database
-     * @param item, a UserEntity
+     * @param item, a UserEntityUserViewModel.kt
      */
     fun addUser(item: UserEntity){
         viewModelScope.launch(Dispatchers.IO){

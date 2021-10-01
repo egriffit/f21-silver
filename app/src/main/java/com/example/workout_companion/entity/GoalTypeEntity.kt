@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
  * A table of user fitness goals (e.g. Lose Weight, Build Muscle)
  *
  * @property id    the primary key of the entity.
- * @property name  the name describing the goal.
+ * @property goal  the name describing the goal.
  */
 @Entity(tableName = "goal_type")
 data class GoalTypeEntity(
@@ -16,6 +16,6 @@ data class GoalTypeEntity(
     @ColumnInfo(name = "id")
     var id: Int,
 
-    @ColumnInfo(name = "name")
-    var name: String,
+    @ColumnInfo(name = "goal")
+    var goal: String,
 )

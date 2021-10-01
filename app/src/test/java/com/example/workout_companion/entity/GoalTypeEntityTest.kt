@@ -12,6 +12,6 @@ class GoalTypeEntityTest {
         val goal = GoalTypeEntity(id, name)
 
         assertEquals(goal.id, id)
-        assertEquals(goal.name, name)
+        assertEquals(goal.goal, name)
     }
 }
