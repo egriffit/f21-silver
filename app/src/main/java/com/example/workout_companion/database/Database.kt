@@ -2,17 +2,17 @@ package com.example.workout_companion.database
 
 import android.content.Context
 import androidx.room.*
-import com.example.workout_companion.mock.dao.GoalTypeDao
+import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.entity.CurrentUserGoalEntity
+import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.mock.dao.CurrentUserGoalDao
 import com.example.workout_companion.mock.dao.FrameworkTypeDao
 import com.example.workout_companion.mock.entity.FrameworkTypeEntity
 import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
-import com.example.workout_companion.mock.entity.GoalTypeEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
 /**

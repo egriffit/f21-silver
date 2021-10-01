@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.workout_companion.mock.dao.GoalTypeDao
+import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.GoalAndNutritionPlanTypeEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
-import com.example.workout_companion.mock.entity.GoalTypeEntity
+import com.example.workout_companion.entity.GoalTypeEntity
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers

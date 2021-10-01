@@ -10,7 +10,8 @@ import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import com.example.workout_companion.mock.dao.CurrentUserGoalDao
 import com.example.workout_companion.mock.dao.FrameworkTypeDao
-import com.example.workout_companion.mock.dao.GoalTypeDao
+import com.example.workout_companion.dao.GoalTypeDao
+import com.example.workout_companion.entity.GoalTypeEntity
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -64,7 +65,9 @@ class CurrentUserGoalEntityTest : TestCase(){
         )
         val currentGoal = CurrentUserGoalEntity(1, 4)
         nutritionDao.addPlan(plan)
-        goalDao.addGoal(goal)
+        for (singleGoal in goal) {
+            goalDao.addGoal(singleGoal)
+        }
         framewworkDao.addFramework(frameworks)
         dao.addCurrentUserGoal(currentGoal)
         val result: CurrentNutritionPlanAndFrameworkEntity = dao.getCurrentGoals()
