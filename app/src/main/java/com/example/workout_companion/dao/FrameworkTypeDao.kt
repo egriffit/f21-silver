@@ -49,10 +49,42 @@ interface FrameworkTypeDao {
     suspend fun addFramework(framework: FrameworkTypeEntity)
 
     /**
+     * Add a collection of frameworks to the database
+     *
+     * @property frameworks the frameworks to add to the database.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFrameworks(frameworks: Collection<FrameworkTypeEntity>)
+
+    /**
+     * Adds all frameworks to the database
+     *
+     * @property framework  the framework to add
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFrameworks(vararg framework: FrameworkTypeEntity)
+
+    /**
      * Delete the framework by its id
      *
      * @property framework  the framework to be deleted.
      */
     @Delete
     suspend fun deleteFramework(framework: FrameworkTypeEntity)
+
+    /**
+     * Delete all frameworks within the collection from the database
+     *
+     * @property frameworks the frameworks to remove from the database.
+     */
+    @Delete
+    suspend fun deleteFrameworks(frameworks: Collection<FrameworkTypeEntity>)
+
+    /**
+     * Delete all frameworks from the database
+     *
+     * @property framework  the frameworks to remove from the database.
+     */
+    @Delete
+    suspend fun deleteFrameworks(vararg framework: FrameworkTypeEntity)
 }
