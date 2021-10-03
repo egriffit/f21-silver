@@ -9,15 +9,15 @@ import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import com.example.workout_companion.mock.dao.CurrentUserGoalDao
-import com.example.workout_companion.mock.dao.FrameworkTypeDao
+import com.example.workout_companion.dao.FrameworkTypeDao
 import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.entity.FrameworkTypeEntity
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +28,7 @@ class CurrentUserGoalEntityTest : TestCase(){
     private lateinit var dao: CurrentUserGoalDao
     private lateinit var nutritionDao: NutritionPlanTypeDao
     private lateinit var goalDao: GoalTypeDao
-    private lateinit var framewworkDao: FrameworkTypeDao
+    private lateinit var frameworkDao: FrameworkTypeDao
 
 
     @Before
@@ -38,7 +38,7 @@ class CurrentUserGoalEntityTest : TestCase(){
         dao = db.currentUserDao()
         goalDao = db.goalTypeDao()
         nutritionDao = db.nutritionPlanTypeDao()
-        framewworkDao = db.frameworkTypeDao()
+        frameworkDao = db.frameworkTypeDao()
     }
 
     @After
@@ -68,7 +68,7 @@ class CurrentUserGoalEntityTest : TestCase(){
         for (singleGoal in goal) {
             goalDao.addGoal(singleGoal)
         }
-        framewworkDao.addFramework(frameworks)
+        frameworkDao.addFrameworks(frameworks)
         dao.addCurrentUserGoal(currentGoal)
         val result: CurrentNutritionPlanAndFrameworkEntity = dao.getCurrentGoals()
         val currentFrameworkName: String = result.FrameWorkWIthGoalEntity.name
