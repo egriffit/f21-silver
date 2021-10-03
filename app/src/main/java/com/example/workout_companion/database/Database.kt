@@ -2,16 +2,9 @@ package com.example.workout_companion.database
 
 import android.content.Context
 import androidx.room.*
-import com.example.workout_companion.dao.GoalTypeDao
-import com.example.workout_companion.dao.NutritionPlanTypeDao
-import com.example.workout_companion.dao.UserDao
-import com.example.workout_companion.entity.CurrentUserGoalEntity
-import com.example.workout_companion.entity.GoalTypeEntity
-import com.example.workout_companion.entity.NutritionPlanTypeEntity
-import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.dao.*
 import com.example.workout_companion.mock.dao.CurrentUserGoalDao
-import com.example.workout_companion.dao.FrameworkTypeDao
-import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.*
 import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
@@ -23,7 +16,8 @@ import com.example.workout_companion.utility.DateTimeConverter
     NutritionPlanTypeEntity::class,
     GoalTypeEntity::class,
     CurrentUserGoalEntity::class,
-    FrameworkTypeEntity::class
+    FrameworkTypeEntity::class,
+    FrameworkDayEntity::class,
     //Add all entities to this list
 ],
     views = [FrameworkWithGoalEntity::class],
@@ -39,6 +33,7 @@ abstract class WCDatabase: RoomDatabase() {
     abstract fun goalTypeDao(): GoalTypeDao
     abstract fun currentUserDao(): CurrentUserGoalDao
     abstract fun frameworkTypeDao(): FrameworkTypeDao
+    abstract fun frameworkDayDao(): FrameworkDayDao
 
     companion object{
         @Volatile
