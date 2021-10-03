@@ -1,34 +1,50 @@
 package com.example.workout_companion.repository
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.FrameworkTypeDao
+import com.example.workout_companion.dao.GoalTypeDao
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.utility.TestDataGenerator
 import com.example.workout_companion.utility.getOrAwaitValue
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class FrameworkTypeRepositoryTest : TestCase() {
 
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
     private lateinit var db: WCDatabase
-    private lateinit var dao: FrameworkTypeDao
+    private lateinit var goalTypeDao: GoalTypeDao
+    private lateinit var frameworkTypeDao: FrameworkTypeDao
     private lateinit var repository: FrameworkTypeRepository
 
+
     @Before
-    public override fun setUp() {
+    public override fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
-        dao = db.frameworkTypeDao()
-        repository = FrameworkTypeRepository(dao)
+        goalTypeDao = db.goalTypeDao()
+        frameworkTypeDao = db.frameworkTypeDao()
+        repository = FrameworkTypeRepository(frameworkTypeDao)
+
+        // Create some basic goals here
+        goalTypeDao.addGoal(GoalTypeEntity(0, "Goal 0"))
+        goalTypeDao.addGoal(GoalTypeEntity(1, "Goal 1"))
+        goalTypeDao.addGoal(GoalTypeEntity(2, "Goal 2"))
     }
 
     @After
@@ -38,15 +54,21 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun addSingleFrameworkTest() = runBlocking {
-        val framework = FrameworkTypeEntity(0, "Framework 1", 3)
+        val framework = FrameworkTypeEntity(0, "Framework 1", 0,3)
         repository.addFramework(framework)
 
         assertTrue(repository.allFrameworks.getOrAwaitValue().contains(framework))
     }
 
+    @Test(expected = SQLiteConstraintException::class)
+    fun addFrameworkWithNonExistentGoalTest() = runBlocking {
+        val framework = FrameworkTypeEntity(0, "Framework 1", 5, 3)
+        repository.addFramework(framework)
+    }
+
     @Test
     fun addMultipleFrameworksByCollectionTest() = runBlocking {
-        val frameworks = TestDataGenerator.getTestFrameworks(10)
+        val frameworks = TestDataGenerator.getTestFrameworks(10, 0)
         repository.addFrameworks(frameworks)
 
         assertEquals(repository.allFrameworks.getOrAwaitValue(), frameworks)
@@ -54,7 +76,7 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun addMultipleFrameworksByVarArgsTest() = runBlocking {
-        val frameworks = TestDataGenerator.getTestFrameworks(5)
+        val frameworks = TestDataGenerator.getTestFrameworks(5, 2)
         repository.addFrameworks(frameworks[0], frameworks[1], frameworks[2], frameworks[3], frameworks[4])
 
         assertEquals(repository.allFrameworks.getOrAwaitValue(), frameworks)
@@ -62,7 +84,7 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun deleteSingleFrameworkTest() = runBlocking {
-        val framework = TestDataGenerator.getTestFramework(5)
+        val framework = TestDataGenerator.getTestFramework(5, 1)
         repository.addFramework(framework)
         repository.deleteFramework(framework)
 
@@ -71,7 +93,7 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun deleteMultipleFrameworksByCollectionTest() = runBlocking {
-        val frameworks = TestDataGenerator.getTestFrameworks(14)
+        val frameworks = TestDataGenerator.getTestFrameworks(14, 0)
         repository.addFrameworks(frameworks)
         repository.deleteFrameworks(frameworks)
 
@@ -83,7 +105,7 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun deleteMultipleFrameworksByVarArgTest() = runBlocking {
-        val frameworks = TestDataGenerator.getTestFrameworks(3)
+        val frameworks = TestDataGenerator.getTestFrameworks(3, 1)
         repository.addFrameworks(frameworks)
         repository.deleteFrameworks(frameworks[0], frameworks[2])
 
@@ -94,8 +116,8 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun getFrameworkByIdTest() = runBlocking {
-        val frameworks = TestDataGenerator.getTestFrameworks(10)
-        val frameworkToFind = TestDataGenerator.getTestFramework(99)
+        val frameworks = TestDataGenerator.getTestFrameworks(10, 1)
+        val frameworkToFind = TestDataGenerator.getTestFramework(99, 1)
         repository.addFrameworks(frameworks + frameworkToFind)
 
         val foundFramework = repository.getFrameworkById(99)
@@ -105,7 +127,7 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun getNonExistentFramework() = runBlocking {
-        val frameworks = TestDataGenerator.getTestFrameworks(5)
+        val frameworks = TestDataGenerator.getTestFrameworks(5, 0)
         repository.addFrameworks(frameworks)
 
         assertNull(repository.getFrameworkById(100))
@@ -113,9 +135,9 @@ class FrameworkTypeRepositoryTest : TestCase() {
 
     @Test
     fun filterFrameworksByNumWorkoutsTest() = runBlocking {
-        val framework1 = FrameworkTypeEntity(0, "Framework 0", 3)
-        val framework2 = FrameworkTypeEntity(1, "Framework 1", 4)
-        val framework3 = FrameworkTypeEntity(2, "Framework 2", 2)
+        val framework1 = FrameworkTypeEntity(0, "Framework 0", 0,3)
+        val framework2 = FrameworkTypeEntity(1, "Framework 1", 0,4)
+        val framework3 = FrameworkTypeEntity(2, "Framework 2", 2,2)
         repository.addFrameworks(framework1, framework2, framework3)
 
         val foundFrameworks = repository.getFrameworksWithinMaxWorkouts(3).getOrAwaitValue()
@@ -124,4 +146,14 @@ class FrameworkTypeRepositoryTest : TestCase() {
         assertTrue(foundFrameworks.contains(framework3))
     }
 
+    @Test
+    fun getFrameworksWithGoalTest() = runBlocking {
+        val framework1 = FrameworkTypeEntity(0, "Framework 0", 0, 3)
+        val framework2 = FrameworkTypeEntity(1, "Framework 1", 1, 3)
+        repository.addFrameworks(framework1, framework2)
+
+        val foundFrameworks = repository.getFrameworksWithGoal(1).getOrAwaitValue()
+        assertTrue(foundFrameworks.contains(framework2))
+        assertFalse(foundFrameworks.contains(framework1))
+    }
 }

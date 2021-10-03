@@ -37,8 +37,18 @@ interface FrameworkTypeDao {
      *
      * @return a LiveData List of all frameworks matching the criteria
      */
-    @Query("SELECT * FROM framework_type WHERE workouts_per_week<:maxNumWorkouts")
+    @Query("SELECT * FROM framework_type WHERE workouts_per_week<=:maxNumWorkouts")
     fun getFrameworksWithinMaxWorkouts(maxNumWorkouts: Int): LiveData<List<FrameworkTypeEntity>>
+
+    /**
+     * Get all frameworks that link to the given goal
+     *
+     * @property goal_id    the primary key for the selected goal.
+     *
+     * @return a LiveData List of all frameworks that have the given goal
+     */
+    @Query("SELECT * FROM framework_type WHERE goal_id=:goal_id")
+    fun getFrameworksWithGoal(goal_id: Int) : LiveData<List<FrameworkTypeEntity>>
 
     /**
      * Add a framework to the database

@@ -34,6 +34,17 @@ class FrameworkTypeRepository(private val frameworkTypeDao: FrameworkTypeDao) {
     }
 
     /**
+     * Get all frameworks that have the specified goal link
+     *
+     * @property goal_id    the primary key of the goal to search.
+     *
+     * @return the frameworks with the given goal
+     */
+    fun getFrameworksWithGoal(goal_id: Int) : LiveData<List<FrameworkTypeEntity>> {
+        return frameworkTypeDao.getFrameworksWithGoal(goal_id)
+    }
+
+    /**
      * Add a single framework to the database
      *
      * @property framework  the framework to add to the database.
