@@ -26,16 +26,12 @@ class FrameworkDayDaoTest : TestCase() {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var db: WCDatabase
-    private lateinit var goalTypeDao: GoalTypeDao
-    private lateinit var frameworkTypeDao: FrameworkTypeDao
     private lateinit var frameworkDayDao: FrameworkDayDao
 
     @Before
     public override fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
-        goalTypeDao = db.goalTypeDao()
-        frameworkTypeDao = db.frameworkTypeDao()
         frameworkDayDao = db.frameworkDayDao()
 
         // Framework days need frameworks
