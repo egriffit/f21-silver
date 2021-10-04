@@ -82,7 +82,7 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
  *
 * @param Application context
 */
-class FrameworkTypeViewModelFactory(private val application: Application): ViewModelProvider.Factory {
+class FrameworkTypeViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
     /**
      * Method to create an instance of the FrameworkTypeViewModel
      */
