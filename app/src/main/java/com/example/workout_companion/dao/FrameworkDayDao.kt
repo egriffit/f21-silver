@@ -22,7 +22,7 @@ interface FrameworkDayDao {
      * @property frameworkDay   the day to add to the database.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addFrameworkDay(frameworkDay: FrameworkDayEntity)
+    suspend fun addFrameworkDay(frameworkDay: FrameworkDayEntity)
 
     /**
      * Adds all days within the collection to a workout framework in the database
@@ -30,7 +30,7 @@ interface FrameworkDayDao {
      * @property frameworkDays  a [Collection] of days to to add.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addFrameworkDays(frameworkDays: Collection<FrameworkDayEntity>)
+    suspend fun addFrameworkDays(frameworkDays: Collection<FrameworkDayEntity>)
 
     /**
      * Adds all days to a workout framework within the database
@@ -38,7 +38,7 @@ interface FrameworkDayDao {
      * @property frameworkDays  a comma-separated list of days to add.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
+    suspend fun addFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
 
     /**
      * Update an existing day in a workout framework
@@ -46,7 +46,7 @@ interface FrameworkDayDao {
      * @property frameworkDay   the updated framework day.
      */
     @Update
-    fun updateFrameworkDay(frameworkDay: FrameworkDayEntity)
+    suspend fun updateFrameworkDay(frameworkDay: FrameworkDayEntity)
 
     /**
      * Delete an existing day from a workout framework
@@ -54,7 +54,7 @@ interface FrameworkDayDao {
      * @property frameworkDay   the day to delete.
      */
     @Delete
-    fun deleteFrameworkDay(frameworkDay: FrameworkDayEntity)
+    suspend fun deleteFrameworkDay(frameworkDay: FrameworkDayEntity)
 
     /**
      * Deletes all existing days from their frameworks in the database
@@ -62,7 +62,7 @@ interface FrameworkDayDao {
      * @property frameworkDays  a [Collection] of days to delete.
      */
     @Delete
-    fun deleteFrameworkDays(frameworkDays: Collection<FrameworkDayEntity>)
+    suspend fun deleteFrameworkDays(frameworkDays: Collection<FrameworkDayEntity>)
 
     /**
      * Deletes all existing days from their frameworks in the database
@@ -70,5 +70,5 @@ interface FrameworkDayDao {
      * @property frameworkDays  a comma-separated list of days to delete.
      */
     @Delete
-    fun deleteFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
+    suspend fun deleteFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
 }

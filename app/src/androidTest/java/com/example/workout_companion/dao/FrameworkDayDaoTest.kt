@@ -114,6 +114,17 @@ class FrameworkDayDaoTest : TestCase() {
     }
 
     @Test
+    fun deleteNonExistentDayTest() = runBlocking {
+        frameworkDayDao.addFrameworkDays(TestDataGenerator.FRAMEWORK_0_DAYS)
+        val daysBeforeDelete = frameworkDayDao.getAllFrameworkDays(0).getOrAwaitValue()
+
+        frameworkDayDao.deleteFrameworkDay(FrameworkDayEntity(10, 10, "Bad Day"))
+        val daysAfterDelete = frameworkDayDao.getAllFrameworkDays(0).getOrAwaitValue()
+
+        assertEquals(daysBeforeDelete, daysAfterDelete)
+    }
+
+    @Test
     fun updateSingleDayTest() = runBlocking {
         val day = FrameworkDayEntity(0, 1, "Test Day")
         frameworkDayDao.addFrameworkDay(day)
@@ -132,6 +143,6 @@ class FrameworkDayDaoTest : TestCase() {
         frameworkDayDao.updateFrameworkDay(day)
 
         val framework1DaysInDB = frameworkDayDao.getAllFrameworkDays(1).getOrAwaitValue()
-        assertTrue(framework1DaysInDB.isEmpty()) 
+        assertTrue(framework1DaysInDB.isEmpty())
     }
 }
