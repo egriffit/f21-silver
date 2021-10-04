@@ -24,7 +24,7 @@ data class FrameworkDayEntity(
     @ColumnInfo(name = "id")
     var id: Int,
 
-    @ColumnInfo(name = "framework_type_id")
+    @ColumnInfo(name = "framework_type_id", index = true)
     var framework_type_id: Int,
 
     @ColumnInfo(name = "name")

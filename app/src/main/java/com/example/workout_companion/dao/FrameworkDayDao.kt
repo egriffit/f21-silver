@@ -38,7 +38,7 @@ interface FrameworkDayDao {
      * @property frameworkDays  a comma-separated list of days to add.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addFrameworkDays(vararg frameworkDays: Collection<FrameworkDayEntity>)
+    fun addFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
 
     /**
      * Update an existing day in a workout framework
