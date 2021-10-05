@@ -1,6 +1,7 @@
 package com.example.workout_companion.utility
 
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.FrameworkComponentEntity
 import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.GoalTypeEntity
@@ -17,6 +18,13 @@ class TestDataGenerator {
             GoalTypeEntity(next_goal_id++, "Test Goal 2"),
         )
 
+        @JvmStatic
+        fun addGoalsToDB(db: WCDatabase) = runBlocking {
+            for (goal in GOALS) {
+                db.goalTypeDao().addGoal(goal)
+            }
+        }
+
         var next_framework_id = 0
         val GOAL_0_FRAMEWORKS: List<FrameworkTypeEntity> = listOf(
             FrameworkTypeEntity(next_framework_id++, "Test Framework 0", 0, 3),
@@ -32,6 +40,15 @@ class TestDataGenerator {
             FrameworkTypeEntity(next_framework_id++, "Test Framework 4", 2, 6),
             FrameworkTypeEntity(next_framework_id++, "Test Framework 5", 2, 3),
         )
+
+        @JvmStatic
+        fun addFrameworksToDB(db: WCDatabase) = runBlocking {
+            db.frameworkTypeDao().addFrameworks(
+                GOAL_0_FRAMEWORKS
+                        + GOAL_1_FRAMEWORKS
+                        + GOAL_2_FRAMEWORKS
+            )
+        }
 
         var next_day_id = 0
         val FRAMEWORK_0_DAYS: List<FrameworkDayEntity> = listOf(
@@ -76,21 +93,6 @@ class TestDataGenerator {
         )
 
         @JvmStatic
-        fun addGoalsToDB(db: WCDatabase) = runBlocking {
-            for (goal in GOALS) {
-                db.goalTypeDao().addGoal(goal)
-            }
-        }
-
-        @JvmStatic
-        fun addFrameworksToDB(db: WCDatabase) = runBlocking {
-            db.frameworkTypeDao().addFrameworks(GOAL_0_FRAMEWORKS
-                    + GOAL_1_FRAMEWORKS
-                    + GOAL_2_FRAMEWORKS
-            )
-        }
-
-        @JvmStatic
         fun addFrameworkDaysToDB(db: WCDatabase) = runBlocking {
             db.frameworkDayDao().addFrameworkDays(FRAMEWORK_0_DAYS
                     + FRAMEWORK_1_DAYS
@@ -99,6 +101,48 @@ class TestDataGenerator {
                     + FRAMEWORK_4_DAYS
                     + FRAMEWORK_5_DAYS
             )
+        }
+
+        var next_component_id = 0
+        val FRAMEWORK_0_DAY_0_COMPONENTS: List<FrameworkComponentEntity> = listOf(
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[0].id, MuscleGroup.CHEST, 3, 24),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[0].id, MuscleGroup.BACK, 3, 24),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[0].id, MuscleGroup.LEGS, 3, 24),
+        )
+
+        val FRAMEWORK_0_DAY_1_COMPONENTS: List<FrameworkComponentEntity> = listOf(
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[1].id, MuscleGroup.CHEST, 3, 24),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[1].id, MuscleGroup.BACK, 3, 24),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[1].id, MuscleGroup.LEGS, 3, 24),
+        )
+
+        val FRAMEWORK_0_DAY_2_COMPONENTS: List<FrameworkComponentEntity> = listOf(
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[2].id, MuscleGroup.CHEST, 3, 30),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[2].id, MuscleGroup.BACK, 3, 30),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_0_DAYS[2].id, MuscleGroup.LEGS, 3, 30),
+        )
+
+        val FRAMEWORK_2_DAY_0_COMPONENTS: List<FrameworkComponentEntity> = listOf(
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[0].id, MuscleGroup.LEGS, 5, 25),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[0].id, MuscleGroup.LEGS, 3, 30),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[0].id, MuscleGroup.BACK, 3, 30),
+        )
+
+        val FRAMEWORK_2_DAY_1_COMPONENTS: List<FrameworkComponentEntity> = listOf(
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[1].id, MuscleGroup.CHEST, 5, 25),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[1].id, MuscleGroup.BACK, 5, 25),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[1].id, MuscleGroup.TRICEPS, 3, 30),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[1].id, MuscleGroup.BICEPS, 3, 30),
+            FrameworkComponentEntity(next_component_id++, FRAMEWORK_2_DAYS[1].id, MuscleGroup.SHOULDERS, 3, 30),
+        )
+
+        @JvmStatic
+        fun addFrameworkComponentsToDB(db: WCDatabase) = runBlocking {
+            db.frameworkComponentDao().addFrameworkComponents(FRAMEWORK_0_DAY_0_COMPONENTS
+                + FRAMEWORK_0_DAY_1_COMPONENTS
+                + FRAMEWORK_0_DAY_2_COMPONENTS
+                + FRAMEWORK_2_DAY_0_COMPONENTS
+                + FRAMEWORK_2_DAY_1_COMPONENTS)
         }
 
         @JvmStatic
