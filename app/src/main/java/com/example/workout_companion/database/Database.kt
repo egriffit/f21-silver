@@ -18,6 +18,7 @@ import com.example.workout_companion.utility.DateTimeConverter
     CurrentUserGoalEntity::class,
     FrameworkTypeEntity::class,
     FrameworkDayEntity::class,
+    FrameworkComponentEntity::class,
     //Add all entities to this list
 ],
     views = [FrameworkWithGoalEntity::class],
@@ -34,6 +35,7 @@ abstract class WCDatabase: RoomDatabase() {
     abstract fun currentUserDao(): CurrentUserGoalDao
     abstract fun frameworkTypeDao(): FrameworkTypeDao
     abstract fun frameworkDayDao(): FrameworkDayDao
+    abstract fun frameworkComponentDao(): FrameworkComponentDao
 
     companion object{
         @Volatile
