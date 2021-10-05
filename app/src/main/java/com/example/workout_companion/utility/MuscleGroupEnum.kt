@@ -3,10 +3,16 @@ package com.example.workout_companion.utility
 import androidx.room.TypeConverter
 import java.lang.IllegalArgumentException
 
+/**
+ * Enumeration of all muscle groups
+ */
 enum class MuscleGroup {
     CHEST, BACK, TRICEPS, BICEPS, SHOULDERS, ABS, LEGS
 }
 
+/**
+ * Converter between strings and
+ */
 object MuscleGroupConverter {
 
     @TypeConverter
