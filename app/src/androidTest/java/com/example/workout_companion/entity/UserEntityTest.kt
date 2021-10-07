@@ -46,6 +46,54 @@ class UserEntityTest : TestCase(){
     }
 
     @Test
+    fun TestCount() = runBlocking(){
+        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
+        val birthDate2 = LocalDate.of(1947, Month.JULY, 30)
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user2 = UserEntity("Arnold Schwarzenegger", "expert", "male", birthDate2, 3, "active")
+
+        dao.insert(user)
+        dao.insert(user2)
+        val count: Int = dao.getCount()
+        MatcherAssert.assertThat(count, CoreMatchers.equalTo(2))
+    }
+
+    @Test
+    fun TestCountWithName() = runBlocking(){
+        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+
+        dao.insert(user)
+        val count: Int = dao.getCountWithName("John Smith")
+        MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
+    }
+
+    @Test
+    fun TestDelete() = runBlocking(){
+        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+
+        dao.insert(user)
+        dao.delete(user)
+        val count: Int = dao.getCountWithName("John Smith")
+        MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
+    }
+
+    @Test
+    fun TestDeleteAll() = runBlocking(){
+        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
+        val birthDate2 = LocalDate.of(1947, Month.JULY, 30)
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user2 = UserEntity("Arnold Schwarzenegger", "expert", "male", birthDate2, 3, "active")
+
+        dao.insert(user)
+        dao.insert(user2)
+        dao.deleteAll()
+        val count: Int = dao.getCount()
+        MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
+    }
+
+    @Test
     fun TestUpdateUser() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")

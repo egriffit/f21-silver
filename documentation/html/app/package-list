@@ -1,0 +1,16 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.example.workout_companion
+com.example.workout_companion.dao
+com.example.workout_companion.database
+com.example.workout_companion.entity
+com.example.workout_companion.mock.dao
+com.example.workout_companion.mock.entity
+com.example.workout_companion.repository
+com.example.workout_companion.sampleData
+com.example.workout_companion.ui.theme
+com.example.workout_companion.utility
+com.example.workout_companion.viewmodel
+view
+

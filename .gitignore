@@ -1,15 +1,19 @@
-
+# Android Studio / Intellij files
 *.iml
-.gradle
-/local.properties
-/.idea
+/.idea/
+
+# Mac OS X specific
 .DS_Store
-/build
+
+# Local config files
+/local.properties
 /captures
 .externalNativeBuild
-.cxx
-local.properties
 
+# Gradle build files
+/build
+.gradle
+/app/src/main/java/com/example/workout_companion/mock
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -23,3 +27,5 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+/app/src/main/java/com/example/workout_companion/mock/
+/app/src/main/java/com/example/workout_companion/mock/dao/

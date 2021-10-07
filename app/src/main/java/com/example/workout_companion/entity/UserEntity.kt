@@ -6,6 +6,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * Data class to store the properties of the UserEntity
+ *
+ * Defines the user table and columns for RoomDatabase
+ */
 @Entity(tableName = "user")
 data class UserEntity(
         @PrimaryKey(autoGenerate = false)
