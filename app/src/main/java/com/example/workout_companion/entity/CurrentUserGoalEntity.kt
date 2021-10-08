@@ -12,4 +12,5 @@ data class CurrentUserGoalEntity (
 
     @ColumnInfo(name = "framework_type_id")
     var framework_type_id: Int
+
 )

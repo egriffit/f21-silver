@@ -1,10 +1,12 @@
-package com.example.workout_companion.mock.dao
+package com.example.workout_companion.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.workout_companion.entity.CurrentUserGoalEntity
-import com.example.workout_companion.mock.entity.CurrentNutritionPlanAndFrameworkEntity
+import com.example.workout_companion.entity.CurrentNutritionPlanAndFrameworkEntity
 
 @Dao
 interface CurrentUserGoalDao {
@@ -19,6 +21,7 @@ interface CurrentUserGoalDao {
      * @param String name of goal
      * @return Int total of rows
      */
+    @Transaction
     @Query("""SELECT nutrition_plan_type_id, calorie, carbohydrate, 
                     protein, fat, framework_type_id,name, workouts_per_week,
                     framework_type.goal_id, goal
@@ -30,5 +33,5 @@ interface CurrentUserGoalDao {
                     ON current_user_goal.nutrition_plan_type_id = a.id
                     AND framework_type.id = current_user_goal.framework_type_id
                         LIMit 1""")
-    fun getCurrentGoals(): CurrentNutritionPlanAndFrameworkEntity
+    fun getCurrentGoals(): LiveData<CurrentNutritionPlanAndFrameworkEntity>
 }

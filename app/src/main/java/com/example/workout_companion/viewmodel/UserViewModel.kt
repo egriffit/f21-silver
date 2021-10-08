@@ -25,7 +25,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
      */
     private val repository: UserRepository
 
-    /**
+    /**W
      * Function to initialize the view.
      * Initializes the WCDatabase, repository and the list of all user entities
      */

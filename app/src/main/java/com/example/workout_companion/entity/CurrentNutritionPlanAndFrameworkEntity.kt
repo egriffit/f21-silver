@@ -1,9 +1,8 @@
-package com.example.workout_companion.mock.entity
+package com.example.workout_companion.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.workout_companion.entity.CurrentUserGoalEntity
-import com.example.workout_companion.entity.NutritionPlanTypeEntity
+import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
 
 
 data class CurrentNutritionPlanAndFrameworkEntity (

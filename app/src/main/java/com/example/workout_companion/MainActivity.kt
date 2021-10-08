@@ -12,7 +12,8 @@ import com.example.workout_companion.sampleData.FrameWorkList
 import com.example.workout_companion.sampleData.currentUser
 import com.example.workout_companion.sampleData.user
 import com.example.workout_companion.ui.theme.Workout_companionTheme
-import com.example.workout_companion.view.AppNavController
+import com.example.workout_companion.view.MainNavigation
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
             Workout_companionTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    AppNavController()
+                    MainNavigation()
                 }
             }
         }

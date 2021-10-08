@@ -101,6 +101,7 @@ interface NutritionPlanTypeDao {
      *@parm String name of goal
      * @return List<GoalAndNutritionPlanTypeEntity>
      */
+    @Transaction
     @Query("SELECT * FROM nutrition_plan_type INNER JOIN goal_type ON nutrition_plan_type.goal_id = goal_type.id WHERE goal_type.goal = :goal")
     fun getNutritionPlansByGoal(goal: String): List<GoalAndNutritionPlanTypeEntity>
 
@@ -111,6 +112,7 @@ interface NutritionPlanTypeDao {
      * @param String name of goal
      * @return Int total of rows
      */
+    @Transaction
     @Query("SELECT COUNT(*) as INTEGER FROM nutrition_plan_type INNER JOIN goal_type ON nutrition_plan_type.goal_id = goal_type.id WHERE goal_type.goal = :goal")
     fun getNutritionPlanCountByGoal(goal: String): Int
 }

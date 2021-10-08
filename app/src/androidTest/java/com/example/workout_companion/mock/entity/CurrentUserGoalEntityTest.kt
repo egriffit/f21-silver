@@ -1,24 +1,27 @@
 package com.example.workout_companion.mock.entity
 
 import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.CurrentUserGoalEntity
-import com.example.workout_companion.entity.NutritionPlanTypeEntity
-import com.example.workout_companion.mock.dao.CurrentUserGoalDao
+import com.example.workout_companion.dao.CurrentUserGoalDao
 import com.example.workout_companion.dao.FrameworkTypeDao
 import com.example.workout_companion.dao.GoalTypeDao
-import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.entity.*
 import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.utility.getOrAwaitValue
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -29,7 +32,8 @@ class CurrentUserGoalEntityTest : TestCase(){
     private lateinit var nutritionDao: NutritionPlanTypeDao
     private lateinit var goalDao: GoalTypeDao
     private lateinit var frameworkDao: FrameworkTypeDao
-
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     public override fun setUp(){
@@ -70,9 +74,9 @@ class CurrentUserGoalEntityTest : TestCase(){
         }
         frameworkDao.addFrameworks(frameworks)
         dao.addCurrentUserGoal(currentGoal)
-        val result: CurrentNutritionPlanAndFrameworkEntity = dao.getCurrentGoals()
-        val currentFrameworkName: String = result.FrameWorkWIthGoalEntity.name
-        val currentGoalName: String = result.FrameWorkWIthGoalEntity.goal
+        val result: CurrentNutritionPlanAndFrameworkEntity? = dao.getCurrentGoals().getOrAwaitValue()
+        val currentFrameworkName: String? = result?.FrameWorkWIthGoalEntity?.name
+        val currentGoalName: String? = result?.FrameWorkWIthGoalEntity?.goal
         MatcherAssert.assertThat(currentFrameworkName, CoreMatchers.equalTo("framework_4"))
         MatcherAssert.assertThat(currentGoalName, CoreMatchers.equalTo("Lose Weight"))
 
