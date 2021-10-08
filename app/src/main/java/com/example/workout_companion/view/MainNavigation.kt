@@ -15,18 +15,10 @@ fun AppNavController() {
         composable (route = "workouts") {
             WorkoutsView(navController)
         }
-//        composable (route = "workoutProgress") {
-//            secondView(navController)
-//        }
-//        composable (route = "meals") {
-//            thirdView(navController)
-//        }
-//        composable (route = "dietProgress") {
-//            fourthView(navController)
-//        }
-//        composable (route = "<profile>") {
-//            fifthView(navController)
-//        }
+        composable (route = "addGoals") {
+            AddGoalsView(navController)
+        }
+        // Other routes go here
     }
 }
 
@@ -35,6 +27,15 @@ fun WorkoutsView(navController: NavController) {
     Column() {
         Text (
             text = "Workouts View"
+        )
+    }
+}
+
+@Composable
+fun AddGoalsView(navController: NavController) {
+    Column() {
+        Text (
+            text = "Add Goals View"
         )
     }
 }
