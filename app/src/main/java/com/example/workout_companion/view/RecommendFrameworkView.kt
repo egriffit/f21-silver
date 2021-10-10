@@ -5,24 +5,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.UserEntity
-import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.sampleData.FrameWorkList
 
 
 @Composable
-fun recommendFrameworkView(UserEntity: UserEntity,
+fun RecommendFrameworkView(UserEntity: UserEntity,
                         FrameWorkWithGoalEntity: List<FrameworkWithGoalEntity>)
 {
     val workoutFrequency = UserEntity.max_workouts_per_week
@@ -34,7 +31,7 @@ fun recommendFrameworkView(UserEntity: UserEntity,
             .padding(25.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Row() {
+        Row{
             Column(
                 modifier = Modifier,
                 horizontalAlignment = Alignment.Start
@@ -53,8 +50,8 @@ fun recommendFrameworkView(UserEntity: UserEntity,
                 modifier = Modifier,
                 horizontalAlignment = Alignment.End
             ) {
-                Text("${FrameWorkWithGoalEntity[0].goal}")
-                Text("${workoutFrequency}")
+                Text(FrameWorkWithGoalEntity[0].goal)
+                Text("$workoutFrequency")
             }
         }
         Spacer(modifier=Modifier.height(20.dp))

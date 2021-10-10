@@ -5,9 +5,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Data class to store the properties of the NutritionPlanTypeEntity
+ * An entity for the nutrition_plan_type table in the database
  *
- * Defines the nutrition_plan_type table and columns for RoomDatabase
+ * @property id             primary key
+ * @property goal_id        Foreign key joining the nutrition_plan_type table with the goal_type table
+ * @property calorie        The target amount of  calories per day
+ * @property carbohydrate   The target percentage of dietary carbohydrates per day
+ * @property protein        The target percentage of dietary protein per day
+ * @property fat            The target percentage of dietary fat per day
  */
 @Entity(tableName = "nutrition_plan_type")
 data class NutritionPlanTypeEntity(

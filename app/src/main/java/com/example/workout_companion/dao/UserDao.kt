@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.workout_companion.entity.UserEntity
 import java.time.LocalDate
-import java.util.*
 
 /**
- * The Data Abstraction Interface for the UserEntity
+ * The Data Abstraction Object for the UserEntity
  *
  * Provides methods for SQL queries using the UserEntity
  */

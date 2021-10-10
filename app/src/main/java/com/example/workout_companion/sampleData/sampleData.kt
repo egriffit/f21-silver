@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.UserEntity
-import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import java.time.LocalDate
 import java.time.Month
 
@@ -19,4 +19,4 @@ val FrameWorkList : List<FrameworkWithGoalEntity> = listOf(
     FrameworkWithGoalEntity(6, "Frame_work_7", 1, 2, "Gain Mass"),
 )
 
-val currentUser = CurrentUserGoalEntity(1, 2)
+val currentUser = CurrentUserGoalEntity(1,1, 2)

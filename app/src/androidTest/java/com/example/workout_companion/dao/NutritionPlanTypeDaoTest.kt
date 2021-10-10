@@ -1,13 +1,13 @@
-package com.example.workout_companion.entity
+package com.example.workout_companion.dao
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.workout_companion.dao.GoalTypeDao
-import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.GoalAndNutritionPlanTypeEntity
 import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class NutritionPlanTypeEntityTest: TestCase(){
+class NutritionPlanTypeDaoTest: TestCase(){
     private lateinit var db: WCDatabase
     private lateinit var dao: NutritionPlanTypeDao
     private lateinit var goalDao: GoalTypeDao
@@ -41,6 +41,16 @@ class NutritionPlanTypeEntityTest: TestCase(){
         dao.addPlan(plan)
         val byId = dao.getById(1)
         MatcherAssert.assertThat(byId, CoreMatchers.equalTo(plan))
+    }
+    @Test
+    fun testFindPlanId() = runBlocking{
+        val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
+        val plan2 = NutritionPlanTypeEntity(2, 2, 2500.0, 0.45, .30, .25)
+
+        dao.addPlan(plan)
+        dao.addPlan(plan2)
+        val planId: Int = dao.findPlanId(2500.0, 0.45, .30, .25)
+        MatcherAssert.assertThat(planId, CoreMatchers.equalTo(2))
     }
 
     @Test
@@ -111,7 +121,8 @@ class NutritionPlanTypeEntityTest: TestCase(){
             GoalTypeEntity(2, "Gain Mass"),
             GoalTypeEntity(3, "Gain Strength"),
         )
-        val plans = listOf(NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
+        val plans = listOf(
+            NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
             NutritionPlanTypeEntity(2, 2, 2200.0, 0.45, .30, .25),
             NutritionPlanTypeEntity(3, 3, 2500.0, 0.45, .30, .25),
             NutritionPlanTypeEntity(4, 1, 1900.0, 0.45, .30, .25),
@@ -135,7 +146,8 @@ class NutritionPlanTypeEntityTest: TestCase(){
             GoalTypeEntity(2, "Gain Mass"),
             GoalTypeEntity(3, "Gain Strength"),
         )
-        val plans = listOf(NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
+        val plans = listOf(
+            NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
             NutritionPlanTypeEntity(2, 2, 2200.0, 0.45, .30, .25),
             NutritionPlanTypeEntity(3, 3, 2500.0, 0.45, .30, .25),
             NutritionPlanTypeEntity(4, 1, 1900.0, 0.45, .30, .25),

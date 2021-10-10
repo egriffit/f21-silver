@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.workout_companion.R
-import com.example.workout_companion.entity.CurrentNutritionPlanAndFrameworkEntity
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModelFactory
 import kotlinx.coroutines.delay
@@ -32,18 +30,13 @@ import kotlinx.coroutines.delay
             factory = CurrentUserGoalViewModelFactory(context.applicationContext as Application)
         )
 
-        var currentGoals: CurrentNutritionPlanAndFrameworkEntity? = currentUserGoalViewModel.getCurrentGoals.value
+//        var currentGoals: CurrentNutritionPlanAndFrameworkEntity? = currentUserGoalViewModel.getCurrentGoals.value
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity =
-//            CurrentNutritionPlanAndFrameworkEntity(nutritionplanType = NutritionPlanTypeEntity(1, 1, 2500.0, .40, .35, .25),
+//            CurrentNutritionPlanAndFrameworkEntity(nutritionPlanType = NutritionPlanTypeEntity(1, 1, 2500.0, .40, .35, .25),
 //                                                   currentUserGoalEntity = CurrentUserGoalEntity(1, 1),
 //                                                   FrameWorkWIthGoalEntity = FrameworkWithGoalEntity(1, "Framework_1", 1, 1, "Gain Strength")
 //            )
-        var goalsExist = false
-
-        if((currentGoals?.currentUserGoalEntity?.framework_type_id != null)|| (currentGoals?.currentUserGoalEntity?.nutrition_plan_type_id != null))
-        {
-            goalsExist = true
-        }
+        val goalsExist: Boolean? = currentUserGoalViewModel.currentGoalExists.value
         //var testGoalsExist: Boolean = true
 
         val scale = remember {
@@ -61,7 +54,7 @@ import kotlinx.coroutines.delay
                     })
             )
             delay(3000L)
-            if(goalsExist){
+            if(goalsExist == true){
                navController.navigate("mainView")
             }
             else

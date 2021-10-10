@@ -1,17 +1,16 @@
-package com.example.workout_companion.entity
+package com.example.workout_companion.dao
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.UserEntity
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +19,7 @@ import java.time.Month
 
 
 @RunWith(AndroidJUnit4::class)
-class UserEntityTest : TestCase(){
+class UserDaoTest : TestCase(){
 
     private lateinit var db: WCDatabase
     private lateinit var dao: UserDao
