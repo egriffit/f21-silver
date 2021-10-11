@@ -41,7 +41,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testWriteAndReadUser() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 160.0,"moderate")
         repository.addUser(user)
         val byName = repository.getByName("John Smith")
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(user))
@@ -50,7 +50,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testGetCount() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2,160.0, "moderate")
         repository.addUser(user)
         val count: Int = repository.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
@@ -59,7 +59,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testGetCountWithName() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2,160.0, "moderate")
         repository.addUser(user)
         val count: Int = repository.getCountWithName("John Smith")
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
@@ -68,7 +68,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testCheckIfUserExists() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 160.0,"moderate")
         repository.addUser(user)
         val exists: Boolean = repository.checkIfUserExists("John Smith")
         assertTrue(exists)
@@ -78,8 +78,8 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testUpdateUser() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-        val newUser = UserEntity("John Smith", "experienced", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 160.0,"moderate")
+        val newUser = UserEntity("John Smith", "experienced", "male", birthDate, 2, 180.0, "moderate")
 
         dao.insert(user)
         dao.update(newUser)
@@ -90,7 +90,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testDelete() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 160.0,"moderate")
         repository.addUser(user)
         repository.deleteUser(user)
         val exists: Boolean = repository.checkIfUserExists("John Smith")
@@ -100,7 +100,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testDeleteAll() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 160.0,"moderate")
         repository.addUser(user)
         repository.deletaAll()
         val count: Int = repository.getCount()
@@ -111,7 +111,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testAge() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 160.0,"moderate")
 
         repository.addUser(user)
         val age: Int = repository.getAge("John Smith")
