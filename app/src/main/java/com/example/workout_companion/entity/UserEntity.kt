@@ -1,7 +1,7 @@
 package com.example.workout_companion.entity
 
 import androidx.room.*
-import com.example.workout_companion.utility.DateTimeConverter
+import com.example.workout_companion.utility.*
 import java.time.LocalDate
 
 /**
@@ -21,10 +21,12 @@ data class UserEntity(
         var name: String,
 
         @ColumnInfo(name = "experience_level")
-        var experience_level: String,
+        @TypeConverters(ExperienceLevelConverter::class)
+        var experience_level: ExperienceLevel,
 
         @ColumnInfo(name = "sex")
-        var sex: String,
+        @TypeConverters(SexConverter::class)
+        var sex: Sex,
 
         @ColumnInfo(name = "birth_date")
         @TypeConverters(DateTimeConverter::class)
@@ -38,5 +40,6 @@ data class UserEntity(
         var height: Double,
 
         @ColumnInfo(name = "activity_level")
-        var activity_level: String
+        @TypeConverters(ActivityLevelConverter::class)
+        var activity_level: ActivityLevel
 )

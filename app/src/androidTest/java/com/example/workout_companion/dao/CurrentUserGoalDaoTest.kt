@@ -47,9 +47,9 @@ class CurrentUserGoalDaoTest : TestCase() {
     fun testGetCurrentGoals() = runBlocking {
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
         val goal = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val frameworks = listOf(
             FrameworkTypeEntity(1, "framework_1", 1, 1),
@@ -79,9 +79,9 @@ class CurrentUserGoalDaoTest : TestCase() {
     fun getCurrentGoalIds() = runBlocking {
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
         val goal = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val frameworks = listOf(
             FrameworkTypeEntity(1, "framework_1", 1, 1),
@@ -147,9 +147,9 @@ class CurrentUserGoalDaoTest : TestCase() {
         )
 
         val goals = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val frameworks = listOf(
             FrameworkTypeEntity(1, "framework_1", 1, 1),
@@ -183,9 +183,9 @@ class CurrentUserGoalDaoTest : TestCase() {
         )
 
         val goals = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val frameworks = listOf(
             FrameworkTypeEntity(1, "framework_1", 1, 1),
@@ -220,9 +220,9 @@ class CurrentUserGoalDaoTest : TestCase() {
         )
 
         val goals = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val frameworks = listOf(
             FrameworkTypeEntity(1, "framework_1", 1, 1),
