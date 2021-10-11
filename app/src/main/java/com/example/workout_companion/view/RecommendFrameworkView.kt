@@ -1,6 +1,7 @@
 package view
 
 import androidx.compose.foundation.BorderStroke
+import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

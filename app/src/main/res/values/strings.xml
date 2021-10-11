@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">workout_companion</string>
+    <string name="title_activity_info_form">info_form</string>
+    <string name="title_activity_goals_landing_page">GoalsLandingPage</string>
 </resources>

@@ -8,11 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.workout_companion.sampleData.FrameWorkList
-import com.example.workout_companion.sampleData.currentUser
-import com.example.workout_companion.sampleData.user
 import com.example.workout_companion.ui.theme.Workout_companionTheme
-import view.recommendFrameworkView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
