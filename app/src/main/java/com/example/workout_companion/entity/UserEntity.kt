@@ -34,6 +34,9 @@ data class UserEntity(
         @ColumnInfo(name = "max_workouts_per_week")
         var max_workouts_per_week: Int,
 
+        @ColumnInfo(name = "height")
+        var height: Double,
+
         @ColumnInfo(name = "activity_level")
         var activity_level: String
 )

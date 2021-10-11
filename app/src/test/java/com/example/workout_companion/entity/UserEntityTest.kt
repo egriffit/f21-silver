@@ -15,12 +15,14 @@ class UserEntityTest {
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val maxWorkoutsPerWeek = 2
         val activityLevel = "moderate"
-        val user = UserEntity(name, experienceLevel, sex, birthDate, maxWorkoutsPerWeek, activityLevel)
+        val height = 160.0
+        val user = UserEntity(name, experienceLevel, sex, birthDate, maxWorkoutsPerWeek, height, activityLevel)
 
         Assert.assertEquals(user.name, name)
         Assert.assertEquals(user.experience_level, experienceLevel)
         Assert.assertEquals(user.sex, sex)
         Assert.assertEquals(user.birth_date, birthDate)
+        Assert.assertEquals(user.max_workouts_per_week, maxWorkoutsPerWeek)
         Assert.assertEquals(user.max_workouts_per_week, maxWorkoutsPerWeek)
         Assert.assertEquals(user.activity_level, activityLevel)
     }

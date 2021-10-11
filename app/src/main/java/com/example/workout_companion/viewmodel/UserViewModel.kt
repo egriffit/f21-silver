@@ -77,6 +77,19 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
         return age
     }
+
+    /**
+     * Function to initialize a coroutine to retrieve the age of the user with a name equal to the provided string
+     * @param name, a String
+     * @return Int
+     */
+    fun getHeightInInches(name: String): Int{
+        var heightInInches: Int = 0
+        viewModelScope.launch(Dispatchers.IO){
+            heightInInches = repository.getAge(name)
+        }
+        return heightInInches
+    }
 }
 
 /**
