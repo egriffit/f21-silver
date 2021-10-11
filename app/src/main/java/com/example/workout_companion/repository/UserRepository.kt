@@ -110,4 +110,14 @@ class UserRepository (private val userDao: UserDao) {
     suspend fun getAge(name: String): Int{
        return userDao.getAge(name)
     }
+
+    /**
+     * Retrieves the age of the user with the provided name
+     *
+     * @param name String
+     * @return Int, age
+     */
+    suspend fun getHeightInInches(name: String): Int{
+        return userDao.getHeightInInches(name)
+    }
 }
