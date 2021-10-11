@@ -38,9 +38,9 @@ class FrameworkTypeDaoTest : TestCase() {
         frameworkTypeDao = db.frameworkTypeDao()
 
         // Create some basic goals here
-        goalTypeDao.addGoal(GoalTypeEntity(0, "Goal 0"))
-        goalTypeDao.addGoal(GoalTypeEntity(1, "Goal 1"))
-        goalTypeDao.addGoal(GoalTypeEntity(2, "Goal 2"))
+        goalTypeDao.addGoal(GoalTypeEntity(0, "Goal 0", 500))
+        goalTypeDao.addGoal(GoalTypeEntity(1, "Goal 1", -500))
+        goalTypeDao.addGoal(GoalTypeEntity(2, "Goal 2", 250))
     }
 
     @After
@@ -157,7 +157,7 @@ class FrameworkTypeDaoTest : TestCase() {
     fun getFrameworksWithGoalNameTest() = runBlocking {
         val framework1 = FrameworkTypeEntity(0, "Framework 0", 0, 3)
         val framework2 = FrameworkTypeEntity(1, "Framework 1", 1, 3)
-        frameworkTypeDao.addFrameworks(framework1)
+        frameworkTypeDao.addFrameworks(framework1, framework2)
         val frameworkWithGoal1 = listOf(FrameworkWithGoalEntity(0, "Framework 0", 3, 0, "Goal 0"))
         val foundFramework = frameworkTypeDao.getFrameworksWithGoalName("Goal 0").getOrAwaitValue()
         assertEquals(foundFramework, frameworkWithGoal1)
