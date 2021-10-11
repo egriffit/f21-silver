@@ -38,7 +38,7 @@ class LandingPage : ComponentActivity() {
 fun DefaultPreview() {
     Workout_companionTheme {
         // function to display its preview.
-        MyButton(); MyButton2(); MyButton3()
+        MyButton(); MyButton2(); MyButton3();
     }
 }
 
