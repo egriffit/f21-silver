@@ -8,6 +8,7 @@ import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.ActivityLevel
+import com.example.workout_companion.utility.ExperienceLevel
 import com.example.workout_companion.utility.Sex
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
@@ -43,7 +44,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testWriteAndReadUser() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
         repository.addUser(user)
         val byName = repository.getByName("John Smith")
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(user))
@@ -52,7 +53,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testGetCount() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2,160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2,160.0, ActivityLevel.MODERATELY_ACTIVE)
         repository.addUser(user)
         val count: Int = repository.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
@@ -61,7 +62,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testGetCountWithName() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2,160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2,160.0, ActivityLevel.MODERATELY_ACTIVE)
         repository.addUser(user)
         val count: Int = repository.getCountWithName("John Smith")
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
@@ -70,7 +71,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testCheckIfUserExists() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
         repository.addUser(user)
         val exists: Boolean = repository.checkIfUserExists("John Smith")
         assertTrue(exists)
@@ -80,19 +81,19 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testUpdateUser() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
-        val newUser = UserEntity("John Smith", "experienced", Sex.MALE, birthDate, 2, 180.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val newUser = UserEntity("John Smith", ExperienceLevel.EXPERT, Sex.MALE, birthDate, 2, 180.0, ActivityLevel.MODERATELY_ACTIVE)
 
         dao.insert(user)
         dao.update(newUser)
         val byName = dao.getByName("John Smith")
-        MatcherAssert.assertThat(byName.experience_level, CoreMatchers.equalTo("experienced"))
+        MatcherAssert.assertThat(byName.experience_level, CoreMatchers.equalTo(ExperienceLevel.EXPERT))
     }
 
     @Test
     fun testDelete() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
         repository.addUser(user)
         repository.deleteUser(user)
         val exists: Boolean = repository.checkIfUserExists("John Smith")
@@ -102,7 +103,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testDeleteAll() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
         repository.addUser(user)
         repository.deletaAll()
         val count: Int = repository.getCount()
@@ -113,7 +114,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testAge() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
 
         repository.addUser(user)
         val age: Int = repository.getAge("John Smith")
