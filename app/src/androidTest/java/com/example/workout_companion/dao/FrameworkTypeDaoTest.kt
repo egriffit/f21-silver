@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.utility.TestDataGenerator
 import com.example.workout_companion.utility.getOrAwaitValue
@@ -150,5 +151,29 @@ class FrameworkTypeDaoTest : TestCase() {
         val foundFrameworks = frameworkTypeDao.getFrameworksWithGoal(1).getOrAwaitValue()
         assertTrue(foundFrameworks.contains(framework2))
         assertFalse(foundFrameworks.contains(framework1))
+    }
+
+    @Test
+    fun getFrameworksWithGoalNameTest() = runBlocking {
+        val framework1 = FrameworkTypeEntity(0, "Framework 0", 0, 3)
+        val framework2 = FrameworkTypeEntity(1, "Framework 1", 1, 3)
+        frameworkTypeDao.addFrameworks(framework1)
+        val frameworkWithGoal1 = listOf(FrameworkWithGoalEntity(0, "Framework 0", 3, 0, "Goal 0"))
+        val foundFramework = frameworkTypeDao.getFrameworksWithGoalName("Goal 0").getOrAwaitValue()
+        assertEquals(foundFramework, frameworkWithGoal1)
+    }
+
+    @Test
+    fun getFrameworksWithGoalNameWithinMaxWorkoutsTest() = runBlocking {
+        val framework1 = FrameworkTypeEntity(0, "Framework 0", 0, 3)
+        val framework2 = FrameworkTypeEntity(1, "Framework 0", 0, 2)
+        val framework3 = FrameworkTypeEntity(2, "Framework 0", 0, 1)
+
+        frameworkTypeDao.addFrameworks(framework1, framework2, framework3)
+        val frameworkWithGoal1 = listOf(
+            FrameworkWithGoalEntity(1, "Framework 0", 2, 0, "Goal 0"),
+            FrameworkWithGoalEntity(2, "Framework 0", 1, 0, "Goal 0"))
+        val foundFramework = frameworkTypeDao.getFrameworksWithGoalNameWithinMaxWorkouts("Goal 0",2).getOrAwaitValue()
+        assertEquals(foundFramework, frameworkWithGoal1)
     }
 }

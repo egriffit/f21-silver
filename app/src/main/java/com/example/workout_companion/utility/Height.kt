@@ -7,10 +7,7 @@ class Height {
     var inches: Int = 0
     var displayFeet: String = ""
 
-    constructor(displayInFeet: String, type: String)
-    {
 
-    }
     constructor(units: Double, type: String){
         if(type == "cm")
         {

@@ -3,6 +3,7 @@ package com.example.workout_companion.repository
 import androidx.lifecycle.LiveData
 import com.example.workout_companion.dao.FrameworkTypeDao
 import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.FrameworkWithGoalEntity
 
 class FrameworkTypeRepository(private val frameworkTypeDao: FrameworkTypeDao) {
 
@@ -10,6 +11,7 @@ class FrameworkTypeRepository(private val frameworkTypeDao: FrameworkTypeDao) {
      * A LiveData List of all frameworks within the database
      */
     val allFrameworks: LiveData<List<FrameworkTypeEntity>> = frameworkTypeDao.getAllFrameworks()
+
 
     /**
      * Get a framework by its primary key, [id]
@@ -21,6 +23,31 @@ class FrameworkTypeRepository(private val frameworkTypeDao: FrameworkTypeDao) {
     fun getFrameworkById(id: Int) : FrameworkTypeEntity? {
         return frameworkTypeDao.getFrameworkById(id)
     }
+
+    /**
+     * Get a framework by goal name
+     *
+     * @property goal the name of the framework goal
+     *
+     * @return the FrameworkWithGoalEntity if found, otherwise null
+     */
+    fun getFrameworkByGoalName(goal: String) : LiveData<List<FrameworkWithGoalEntity>>  {
+        return frameworkTypeDao.getFrameworksWithGoalName(goal)
+    }
+
+    /**
+     * Get a framework by goal name and with the number of workouts
+     * equal to or fewer than the number of workouts provided
+     *
+     * @property goal the name of the framework goal
+     * @property goal the name of the framework goal
+     *
+     * @return the FrameworkWithGoalEntity if found, otherwise null
+     */
+    fun getFrameworksWithGoalNameWithinMaxWorkouts(goal: String, workoutFrequency: Int) : LiveData<List<FrameworkWithGoalEntity>>  {
+        return frameworkTypeDao.getFrameworksWithGoalNameWithinMaxWorkouts(goal, workoutFrequency)
+    }
+
 
     /**
      * Get all frameworks whose number of workouts per week is less than or equal to [maxWorkouts]

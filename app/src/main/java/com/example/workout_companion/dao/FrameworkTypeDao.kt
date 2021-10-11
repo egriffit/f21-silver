@@ -3,6 +3,7 @@ package com.example.workout_companion.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.FrameworkWithGoalEntity
 
 /**
  * A Database Access Object for the FrameworkTypeEntity
@@ -49,6 +50,26 @@ interface FrameworkTypeDao {
      */
     @Query("SELECT * FROM framework_type WHERE goal_id=:goal_id")
     fun getFrameworksWithGoal(goal_id: Int) : LiveData<List<FrameworkTypeEntity>>
+
+    /**
+     * Get all frameworks that link to the given goal by the name
+     *
+     * @property goal    the primary key for the selected goal.
+     *
+     * @return a LiveData List of all frameworks that have the given goal
+     */
+    @Query("SELECT * FROM frameworkwithgoalentity WHERE goal=:goal")
+    fun getFrameworksWithGoalName(goal: String) : LiveData<List<FrameworkWithGoalEntity>>
+
+    /**
+     * Get all frameworks that link to the given goal by the name
+     *
+     * @property goal    the name of the selected goal.
+     * @property workoutsPerWeek    the number of workouts_per_week
+     * @return a LiveData List of all frameworks that have the given goal and number of workouts
+     */
+    @Query("SELECT * FROM frameworkwithgoalentity WHERE goal=:goal AND workouts_per_week<=:workoutsPerWeek")
+    fun getFrameworksWithGoalNameWithinMaxWorkouts(goal: String, workoutsPerWeek: Int) : LiveData<List<FrameworkWithGoalEntity>>
 
     /**
      * Add a framework to the database
