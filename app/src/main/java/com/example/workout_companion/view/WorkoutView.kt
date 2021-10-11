@@ -9,15 +9,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.Text
 
 @Composable
-fun AppNavController() {
-    val navController = rememberNavController()
-    NavHost(navController, startDestination = "workouts") {
-        composable (route = "workouts") {
-            WorkoutsView(navController)
-        }
-        composable (route = "addGoals") {
-            AddGoalsView(navController)
-        }
-        // Other routes go here
+fun WorkoutsView(navController: NavController) {
+    Column() {
+        Text (
+            text = "Workouts View"
+        )
     }
 }
