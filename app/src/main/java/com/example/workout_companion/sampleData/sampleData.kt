@@ -5,12 +5,13 @@ import androidx.annotation.RequiresApi
 import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.utility.ActivityLevel
 import java.time.LocalDate
 import java.time.Month
 
 @RequiresApi(Build.VERSION_CODES.O)
 val birthDate : LocalDate = LocalDate.of (1990, Month.JANUARY, 1)
-val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 167.64,"moderate")
+val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, 167.64, ActivityLevel.MODERATELY_ACTIVE)
 
 val FrameWorkList : List<FrameworkWithGoalEntity> = listOf(
     FrameworkWithGoalEntity(2, "Frame_work_2", 1, 2, "Gain Mass"),

@@ -1,5 +1,6 @@
 package com.example.workout_companion.entity
 
+import com.example.workout_companion.utility.ActivityLevel
 import org.junit.Assert
 import org.junit.Test
 import java.time.LocalDate
@@ -14,7 +15,7 @@ class UserEntityTest {
         val sex = "male"
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val maxWorkoutsPerWeek = 2
-        val activityLevel = "moderate"
+        val activityLevel = ActivityLevel.MODERATELY_ACTIVE
         val height = 160.0
         val user = UserEntity(name, experienceLevel, sex, birthDate, maxWorkoutsPerWeek, height, activityLevel)
 
