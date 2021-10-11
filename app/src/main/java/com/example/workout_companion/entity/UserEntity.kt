@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.workout_companion.utility.ActivityLevel
 import com.example.workout_companion.utility.ActivityLevelConverter
 import com.example.workout_companion.utility.DateTimeConverter
+import com.example.workout_companion.utility.Sex
 import java.time.LocalDate
 
 /**
@@ -26,7 +27,8 @@ data class UserEntity(
         var experience_level: String,
 
         @ColumnInfo(name = "sex")
-        var sex: String,
+        @TypeConverters(Sex::class)
+        var sex: Sex,
 
         @ColumnInfo(name = "birth_date")
         @TypeConverters(DateTimeConverter::class)

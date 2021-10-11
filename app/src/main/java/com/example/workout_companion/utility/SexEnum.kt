@@ -8,9 +8,9 @@ import java.lang.IllegalArgumentException
  *
  * @property descName The descriptive name of the biological sex.
  */
-enum class Sex(val descName: String) {
-    MALE("Male"),
-    FEMALE("Female"),
+enum class Sex(val descName: String, val scaleFactor: Int) {
+    MALE("Male", 1),
+    FEMALE("Female", 0),
 }
 
 /**
