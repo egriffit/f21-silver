@@ -2,7 +2,7 @@ package com.example.workout_companion.sampleData
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.workout_companion.entity.CurrentUserGoalEntity
+import com.example.workout_companion.mock.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import java.time.LocalDate

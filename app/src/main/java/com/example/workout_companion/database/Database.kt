@@ -3,9 +3,9 @@ package com.example.workout_companion.database
 import android.content.Context
 import androidx.room.*
 import com.example.workout_companion.dao.*
-import com.example.workout_companion.dao.CurrentUserGoalDao
+import com.example.workout_companion.mock.dao.CurrentUserGoalDao
 import com.example.workout_companion.entity.*
-import com.example.workout_companion.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
 /**
@@ -43,7 +43,7 @@ abstract class WCDatabase: RoomDatabase() {
 
         /**
          * Code to instantiate and retrieve the instance of the database
-         * @param context, the context of the application using the database
+         * @param Context, the context of the application using the database
          * @return WCDatabase object
          */
         fun getInstance(context: Context): WCDatabase{

@@ -28,21 +28,3 @@ fun MainNavigation() {
         // Other routes go here
     }
 }
-
-@Composable
-fun WorkoutsView(navController: NavController) {
-    Column() {
-        Text (
-            text = "Workouts View"
-        )
-    }
-}
-
-@Composable
-fun AddGoalsView(navController: NavController) {
-    Column() {
-        Text (
-            text = "Add Goals View"
-        )
-    }
-}
