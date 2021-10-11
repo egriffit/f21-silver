@@ -1,6 +1,7 @@
 package com.example.workout_companion.entity
 
 import com.example.workout_companion.utility.ActivityLevel
+import com.example.workout_companion.utility.Sex
 import org.junit.Assert
 import org.junit.Test
 import java.time.LocalDate
@@ -12,7 +13,7 @@ class UserEntityTest {
     fun constructorTest() {
         val name = "John Smith"
         val experienceLevel = "beginner"
-        val sex = "male"
+        val sex = Sex.MALE
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val maxWorkoutsPerWeek = 2
         val activityLevel = ActivityLevel.MODERATELY_ACTIVE

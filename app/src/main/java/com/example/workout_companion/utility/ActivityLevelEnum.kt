@@ -24,12 +24,28 @@ enum class ActivityLevel(val descName: String, val scaleFactor: Double) {
  */
 object ActivityLevelConverter {
 
+    /**
+     * Converts an ActivityLevel to its scale factor
+     *
+     * @property level The ActivityLevel enumeration to convert.
+     *
+     * @return The scale factor of the ActivityLevel.
+     */
     @TypeConverter
     @JvmStatic
     fun fromActivityLevel(level: ActivityLevel): Double {
         return level.scaleFactor
     }
 
+    /**
+     * Converts a scale factor to its ActivityLevel enumeration
+     *
+     * @property factor The scale factor to convert.
+     *
+     * @return The ActivityLevel enumeration.
+     *
+     * @throws IllegalArgumentException
+     */
     @TypeConverter
     @JvmStatic
     fun toActivityLevel(factor: Double): ActivityLevel {
