@@ -1,6 +1,7 @@
 package com.example.workout_companion.utility
 
 import com.example.workout_companion.entity.GoalTypeEntity
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 /**
@@ -23,5 +24,6 @@ fun estimateCaloricIntake(
     gender: Sex,
     goal: GoalTypeEntity
 ): Int {
-    return ((9.99 * weight + 6.25 * height - 5 * age + 166 * gender.scaleFactor - 161) * activityLevel.scaleFactor).roundToInt() + goal.caloric_addition
+    val estimate = ((10 * weight + 6.25 * height - 5 * age + 166 * gender.scaleFactor - 161) * activityLevel.scaleFactor).roundToInt()
+    return  max(estimate + goal.caloric_addition, 0)
 }
