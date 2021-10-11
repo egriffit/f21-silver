@@ -3,13 +3,16 @@ package com.example.workout_companion.entity
 import androidx.room.*
 import com.example.workout_companion.utility.DateTimeConverter
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
 
 /**
- * Data class to store the properties of the UserEntity
+ * An entity for the user table in the database
  *
- * Defines the user table and columns for RoomDatabase
+ * @property name                       Primary key, the name of the user
+ * @property experience_level           The user's reported workout experience, beginner, intermediate, expert
+ * @property sex                        The user's gender
+ * @property birth_date                 The user's date of birth
+ * @property max_workouts_per_week      The number of workouts the user can do per week
+ * @property activity_level             The user's reported activity level
  */
 @Entity(tableName = "user")
 data class UserEntity(
@@ -30,6 +33,9 @@ data class UserEntity(
 
         @ColumnInfo(name = "max_workouts_per_week")
         var max_workouts_per_week: Int,
+
+        @ColumnInfo(name = "height")
+        var height: Double,
 
         @ColumnInfo(name = "activity_level")
         var activity_level: String

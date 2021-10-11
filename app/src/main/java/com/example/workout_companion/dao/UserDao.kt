@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.workout_companion.entity.UserEntity
 import java.time.LocalDate
-import java.util.*
 
 /**
- * The Data Abstraction Interface for the UserEntity
+ * The Data Abstraction Object for the UserEntity
  *
  * Provides methods for SQL queries using the UserEntity
  */
@@ -111,4 +110,15 @@ interface UserDao {
      */
     @Query("SELECT CAST(round((julianday(date('now')) -  julianday(birth_date))/365 - 0.5)as INTEGER) AS age FROM user WHERE name = :name")
     suspend fun getAge(name: String): Int
+
+
+    /**
+     * Retrieves the user's height in inches by dividing the height stored in cm by 2.54
+     * and rouning to the nearest inch
+     * @param name, a string
+     * @return Integer, Height of the user
+     */
+    @Query("SELECT CAST(ROUND(height / 2.54) as INTEGER) AS inches FROM user WHERE name = :name")
+    suspend fun getHeightInInches(name: String): Int
+
 }

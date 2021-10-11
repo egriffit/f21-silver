@@ -25,7 +25,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
      */
     private val repository: UserRepository
 
-    /**
+    /**W
      * Function to initialize the view.
      * Initializes the WCDatabase, repository and the list of all user entities
      */
@@ -76,6 +76,19 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
            age = repository.getAge(name)
         }
         return age
+    }
+
+    /**
+     * Function to initialize a coroutine to retrieve the age of the user with a name equal to the provided string
+     * @param name, a String
+     * @return Int
+     */
+    fun getHeightInInches(name: String): Int{
+        var heightInInches: Int = 0
+        viewModelScope.launch(Dispatchers.IO){
+            heightInInches = repository.getAge(name)
+        }
+        return heightInInches
     }
 }
 

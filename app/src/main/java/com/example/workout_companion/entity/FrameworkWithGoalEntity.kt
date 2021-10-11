@@ -1,4 +1,4 @@
-package com.example.workout_companion.mock.entity
+package com.example.workout_companion.entity
 
 import androidx.room.*
 

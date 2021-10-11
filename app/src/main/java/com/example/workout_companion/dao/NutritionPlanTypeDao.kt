@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.workout_companion.entity.GoalAndNutritionPlanTypeEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
-import java.util.*
 
 /**
- * The Data Abstraction Interface for the UserEntity
+ * The Data Abstraction Object for the UserEntity
  *
  * Provides methods for SQL queries using the UserEntity
  */
@@ -27,11 +26,30 @@ interface NutritionPlanTypeDao {
      * Retrieves a NutritionPlanTypeEntity object from nutrition_plan_type table where
      * the id column matches the provided Integer.
      *
-     * @param Id, a Integer equal to the id of the nutrition plan
+     * @param id, a Integer equal to the id of the nutrition plan
      * @return  UserEntity object
      */
     @Query("SELECT * FROM nutrition_plan_type WHERE id = :id")
     suspend fun getById(id: Int): NutritionPlanTypeEntity
+
+    /**
+     * Retrieves the id from the nutrition_plan_type table where the calorie, carbohydrate, protein
+     * and fat matches the values provided.
+     *
+     * @param calorie, a double
+     * @param carbohydrate, a double
+     * @param protein, a double
+     * @param fat, a double
+     * @return nutrition_plan_type id
+     */
+    @Query("""SELECT CAST(id as INTEGER)
+                                            FROM nutrition_plan_type
+                                            WHERE nutrition_plan_type.calorie = :calorie
+                                            AND nutrition_plan_type.protein = :protein
+                                            AND nutrition_plan_type.fat = :fat
+                                            AND nutrition_plan_type.carbohydrate = :carbohydrate""")
+    suspend fun findPlanId(calorie: Double, carbohydrate: Double, protein: Double, fat: Double): Int
+
 
     /**
      * Retrieves the row count for the total of records in the nutrition_plan_type table
@@ -98,9 +116,10 @@ interface NutritionPlanTypeDao {
     /**
      * Retrieve all nutrition plans where goal_name is equal to the string
      * provided.
-     *@parm String name of goal
+     * @param goal, name of goal
      * @return List<GoalAndNutritionPlanTypeEntity>
      */
+    @Transaction
     @Query("SELECT * FROM nutrition_plan_type INNER JOIN goal_type ON nutrition_plan_type.goal_id = goal_type.id WHERE goal_type.goal = :goal")
     fun getNutritionPlansByGoal(goal: String): List<GoalAndNutritionPlanTypeEntity>
 
@@ -108,9 +127,10 @@ interface NutritionPlanTypeDao {
      * Retrieve the number of rows with nutrition plans where goal_name is equal to the string
      * provided.
      *
-     * @param String name of goal
+     * @param goal name of goal
      * @return Int total of rows
      */
+    @Transaction
     @Query("SELECT COUNT(*) as INTEGER FROM nutrition_plan_type INNER JOIN goal_type ON nutrition_plan_type.goal_id = goal_type.id WHERE goal_type.goal = :goal")
     fun getNutritionPlanCountByGoal(goal: String): Int
 }
