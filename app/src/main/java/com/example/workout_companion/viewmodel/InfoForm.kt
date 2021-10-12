@@ -174,7 +174,7 @@ fun submitbutton(){
         shape = MaterialTheme.shapes.large,
     )
     {
-        Text(text = "Submit?", color = Color.White)
+        Text(text = "Submit?", color = Color.Black)
     }
     }
 }
