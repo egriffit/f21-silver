@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.Text
+import com.example.workout_companion.view.inputfields.InfoForm
 
 
 @Composable
@@ -20,7 +21,7 @@ fun MainNavigation() {
             WorkoutsView(navController)
         }
         composable (route = "addGoals") {
-            AddGoalView(navController)
+            InfoForm(navController)
         }
         composable (route = "mainView") {
             MainView(navController)
