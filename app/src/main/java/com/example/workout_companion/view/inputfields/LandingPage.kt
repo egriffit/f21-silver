@@ -18,17 +18,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
-class LandingPage : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-               MyButton(); MyButton2(); MyButton3();}
-            }
-        }
+@Composable
+fun LandingPage(navController: NavController){
+    Column(modifier = Modifier.fillMaxHeight()){
+        MyButton()
+        MyButton2()
+        MyButton3()
     }
 }
 
@@ -46,8 +43,8 @@ fun MyButton() {
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxWidth(),
+
 // Modifies the button to be aligned properly
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,8 +72,7 @@ fun MyButton() {
 fun MyButton2() {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxWidth(),
 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -108,8 +104,7 @@ fun MyButton3() {
     Column(
 
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
