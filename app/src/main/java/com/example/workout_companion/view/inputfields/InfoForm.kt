@@ -1,4 +1,4 @@
-package com.example.workout_companion.viewmodel
+package com.example.workout_companion.view.inputfields
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,13 +17,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.workout_companion.view.ui.theme.Workout_companionTheme
 
 class InfoForm : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Workout_companionTheme {
+            MaterialTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     LazyColumnDemo();
@@ -36,7 +35,7 @@ class InfoForm : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview3() {
-    Workout_companionTheme {
+    MaterialTheme() {
          LazyColumnDemo();
     }
 }
