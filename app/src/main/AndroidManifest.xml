@@ -10,6 +10,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Workout_companion">
         <activity
+            android:name=".viewmodel.GoalsLandingPage"
+            android:exported="true"
+            android:label="@string/title_activity_goals_landing_page"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
+            android:name=".viewmodel.InfoForm"
+            android:exported="true"
+            android:label="@string/title_activity_info_form"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
+            android:name=".view.InfoForm"
+            android:exported="true"
+            android:label="@string/title_activity_info_form"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
+            android:name=".info_form"
+            android:exported="true"
+            android:label="@string/title_activity_info_form"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

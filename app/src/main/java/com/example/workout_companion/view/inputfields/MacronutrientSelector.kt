@@ -1,9 +1,10 @@
-package com.example.workout_companion.viewmodel
+package com.example.workout_companion.view.inputfields
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.example.workout_companion.viewmodel.IncrementerGroup
 
 @Composable
 fun MacronutrientSelector(canSubmit: MutableState<Boolean>){

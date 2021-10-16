@@ -13,9 +13,9 @@ class TestDataGenerator {
 
         var next_goal_id = 0
         val GOALS: List<GoalTypeEntity> = listOf(
-            GoalTypeEntity(next_goal_id++, "Test Goal 0"),
-            GoalTypeEntity(next_goal_id++, "Test Goal 1"),
-            GoalTypeEntity(next_goal_id++, "Test Goal 2"),
+            GoalTypeEntity(next_goal_id++, "Test Goal 0", 500),
+            GoalTypeEntity(next_goal_id++, "Test Goal 1", -500),
+            GoalTypeEntity(next_goal_id++, "Test Goal 2", 250),
         )
 
         @JvmStatic

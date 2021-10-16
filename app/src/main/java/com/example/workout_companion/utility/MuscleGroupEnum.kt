@@ -11,7 +11,7 @@ enum class MuscleGroup {
 }
 
 /**
- * Converter between strings and
+ * Converter between strings and MuscleGroup enumeration class
  */
 object MuscleGroupConverter {
 

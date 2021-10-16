@@ -19,6 +19,8 @@ import androidx.navigation.NavController
 import com.example.workout_companion.R
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModelFactory
+import com.example.workout_companion.viewmodel.UserViewModel
+import com.example.workout_companion.viewmodel.UserViewModelFactory
 import kotlinx.coroutines.delay
 
 
@@ -29,6 +31,7 @@ import kotlinx.coroutines.delay
         val currentUserGoalViewModel: CurrentUserGoalViewModel = viewModel(
             factory = CurrentUserGoalViewModelFactory(context.applicationContext as Application)
         )
+
 
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity? = currentUserGoalViewModel.getCurrentGoals.value
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity =
