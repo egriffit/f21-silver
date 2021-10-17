@@ -7,7 +7,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.workout_companion.api.edamam.EdamamAPI
 import com.example.workout_companion.api.edamam.Properties
+import com.example.workout_companion.api.edamam.edamamApi
+import com.example.workout_companion.api.edamam.entities.EdamamFood
+import com.example.workout_companion.api.edamam.entities.Food
+import com.example.workout_companion.api.edamam.entities.FoodData
 import com.example.workout_companion.api.edamam.repository.EdamamRepository
+import com.example.workout_companion.api.utility.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -31,11 +36,7 @@ class EdamamViewModel(application: Application): AndroidViewModel(application) {
      * Initializes the Edamam API and repository
      */
     init {
-        api = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(Properties.base_url)
-            .build()
-            .create(EdamamAPI::class.java)
+        api = edamamApi(Properties.base_url)
         repository = EdamamRepository(api)
     }
 
@@ -43,10 +44,12 @@ class EdamamViewModel(application: Application): AndroidViewModel(application) {
      * Function to initialize a coroutine to retrieve the Edamam to the database
      * @param item, a CurrentUserGoalEntity
      */
-    fun getFood(food: String){
+    fun getFood(food: String): EdamamFood? {
+        var found: EdamamFood? = null
         viewModelScope.launch(Dispatchers.IO){
-            repository.getFood(food)
+            found = repository.getFood(food).data
         }
+        return found
     }
 
 
@@ -69,4 +72,35 @@ class EdamamViewModelFactory(
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }
+}
+
+fun getFoodsFromResponse(response: EdamamFood): List<FoodData>{
+    var name: String = ""
+    var calories: Int = 0
+    var carbohydrates: Double = 0.0
+    var protein: Double = 0.0
+    var fat: Double = 0.0
+    var foodId: String = ""
+    //var servings = mutableMapOf<String, Double>()
+    var foodList: MutableList<FoodData> = mutableListOf()
+    response.hints.forEach{
+        name = it.food.label
+        calories = it.food.nutrients.ENERC_KCAL.toInt()
+        carbohydrates = it.food.nutrients.CHOCDF
+        protein = it.food.nutrients.PROCNT
+        fat = it.food.nutrients.FAT
+        foodId = it.food.foodId
+        foodList.add(FoodData(name,foodId, calories, carbohydrates, protein, fat))
+    }
+    return foodList
+}
+
+fun parseNext(url: String): String{
+    var session: String = ""
+    var sessionRegex = "[?&]session=([^&]+).*$".toRegex()
+    val matches = sessionRegex.findAll(url)
+    matches.forEach{m->
+        session = m.groupValues[1]
+    }
+    return session
 }

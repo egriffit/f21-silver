@@ -2,13 +2,18 @@ package com.example.workout_companion.api.edamam.repository
 
 import com.example.workout_companion.api.edamam.EdamamAPI
 import com.example.workout_companion.api.edamam.Properties
+import com.example.workout_companion.api.edamam.edamamApi
 import com.example.workout_companion.api.edamam.entities.EdamamFood
 import com.example.workout_companion.api.utility.Resource
+import okhttp3.ResponseBody
+import retrofit2.Call
 import javax.inject.Inject
 
 class EdamamRepository @Inject constructor(
     private val api: EdamamAPI
+
 ) {
+
     suspend fun getFood(food: String): Resource<EdamamFood> {
         val response = try{
             api.getEdamamByFood(Properties.app_id, Properties.app_key, food)
