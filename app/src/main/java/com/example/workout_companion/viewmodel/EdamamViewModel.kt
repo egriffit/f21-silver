@@ -9,18 +9,15 @@ import com.example.workout_companion.api.edamam.EdamamAPI
 import com.example.workout_companion.api.edamam.Properties
 import com.example.workout_companion.api.edamam.edamamApi
 import com.example.workout_companion.api.edamam.entities.EdamamFood
-import com.example.workout_companion.api.edamam.entities.Food
-import com.example.workout_companion.api.edamam.entities.FoodData
+import com.example.workout_companion.api.utility.FoodData
 import com.example.workout_companion.api.edamam.repository.EdamamRepository
-import com.example.workout_companion.api.utility.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.IllegalArgumentException
 
+
 /***
- * ViewModel class for the CurrentUserGoalEntity object
+ * ViewModel class for the Edamam Api results
  * @param application, context
  * @return AndroidViewModel
  */
@@ -42,16 +39,41 @@ class EdamamViewModel(application: Application): AndroidViewModel(application) {
 
     /**
      * Function to initialize a coroutine to retrieve the Edamam to the database
-     * @param item, a CurrentUserGoalEntity
+     * @param food, String
+     * @return List of FoodData objects
      */
-    fun getFood(food: String): EdamamFood? {
+    fun getFood(food: String): List<FoodData> {
         var found: EdamamFood? = null
         viewModelScope.launch(Dispatchers.IO){
             found = repository.getFood(food).data
         }
-        return found
+        return getFoodsFromResponse(found)
     }
-
+    companion object{
+        fun getFoodsFromResponse(response: EdamamFood?): List<FoodData>{
+            var name: String = ""
+            var calories: Int = 0
+            var carbohydrates: Double = 0.0
+            var protein: Double = 0.0
+            var fat: Double = 0.0
+            var foodId: String = ""
+            var servings = mutableMapOf<String, Double>()
+            var foodList: MutableList<FoodData> = mutableListOf()
+            response?.hints?.forEach{
+                name = it.food.label
+                calories = it.food.nutrients.ENERC_KCAL.toInt()
+                carbohydrates = it.food.nutrients.CHOCDF
+                protein = it.food.nutrients.PROCNT
+                fat = it.food.nutrients.FAT
+                foodId = it.food.foodId
+                it.food.servingSizes.forEach{s->
+                    servings.put(s.label, s.quantity)
+                }
+                foodList.add(FoodData(name,foodId, calories, carbohydrates, protein, fat, servings))
+            }
+            return foodList
+        }
+    }
 
 }
 /**
@@ -74,26 +96,7 @@ class EdamamViewModelFactory(
     }
 }
 
-fun getFoodsFromResponse(response: EdamamFood): List<FoodData>{
-    var name: String = ""
-    var calories: Int = 0
-    var carbohydrates: Double = 0.0
-    var protein: Double = 0.0
-    var fat: Double = 0.0
-    var foodId: String = ""
-    //var servings = mutableMapOf<String, Double>()
-    var foodList: MutableList<FoodData> = mutableListOf()
-    response.hints.forEach{
-        name = it.food.label
-        calories = it.food.nutrients.ENERC_KCAL.toInt()
-        carbohydrates = it.food.nutrients.CHOCDF
-        protein = it.food.nutrients.PROCNT
-        fat = it.food.nutrients.FAT
-        foodId = it.food.foodId
-        foodList.add(FoodData(name,foodId, calories, carbohydrates, protein, fat))
-    }
-    return foodList
-}
+
 
 fun parseNext(url: String): String{
     var session: String = ""

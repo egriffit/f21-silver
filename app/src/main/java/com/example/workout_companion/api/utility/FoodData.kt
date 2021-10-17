@@ -1,4 +1,4 @@
-package com.example.workout_companion.api.edamam.entities
+package com.example.workout_companion.api.utility
 
 data class FoodData (
     val name: String,
@@ -6,5 +6,6 @@ data class FoodData (
     val calories: Int,
     val carbohydrates: Double,
     val protein: Double,
-    val fat: Double
+    val fat: Double,
+    val servings: Map<String, Double>
 )
