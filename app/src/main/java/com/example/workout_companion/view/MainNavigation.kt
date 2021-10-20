@@ -35,10 +35,22 @@ fun MainNavigation() {
             val userViewModel: UserViewModel = viewModel(
                 factory = UserViewModelFactory(context.applicationContext as Application)
             )
-            InfoForm(navController, userViewModel)
+            UserForm(navController, userViewModel)
         }
         composable (route = "mainView") {
             LandingPage(navController)
+        }
+        composable (route = "ExerciseOverview") {
+            ExerciseOverview(navController)
+        }
+        composable (route = "NutritionOverview") {
+            NutritionOverview(navController)
+        }
+        composable (route = "UpdateGoals") {
+            UpdateGoalsView(navController)
+        }
+        composable (route = "Assessment") {
+            AssessmentView(navController)
         }
         // Other routes go here
     }
