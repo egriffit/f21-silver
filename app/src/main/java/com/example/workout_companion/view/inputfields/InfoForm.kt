@@ -167,10 +167,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         }
         // Goal
         item{
-            var goalState by remember { mutableStateOf(Goal)}
-            OutlinedTextField(
 
-            )
         }
         // Activity Level
         item{
