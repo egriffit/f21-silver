@@ -1,5 +1,7 @@
 package com.example.workout_companion.view.inputfields
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,12 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavController
-import com.example.workout_companion.utility.ActivityLevel
-import com.example.workout_companion.utility.ExperienceLevel
-import com.example.workout_companion.utility.MainGoal
-import com.example.workout_companion.utility.Sex
+import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
+import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O) // Again, let's get rid of this
 @Composable
 fun InfoForm(navController: NavController, userViewModel: UserViewModel){
     LazyColumnDemo(navController, userViewModel);
@@ -39,11 +41,12 @@ fun DefaultPreview3() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O) // I don't like this, so let's try to get rid of it
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     // Main state variables and their defaults
     var nameState by remember { mutableStateOf("") }
-    var ageState by remember { mutableStateOf(0) }
+    var ageState by remember { mutableStateOf("") } // Our text field will make sure its an Int
     var feetState by remember { mutableStateOf("") }
     var inchesState by remember { mutableStateOf("") }
     var weightState by remember { mutableStateOf("") }
@@ -53,7 +56,6 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     var expLevelState by remember { mutableStateOf(ExperienceLevel.BEGINNER) }
     var birthDateState by remember { mutableStateOf("") }
 
-    var query = remember { mutableStateOf(" ") }
     LazyColumn(
         Modifier
             .background(Color(0xFFEDEAE0))
@@ -80,8 +82,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         item{
             Row() {
                 OutlinedTextField(
-                    value = ageState.toString(),
-                    onValueChange = { ageState = it.toInt() },
+                    value = ageState,
+                    onValueChange = { ageState = if (it.toIntOrNull() != null) it else "" },
                     label = { Text(text = "Age?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -90,26 +92,28 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
-        // Height
+        // Height (feet and inches)
         item{
-            Row() {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 OutlinedTextField(
                     value = feetState,
-                    onValueChange = { feetState = it },
+                    onValueChange = { feetState = if (it.toIntOrNull() != null) it else "" },
                     label = { Text(text = "Feet?") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Number
                     )
                 )
-                Spacer(modifier = Modifier.padding(end = 10.dp))
+                //Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = inchesState,
-                    onValueChange = { inchesState = it },
+                    onValueChange = { inchesState = if (it.toIntOrNull() != null) it else "" },
                     label = { Text(text = "Inches?") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Number
                     )
                 )
             }
@@ -294,9 +298,22 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 modifier = Modifier.padding(start = 120.dp, end = 120.dp)
             ) {
                 Button(onClick = {
-                    submit(
-                        navController
+                    val user = UserEntity(
+                        name = nameState,
+                        experience_level = expLevelState,
+                        sex = genderState,
+                        birth_date = LocalDate.of(2020, 10, 21), // TODO: Fix!
+                        max_workouts_per_week = 0, // TODO: Fix!
+                        height = feetState.toDouble(), // TODO: Fix!
+                        activity_level = activityLevelState
                     )
+
+                    if (userIsValid(user)) {
+                        userViewModel.addUser(user)
+                        navController.navigate("AddGoals")
+                    }
+
+                    navController.navigate("AddGoals")
                 }) {
                     Text("Submit")
                 }
@@ -306,14 +323,42 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     }
 }
 
-fun submit(navController: NavController){
-    //We need to make sure our inputs are capable of handling the input we need
-    //create user and add to database
-//    val formData = UserEntity(name,  ExperienceLevel.BEGINNER,
-//        Sex.MALE, birthDate, 2,
-//        160.0, ActivityLevel.MODERATELY_ACTIVE)
-//    userViewModel.addUser(formData)
-    //Navigate to the new view
-    navController.navigate("AddGoals")
+@RequiresApi(Build.VERSION_CODES.O)
+fun userIsValid(user: UserEntity) : Boolean {
+    return nameIsValid(user.name)
+            && expLevelIsValid(user.experience_level)
+            && sexIsValid(user.sex)
+            && birthDateIsValid(user.birth_date)
+            && maxWorkoutsIsValid(user.max_workouts_per_week)
+            && heightIsValid(user.height)
+            && activityLevelIsValid(user.activity_level)
 }
 
+fun nameIsValid(name: String) : Boolean {
+    return name.isNotBlank()
+}
+
+fun expLevelIsValid(level: ExperienceLevel) : Boolean {
+    return ExperienceLevel.values().contains(level)
+}
+
+fun sexIsValid(sex: Sex) : Boolean {
+    return Sex.values().contains(sex)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun birthDateIsValid(date: LocalDate) : Boolean {
+    return date < LocalDate.now()
+}
+
+fun maxWorkoutsIsValid(maxWorkouts: Int) : Boolean {
+    return maxWorkouts in 1..7
+}
+
+fun heightIsValid(height: Double) : Boolean {
+    return height > 0.0
+}
+
+fun activityLevelIsValid(level: ActivityLevel) : Boolean {
+    return ActivityLevel.values().contains(level)
+}
