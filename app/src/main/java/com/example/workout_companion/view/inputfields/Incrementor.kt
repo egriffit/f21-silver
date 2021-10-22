@@ -71,9 +71,11 @@ fun Incrementer(
                     Icon(
                         Icons.Sharp.ChevronLeft,
                         contentDescription = "Localized description",
-                        modifier = Modifier.background(
-                            backgroundColor
-                        ).size(38.dp),
+                        modifier = Modifier
+                            .background(
+                                backgroundColor
+                            )
+                            .size(38.dp),
                         tint = Color.Black
                     )
                 }
@@ -116,13 +118,107 @@ fun Incrementer(
                 Icon(
                     Icons.Sharp.ChevronRight,
                     contentDescription = "",
-                    modifier = Modifier.background(
-                        backgroundColor
-                    ).size(38.dp),
+                    modifier = Modifier
+                        .background(
+                            backgroundColor
+                        )
+                        .size(38.dp),
                     tint = Color.Black
                 )
             }
         }
+}
+
+@Composable
+fun Incrementer(
+    label: String, fieldState: MutableState<Int>,
+    step: Int, min: Int,
+    max: Int
+) {
+    var backgroundColor = Color.LightGray
+    var textFieldBackgroundColor = Color.White
+
+    var buttonColor = ButtonDefaults.outlinedButtonColors(backgroundColor =  Color.LightGray)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp)
+    ) {
+        Column(
+            modifier = Modifier.width(100.dp)
+        ){
+            Text(
+                text = label,
+                fontSize = 15.sp
+            )
+            Spacer(modifier = Modifier.fillMaxWidth())
+        }
+        Row() {
+            Button(
+                onClick = {
+                    if (fieldState.value > min) {
+                        fieldState.value -= step
+                    }
+                },
+                colors = ButtonDefaults.outlinedButtonColors(backgroundColor =  backgroundColor),
+                border= BorderStroke(1.dp, Color.Black),
+                modifier = Modifier.background(
+                    backgroundColor
+                )
+            ) {
+                Icon(
+                    Icons.Sharp.ChevronLeft,
+                    contentDescription = "Localized description",
+                    modifier = Modifier
+                        .background(
+                            backgroundColor
+                        )
+                        .size(38.dp),
+                    tint = Color.Black
+                )
+            }
+            Box(modifier = Modifier.width(100.dp)) {
+                OutlinedTextField(
+                    value = fieldState.value.toString(),
+                    onValueChange = { fieldState.value = Integer.parseInt(it) },
+                    modifier = Modifier.background(
+                        textFieldBackgroundColor
+                    )
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .alpha(0f)
+                        .clickable(onClick = {})
+                )
+            }
+        }
+        Button(
+            onClick = {
+                if (fieldState.value <= max) {
+                    fieldState.value += step
+                }
+            },
+            modifier = Modifier.background(
+                backgroundColor
+            ),
+            border= BorderStroke(1.dp, Color.Black),
+            colors = ButtonDefaults.outlinedButtonColors(backgroundColor =  backgroundColor)
+        ) {
+
+            Icon(
+                Icons.Sharp.ChevronRight,
+                contentDescription = "",
+                modifier = Modifier
+                    .background(
+                        backgroundColor
+                    )
+                    .size(38.dp),
+                tint = Color.Black
+            )
+        }
+    }
 }
 
 @Preview
@@ -136,4 +232,14 @@ fun PreviewIncrementer(){
     var locked = remember{mutableStateOf(true)}
     Incrementer(label = "test", fieldState = percentage, canIncrease = canIncrease,
         locked = locked, total = currentTotal)
+}
+
+@Preview
+@Composable
+fun PreviewIncrementerStatic() {
+    var maxVal = 4000
+    val minVal = 1000
+    val step = 50
+    var value = remember{ mutableStateOf(minVal) }
+    Incrementer(label = "Calories", fieldState = value, step = step, min = minVal, max = maxVal )
 }

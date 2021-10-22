@@ -314,6 +314,6 @@ fun submit(navController: NavController){
 //        160.0, ActivityLevel.MODERATELY_ACTIVE)
 //    userViewModel.addUser(formData)
     //Navigate to the new view
-    navController.navigate("mainView")
+    navController.navigate("AddGoals")
 }
 

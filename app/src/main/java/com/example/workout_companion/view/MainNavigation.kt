@@ -25,10 +25,7 @@ fun MainNavigation() {
         composable (route = "splashScreen") {
             SplashScreen(navController)
         }
-        composable (route = "workouts") {
-            WorkoutsView(navController)
-        }
-        composable (route = "addGoals" ) {
+        composable (route = "userForm" ) {
             //load user view model
             val context = LocalContext.current
 
@@ -36,6 +33,9 @@ fun MainNavigation() {
                 factory = UserViewModelFactory(context.applicationContext as Application)
             )
             UserForm(navController, userViewModel)
+        }
+        composable (route = "AddGoals" ) {
+            AddGoalView(navController)
         }
         composable (route = "mainView") {
             LandingPage(navController)
