@@ -17,7 +17,7 @@ import com.example.workout_companion.ui.theme.Workout_companionTheme
 import com.example.workout_companion.view.MainNavigation
 import com.example.workout_companion.viewmodel.Incrementer
 import com.example.workout_companion.viewmodel.IncrementerGroup
-import com.example.workout_companion.viewmodel.MacronutrientSelector
+import com.example.workout_companion.view.inputfields.MacronutrientSelector
 
 
 class MainActivity : ComponentActivity() {

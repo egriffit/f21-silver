@@ -1,6 +1,5 @@
 package com.example.workout_companion.view
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.composable
