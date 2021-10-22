@@ -27,14 +27,14 @@ interface FoodTypeDao {
      * @return  FoodTypeEntity object
      */
     @Query("SELECT * FROM food_type WHERE name = :name")
-    suspend fun getByName(name: String): FoodTypeEntity
+    fun getByName(name: String): LiveData<List<FoodTypeEntity>>
 
     /**
      * Retrieves the row count for the total of records in the food_type table
      *
      * @return  Int total number of rows found
      */
-    @Query("SELECT COUNT(*) FROM user")
+    @Query("SELECT COUNT(*) FROM food_type")
     fun getCount(): Int
 
     /**
