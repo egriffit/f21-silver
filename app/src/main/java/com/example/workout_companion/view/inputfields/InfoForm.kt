@@ -1,24 +1,27 @@
 package com.example.workout_companion.view.inputfields
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavController
-import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.ActivityLevel
 import com.example.workout_companion.utility.ExperienceLevel
+import com.example.workout_companion.utility.MainGoal
 import com.example.workout_companion.utility.Sex
 import com.example.workout_companion.viewmodel.UserViewModel
 
@@ -38,16 +41,17 @@ fun DefaultPreview3() {
 
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
-    var NameState = remember { mutableStateOf("") }
-    var feetState = remember { mutableStateOf("") }
-    var inchesState = remember { mutableStateOf("") }
-    var activityLevelState = remember { mutableStateOf("") }
-    var AgeState = remember { mutableStateOf(0) }
-    var GenderState = remember { mutableStateOf("") }
-    var goalState = remember { mutableStateOf("") }
-    var ExperienceLevelState = remember { mutableStateOf("") }
-    var WeightState = remember { mutableStateOf("") }
-    var birthDateState = remember { mutableStateOf("") }
+    // Main state variables and their defaults
+    var nameState by remember { mutableStateOf("") }
+    var ageState by remember { mutableStateOf(0) }
+    var feetState by remember { mutableStateOf("") }
+    var inchesState by remember { mutableStateOf("") }
+    var weightState by remember { mutableStateOf("") }
+    var genderState by remember { mutableStateOf(Sex.MALE) }
+    var goalState by remember { mutableStateOf(MainGoal.BUILD_MUSCLE) }
+    var activityLevelState by remember { mutableStateOf(ActivityLevel.SLIGHTLY_ACTIVE) }
+    var expLevelState by remember { mutableStateOf(ExperienceLevel.BEGINNER) }
+    var birthDateState by remember { mutableStateOf("") }
 
     var query = remember { mutableStateOf(" ") }
     LazyColumn(
@@ -58,11 +62,12 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
 
-        item {
+        // Name
+        item{
             Row() {
                 OutlinedTextField(
-                    value = NameState.value,
-                    onValueChange = { NameState.value = it },
+                    value = nameState,
+                    onValueChange = { nameState = it },
                     label = { Text(text = "Name?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -71,47 +76,12 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
+        // Age
         item{
             Row() {
                 OutlinedTextField(
-                    value = feetState.value,
-                    onValueChange = { feetState.value = it },
-                    label = { Text(text = "Feet?") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-                Spacer(modifier = Modifier.padding(end = 10.dp))
-                OutlinedTextField(
-                    value = inchesState.value,
-                    onValueChange = { inchesState.value = it },
-                    label = { Text(text = "Inches?") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
-        }
-        item{
-            Row() {
-                OutlinedTextField(
-                    value = activityLevelState.value,
-                    onValueChange = { activityLevelState.value = it },
-                    label = { Text(text = "Activity Level?") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
-        }
-        item{
-            Row() {
-                OutlinedTextField(
-                    value = AgeState.value.toString(),
-                    onValueChange = { AgeState.value = it.toInt() },
+                    value = ageState.toString(),
+                    onValueChange = { ageState = it.toInt() },
                     label = { Text(text = "Age?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -120,12 +90,23 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
+        // Height
         item{
             Row() {
                 OutlinedTextField(
-                    value = GenderState.value,
-                    onValueChange = { GenderState.value = it },
-                    label = { Text(text = "Gender?") },
+                    value = feetState,
+                    onValueChange = { feetState = it },
+                    label = { Text(text = "Feet?") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text
+                    )
+                )
+                Spacer(modifier = Modifier.padding(end = 10.dp))
+                OutlinedTextField(
+                    value = inchesState,
+                    onValueChange = { inchesState = it },
+                    label = { Text(text = "Inches?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -133,37 +114,12 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
+        // Weight
         item{
             Row() {
                 OutlinedTextField(
-                    value = goalState.value,
-                    onValueChange = { goalState.value = it },
-                    label = { Text(text = "Main Goal?") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
-        }
-        item{
-            Row() {
-                OutlinedTextField(
-                    value = ExperienceLevelState.value,
-                    onValueChange = { ExperienceLevelState.value = it },
-                    label = { Text(text = "Experience? (Beginner, expert)") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
-        }
-        item{
-            Row() {
-                OutlinedTextField(
-                    value = WeightState.value,
-                    onValueChange = { WeightState.value = it },
+                    value = weightState,
+                    onValueChange = { weightState = it },
                     label = { Text(text = "Weight? (In pounds)") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -172,7 +128,165 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
+        // Gender
+        item{
+            Row() {
+                var textFieldSize by remember { mutableStateOf(Size.Zero) }
+                var expanded by remember { mutableStateOf(false) }
+                val icon = Icons.Filled.ArrowDropDown
 
+                OutlinedTextField(
+                    value = genderState.descName,
+                    onValueChange = { /* Do nothing because users use the menu to edit */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            textFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text ="Gender") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { expanded = !expanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.
+                    width(with(LocalDensity.current){textFieldSize.width.toDp()})
+                ) {
+                    Sex.values().forEach { gender ->
+                        DropdownMenuItem(onClick = {
+                            genderState = gender
+                            expanded = false
+                        }) {
+                            Text(text = gender.descName)
+                        }
+                    }
+                }
+            }
+        }
+        // Goal
+        item{
+            var expanded by remember { mutableStateOf(false) }
+            var textFieldSize by remember { mutableStateOf(Size.Zero) }
+            val icon = Icons.Default.ArrowDropDown
+
+            OutlinedTextField(
+                value = goalState.descName,
+                onValueChange = { /* Do nothing because users use the menu to edit */ },
+                readOnly = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        // This value is used to assign to the DropDown the same width
+                        textFieldSize = coordinates.size.toSize()
+                    },
+                label = { Text(text ="Main Goal") },
+                trailingIcon = {
+                    Icon(icon, "contentDescription",
+                        Modifier.clickable { expanded = !expanded })
+                }
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.
+                width(with(LocalDensity.current){textFieldSize.width.toDp()})
+            ) {
+                MainGoal.values().forEach { goal ->
+                    DropdownMenuItem(onClick = {
+                        goalState = goal
+                        expanded = false
+                    }) {
+                        Text(text = goal.descName)
+                    }
+                }
+            }
+        }
+        // Activity Level
+        item{
+            Row() {
+                var expanded by remember { mutableStateOf(false) }
+                var textFieldSize by remember { mutableStateOf(Size.Zero) }
+                val icon = Icons.Filled.ArrowDropDown
+
+                OutlinedTextField(
+                    value = activityLevelState.descName,
+                    onValueChange = { /* Do nothing because users use the menu to edit */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            textFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text ="Activity Level") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { expanded = !expanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.
+                            width(with(LocalDensity.current){textFieldSize.width.toDp()})
+                ) {
+                    ActivityLevel.values().forEach { level ->
+                        DropdownMenuItem(onClick = {
+                            activityLevelState = level
+                            expanded = false
+                        }) {
+                            Text(text = level.descName)
+                        }
+                    }
+                }
+            }
+        }
+        // Experience Level
+        item{
+            Row() {
+                var expanded by remember { mutableStateOf(false) }
+                var textFieldSize by remember { mutableStateOf(Size.Zero) }
+                val icon = Icons.Filled.ArrowDropDown
+
+                OutlinedTextField(
+                    value = expLevelState.descName,
+                    onValueChange = { /* Do nothing because users use the menu to edit */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            textFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text ="Activity Level") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { expanded = !expanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.
+                    width(with(LocalDensity.current){textFieldSize.width.toDp()})
+                ) {
+                    ExperienceLevel.values().forEach { level ->
+                        DropdownMenuItem(onClick = {
+                            expLevelState = level
+                            expanded = false
+                        }) {
+                            Text(text = level.descName)
+                        }
+                    }
+                }
+            }
+        }
+        // Submit Button
         item{
             //Submit Button
             Row(
@@ -188,6 +302,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 }
             }
         }
+
     }
 }
 
