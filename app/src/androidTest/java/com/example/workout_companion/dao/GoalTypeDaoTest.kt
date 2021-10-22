@@ -39,7 +39,7 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun writeAndReadGoalTest() = runBlocking() {
-        val goal = GoalTypeEntity(0, "Test Goal")
+        val goal = GoalTypeEntity(0, "Test Goal", 400)
         dao.addGoal(goal)
 
         assertTrue(dao.getAllGoals().getOrAwaitValue().contains(goal))
@@ -47,9 +47,9 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun addTwoGoalsTest() = runBlocking() {
-        val goal1 = GoalTypeEntity(0, "Goal 1")
+        val goal1 = GoalTypeEntity(0, "Goal 1", -111)
         dao.addGoal(goal1)
-        val goal2 = GoalTypeEntity(1, "Goal 2")
+        val goal2 = GoalTypeEntity(1, "Goal 2", 0)
         dao.addGoal(goal2)
 
         val allGoals = dao.getAllGoals().getOrAwaitValue()
@@ -60,9 +60,9 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun addConflictingGoalsTest() = runBlocking() {
-        val mainGoal = GoalTypeEntity(0, "Main name")
+        val mainGoal = GoalTypeEntity(0, "Main name", 100)
         dao.addGoal(mainGoal)
-        val conflictingGoal = GoalTypeEntity(0, "Conflicting name")
+        val conflictingGoal = GoalTypeEntity(0, "Conflicting name", 123)
         dao.addGoal(conflictingGoal)
 
         val allGoals = dao.getAllGoals().getOrAwaitValue()
@@ -73,9 +73,9 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun getGoalByIDTest() = runBlocking() {
-        val goal1 = GoalTypeEntity(0, "Goal 1")
+        val goal1 = GoalTypeEntity(0, "Goal 1", -234)
         dao.addGoal(goal1)
-        val goal2 = GoalTypeEntity(1, "Goal 2")
+        val goal2 = GoalTypeEntity(1, "Goal 2", -234)
         dao.addGoal(goal2)
 
         val retrievedGoal: GoalTypeEntity? = dao.getGoalById(1)
@@ -85,8 +85,8 @@ class GoalTypeDaoTest : TestCase() {
 
     @Test
     fun getMissingGoalByIDTest() = runBlocking() {
-        val goal1 = GoalTypeEntity(0, "Goal 0")
-        val goal2 = GoalTypeEntity(1, "Goal 1")
+        val goal1 = GoalTypeEntity(0, "Goal 0", -300)
+        val goal2 = GoalTypeEntity(1, "Goal 1", 300)
         dao.addGoal(goal1)
         dao.addGoal(goal2)
 

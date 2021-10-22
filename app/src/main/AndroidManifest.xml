@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.workout_companion">
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Workout_companion">
+        <activity
+            android:name=".viewmodel.GoalsLandingPage"
+            android:exported="true"
+            android:label="@string/title_activity_goals_landing_page"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
+            android:name=".viewmodel.InfoForm"
+            android:exported="true"
+            android:label="@string/title_activity_info_form"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
+            android:name=".view.InfoForm"
+            android:exported="true"
+            android:label="@string/title_activity_info_form"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
+        <activity
+            android:name=".info_form"
+            android:exported="true"
+            android:label="@string/title_activity_info_form"
+            android:theme="@style/Theme.Workout_companion.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
