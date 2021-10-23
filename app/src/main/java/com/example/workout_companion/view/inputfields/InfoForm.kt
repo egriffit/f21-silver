@@ -27,7 +27,6 @@ import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O) // Again, let's get rid of this
 @Composable
 fun InfoForm(navController: NavController, userViewModel: UserViewModel){
     LazyColumnDemo(navController, userViewModel);
@@ -42,7 +41,6 @@ fun DefaultPreview3() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O) // I don't like this, so let's try to get rid of it
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     // User entity
@@ -353,7 +351,6 @@ fun heightInputsAreValid(feetString: String, inchesString: String) : Boolean {
             && inchesString.toDoubleOrNull() != null
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun userIsValid(user: UserEntity) : Boolean {
     return nameIsValid(user.name)
             && expLevelIsValid(user.experience_level)
@@ -376,7 +373,6 @@ fun sexIsValid(sex: Sex) : Boolean {
     return Sex.values().contains(sex)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun birthDateIsValid(date: LocalDate) : Boolean {
     return date < LocalDate.now()
 }
