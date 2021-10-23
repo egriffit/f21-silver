@@ -1,7 +1,5 @@
 package com.example.workout_companion.sampleData
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
@@ -11,7 +9,6 @@ import com.example.workout_companion.utility.Sex
 import java.time.LocalDate
 import java.time.Month
 
-@RequiresApi(Build.VERSION_CODES.O)
 val birthDate : LocalDate = LocalDate.of (1990, Month.JANUARY, 1)
 val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 167.64, ActivityLevel.MODERATELY_ACTIVE)
 
