@@ -106,7 +106,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Number
                     )
                 )
-                //Spacer(modifier = Modifier.padding(end = 10.dp))
+                Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = inchesState,
                     onValueChange = { inchesState = if (it.toIntOrNull() != null) it else "" },
@@ -299,21 +299,19 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             ) {
                 Button(onClick = {
                     val user = UserEntity(
-                        name = nameState,
-                        experience_level = expLevelState,
-                        sex = genderState,
-                        birth_date = LocalDate.of(2020, 10, 21), // TODO: Fix!
-                        max_workouts_per_week = 0, // TODO: Fix!
-                        height = feetState.toDouble(), // TODO: Fix!
-                        activity_level = activityLevelState
-                    )
+                                    name = nameState,
+                                    experience_level = expLevelState,
+                                    sex = genderState,
+                                    birth_date = LocalDate.of(2020, 10, 21), // TODO: Fix!
+                                    max_workouts_per_week = 0, // TODO: Fix!
+                                    height = LengthConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble()),
+                                    activity_level = activityLevelState
+                                )
 
                     if (userIsValid(user)) {
-                        userViewModel.addUser(user)
+                        //userViewModel.addUser(user)
                         navController.navigate("AddGoals")
                     }
-
-                    navController.navigate("AddGoals")
                 }) {
                     Text("Submit")
                 }
