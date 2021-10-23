@@ -121,4 +121,15 @@ class UserRepositoryTest : TestCase() {
         MatcherAssert.assertThat(age, CoreMatchers.equalTo(31))
     }
 
+    @Test
+    fun testWeight() = runBlocking {
+        val weight = 75.0
+        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, weight, ActivityLevel.MODERATELY_ACTIVE)
+
+        repository.addUser(user)
+        val repoWeight = repository.getWeight(user.name)
+        MatcherAssert.assertThat(user.weight, CoreMatchers.equalTo(repoWeight))
+    }
+
 }

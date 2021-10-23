@@ -120,4 +120,14 @@ class UserRepository (private val userDao: UserDao) {
     suspend fun getHeightInInches(name: String): Int{
         return userDao.getHeightInInches(name)
     }
+
+    /**
+     * Retrieves the weight of the user in kilograms
+     *
+     * @param name The name of the user
+     * @return The weight in kilograms
+     */
+    suspend fun getWeight(name: String): Double {
+        return userDao.getWeight(name)
+    }
 }
