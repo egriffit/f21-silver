@@ -11,13 +11,15 @@ import kotlin.math.floor
  *      Centimeters to Inches
  *      Centimeters to Feet, Inches
  */
-object LengthConverter {
+object UnitConverter {
 
     // Scale factors
     private const val FT_TO_IN = 12.0
     private const val IN_TO_FT = 1 / FT_TO_IN
     private const val IN_TO_CM = 2.54
     private const val CM_TO_IN = 1 / IN_TO_CM
+    private const val KG_TO_LB = 2.2046
+    private const val LB_TO_KG = 1 / KG_TO_LB
 
     /**
      * Convert inches to centimeters
@@ -66,5 +68,27 @@ object LengthConverter {
         inches -= feet * FT_TO_IN
 
         return Pair(feet, inches)
+    }
+
+    /**
+     * Convert pounds to kilograms
+     *
+     * @property pounds The pounds to convert to kilograms.
+     *
+     * @return The pounds converted to kilograms.
+     */
+    fun toKilograms(pounds: Double) : Double {
+        return pounds * LB_TO_KG
+    }
+
+    /**
+     * Convert kilograms to pounds
+     *
+     * @property kg The kilograms to convert to pounds.
+     *
+     * @return The kilograms converted to pounds.
+     */
+    fun toPounds(kg: Double) : Double {
+        return kg * KG_TO_LB
     }
 }

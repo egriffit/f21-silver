@@ -1,6 +1,5 @@
 package com.example.workout_companion.view.inputfields
 
-import android.graphics.Paint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -62,8 +61,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     var nameState by remember { mutableStateOf(user.name) }
     var ageState by remember { mutableStateOf("") } // TODO: Get rid of this
     var birthDateState by remember { mutableStateOf("") } // TODO: How to input this?
-    var feetState by remember { mutableStateOf(LengthConverter.toFeetAndInches(user.height).first.toInt().toString()) }
-    var inchesState by remember { mutableStateOf(LengthConverter.toFeetAndInches(user.height).second.toInt().toString()) }
+    var feetState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString()) }
+    var inchesState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString()) }
     var weightState by remember { mutableStateOf("") } // TODO: convert length to unit
     var genderState by remember { mutableStateOf(user.sex) }
     var goalState by remember { mutableStateOf(MainGoal.BUILD_MUSCLE) } // TODO: where stored?
@@ -332,7 +331,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         user.sex = genderState
                         user.birth_date = LocalDate.MAX // TODO: Fix!
                         if (heightInputsAreValid(feetState, inchesState)) {
-                            user.height = LengthConverter.toCentimeters(
+                            user.height = UnitConverter.toCentimeters(
                                 feet = feetState.toDouble(),
                                 inches = inchesState.toDouble(),
                             )
