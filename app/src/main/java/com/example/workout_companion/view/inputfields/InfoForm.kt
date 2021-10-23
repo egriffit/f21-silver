@@ -1,5 +1,6 @@
 package com.example.workout_companion.view.inputfields
 
+import android.graphics.Paint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -44,7 +46,19 @@ fun DefaultPreview3() {
 @RequiresApi(Build.VERSION_CODES.O) // I don't like this, so let's try to get rid of it
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
-    // Main state variables and their defaults
+    // User entity
+    // TODO: load existing user entity if it exists
+    val user = UserEntity(
+        name = "",
+        experience_level = ExperienceLevel.BEGINNER,
+        sex = Sex.MALE,
+        birth_date = LocalDate.MAX,
+        max_workouts_per_week = -1,
+        height = -1.0,
+        activity_level = ActivityLevel.SLIGHTLY_ACTIVE
+    )
+
+    // Main state variables for the inputs
     var nameState by remember { mutableStateOf("") }
     var ageState by remember { mutableStateOf("") } // Our text field will make sure its an Int
     var feetState by remember { mutableStateOf("") }
@@ -55,6 +69,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     var activityLevelState by remember { mutableStateOf(ActivityLevel.SLIGHTLY_ACTIVE) }
     var expLevelState by remember { mutableStateOf(ExperienceLevel.BEGINNER) }
     var birthDateState by remember { mutableStateOf("") }
+
 
     LazyColumn(
         Modifier
@@ -74,20 +89,6 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
-                    )
-                )
-            }
-        }
-        // Age
-        item{
-            Row() {
-                OutlinedTextField(
-                    value = ageState,
-                    onValueChange = { ageState = if (it.toIntOrNull() != null) it else "" },
-                    label = { Text(text = "Age?") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
                     )
                 )
             }
@@ -118,14 +119,26 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
-        // Weight
+        // Age and Weight
         item{
-            Row() {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    value = ageState,
+                    onValueChange = { ageState = if (it.toIntOrNull() != null) it else "" },
+                    label = { Text(text = "Age?") },
+                    modifier = Modifier.weight(1f),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+                Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = weightState,
                     onValueChange = { weightState = it },
                     label = { Text(text = "Weight? (In pounds)") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(2f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     )
@@ -292,33 +305,41 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         }
         // Submit Button
         item{
-            //Submit Button
             Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(start = 120.dp, end = 120.dp)
             ) {
-                Button(onClick = {
-                    val user = UserEntity(
-                                    name = nameState,
-                                    experience_level = expLevelState,
-                                    sex = genderState,
-                                    birth_date = LocalDate.of(2020, 10, 21), // TODO: Fix!
-                                    max_workouts_per_week = 0, // TODO: Fix!
-                                    height = LengthConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble()),
-                                    activity_level = activityLevelState
-                                )
+                Button(
+                    onClick = {
+                        user.name = nameState
+                        user.experience_level = expLevelState
+                        user.sex = genderState
+                        user.birth_date = LocalDate.MAX // TODO: Fix!
+                        if (heightInputsAreValid(feetState, inchesState)) {
+                            user.height = LengthConverter.toCentimeters(
+                                feet = feetState.toDouble(),
+                                inches = inchesState.toDouble(),
+                            )
+                        }
+                        user.max_workouts_per_week = -1 // TODO: Fix!
+                        user.activity_level = activityLevelState
 
-                    if (userIsValid(user)) {
-                        //userViewModel.addUser(user)
-                        navController.navigate("AddGoals")
-                    }
-                }) {
+                        if (userIsValid(user)) {
+                            //userViewModel.addUser(user)
+                            navController.navigate("AddGoals")
+                        }
+                    }) {
                     Text("Submit")
                 }
             }
         }
-
     }
+}
+
+fun heightInputsAreValid(feetString: String, inchesString: String) : Boolean {
+    return feetString.toDoubleOrNull() != null
+            && inchesString.toDoubleOrNull() != null
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
