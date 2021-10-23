@@ -64,7 +64,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     var birthDateState by remember { mutableStateOf("") } // TODO: How to input this?
     var feetState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString()) }
     var inchesState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString()) }
-    var weightState by remember { mutableStateOf("") } // TODO: convert length to unit
+    var weightState by remember { mutableStateOf(UnitConverter.toPounds(user.weight).toString()) }
     var genderState by remember { mutableStateOf(user.sex) }
     var goalState by remember { mutableStateOf(MainGoal.BUILD_MUSCLE) } // TODO: where stored?
     var activityLevelState by remember { mutableStateOf(user.activity_level) }
@@ -331,13 +331,9 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         user.experience_level = expLevelState
                         user.sex = genderState
                         user.birth_date = LocalDate.MAX // TODO: Fix!
-                        if (heightInputsAreValid(feetState, inchesState)) {
-                            user.height = UnitConverter.toCentimeters(
-                                feet = feetState.toDouble(),
-                                inches = inchesState.toDouble(),
-                            )
-                        }
-                        user.max_workouts_per_week = -1 // TODO: Fix!
+                        user.height = UnitConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble())
+                        user.weight = UnitConverter.toKilograms(weightState.toDouble())
+                        user.max_workouts_per_week = maxWorkoutsState.toInt()
                         user.activity_level = activityLevelState
 
                         if (userIsValid(user)) {
