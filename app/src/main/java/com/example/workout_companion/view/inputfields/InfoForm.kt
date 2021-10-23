@@ -53,22 +53,23 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         experience_level = ExperienceLevel.BEGINNER,
         sex = Sex.MALE,
         birth_date = LocalDate.MAX,
-        max_workouts_per_week = -1,
-        height = -1.0,
+        max_workouts_per_week = 0,
+        height = 0.0,
         activity_level = ActivityLevel.SLIGHTLY_ACTIVE
     )
 
     // Main state variables for the inputs
-    var nameState by remember { mutableStateOf("") }
-    var ageState by remember { mutableStateOf("") } // Our text field will make sure its an Int
-    var feetState by remember { mutableStateOf("") }
-    var inchesState by remember { mutableStateOf("") }
-    var weightState by remember { mutableStateOf("") }
-    var genderState by remember { mutableStateOf(Sex.MALE) }
-    var goalState by remember { mutableStateOf(MainGoal.BUILD_MUSCLE) }
-    var activityLevelState by remember { mutableStateOf(ActivityLevel.SLIGHTLY_ACTIVE) }
-    var expLevelState by remember { mutableStateOf(ExperienceLevel.BEGINNER) }
-    var birthDateState by remember { mutableStateOf("") }
+    var nameState by remember { mutableStateOf(user.name) }
+    var ageState by remember { mutableStateOf("") } // TODO: Get rid of this
+    var birthDateState by remember { mutableStateOf("") } // TODO: How to input this?
+    var feetState by remember { mutableStateOf(LengthConverter.toFeetAndInches(user.height).first.toInt().toString()) }
+    var inchesState by remember { mutableStateOf(LengthConverter.toFeetAndInches(user.height).second.toInt().toString()) }
+    var weightState by remember { mutableStateOf("") } // TODO: convert length to unit
+    var genderState by remember { mutableStateOf(user.sex) }
+    var goalState by remember { mutableStateOf(MainGoal.BUILD_MUSCLE) } // TODO: where stored?
+    var activityLevelState by remember { mutableStateOf(user.activity_level) }
+    var expLevelState by remember { mutableStateOf(user.experience_level) }
+    var maxWorkoutsState by remember { mutableStateOf(user.max_workouts_per_week.toString()) }
 
 
     LazyColumn(
@@ -301,6 +302,20 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         }
                     }
                 }
+            }
+        }
+        // Max workouts
+        item{
+            Row(){
+                OutlinedTextField(
+                    value = maxWorkoutsState,
+                    onValueChange = { maxWorkoutsState = if (it.toIntOrNull() != null) it else "" },
+                    label = { Text(text = "Max Number of Workouts/Week?") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
             }
         }
         // Submit Button
