@@ -54,6 +54,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         birth_date = LocalDate.MAX,
         max_workouts_per_week = 0,
         height = 0.0,
+        weight = 0.0,
         activity_level = ActivityLevel.SLIGHTLY_ACTIVE
     )
 
