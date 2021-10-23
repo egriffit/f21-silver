@@ -1,11 +1,8 @@
 package com.example.workout_companion.utility
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import java.time.*
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalQueries.localDate
 
 /***
  * Helper object used to convert Strings to LocalTime objects and vis versa
@@ -16,7 +13,6 @@ object DateTimeConverter {
     /**
      * DataTimeFormatter object with the pattern used to format LocalDateStrings
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
     /**
@@ -24,7 +20,6 @@ object DateTimeConverter {
      * @param value, a string
      * @return LocalDate
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     @JvmStatic
     fun toLocalDate(value: String?): LocalDate? {
@@ -39,7 +34,6 @@ object DateTimeConverter {
      * @param value, a LocalDate object
      * @return String, date formatted as a String
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     @JvmStatic
     fun fromLocalDate(date: LocalDate?): String? {
