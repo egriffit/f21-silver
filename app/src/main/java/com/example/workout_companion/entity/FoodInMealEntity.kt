@@ -3,6 +3,7 @@ package com.example.workout_companion.entity
 import java.time.LocalDate
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 
@@ -15,7 +16,22 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "food_in_meal",
-        primaryKeys = ["meal_id", "food_id"])
+        primaryKeys = ["meal_id", "food_id"],
+        foreignKeys = [
+            ForeignKey(
+            entity = MealEntity::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("meal_id"),
+            onDelete = ForeignKey.CASCADE
+             ),
+            ForeignKey(
+                entity = FoodTypeEntity::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("food_id"),
+                onDelete = ForeignKey.CASCADE
+            ),
+        ]
+)
 data class FoodInMealEntity(
     @ColumnInfo(name = "meal_id")
     var meal_id: Int,

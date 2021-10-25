@@ -19,8 +19,18 @@ interface MealDao {
      *
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
+    @Query("SELECT * FROM meal WHERE date = strftime('%Y-%m-%d', DATE('now'))")
+    fun getByDate(): LiveData<List<MealEntity>>
+
+
+    /**
+     * Retrieves a List of MealEntity objects from the meal table
+     * for a give date
+     *
+     * @return LiveData<List<MealEntity> a list of MealEntity objects
+     */
     @Query("SELECT * FROM meal where date = :date")
-    fun getyDate(date: LocalDate): LiveData<List<MealEntity>>
+    fun getByDate(date: LocalDate): LiveData<List<MealEntity>>
 
     /**
      * Retrieves a Meal object from meal table where
@@ -37,6 +47,8 @@ interface MealDao {
     """)
     fun getByName(type: String): LiveData<List<MealEntity>>
 
+
+
     /**
      * Retrieves the row count for the total of records in the meal table
      * for a current date
@@ -44,10 +56,23 @@ interface MealDao {
      * @return  Int total number of rows found
      */
     @Query("""
-        SELECT COUNT(*) FROM meal 
+        SELECT COUNT(*) FROM meal
         WHERE date = strftime('%Y-%m-%d', DATE('now'))
         """)
     fun getCount(): Int
+
+    /**
+     * Retrieves the row count for the total of records in the meal table
+     * for a current date and name of meal
+     *
+     * @return  Int total number of rows found
+     */
+    @Query("""
+        SELECT COUNT(*) FROM meal 
+        WHERE type = :name
+        AND date = strftime('%Y-%m-%d', DATE('now'))
+        """)
+    fun getCount(name: String): Int
 
     /**
      * Insert a MealEntity object into the meal table
@@ -88,10 +113,18 @@ interface MealDao {
 
     /**
      * Delete all records in the meal table
-     *
+     * for the current date
      * @return void
      */
-    @Query("DELETE FROM meal")
+    @Query("DELETE FROM meal WHERE date = strftime('%Y-%m-%d', DATE('now'))")
     suspend fun deleteAll()
+
+    /**
+     * Delete all records in the meal table
+     * for the provided date
+     * @return void
+     */
+    @Query("DELETE FROM meal WHERE date = :date")
+    suspend fun deleteAll(date: LocalDate)
 
 }

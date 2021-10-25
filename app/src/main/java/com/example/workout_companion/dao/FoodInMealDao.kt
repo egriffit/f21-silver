@@ -23,12 +23,29 @@ interface FoodInMealDao {
      */
     @Query("""
         SELECT *
-        FROM food_in_meal
-        INNER JOIN food_type
-        ON food_in_meal.food_id = food_type.id
-        WHERE food_in_meal.meal_id = :meal_id
+        FROM food_type
+        INNER JOIN (SELECT *
+            FROM food_in_meal
+            INNER JOIN meal
+            ON food_in_meal.meal_id = meal.id ) a
+        ON a.food_id = food_type.id
+        WHERE a.meal_id = :meal_id
     """)
     fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>>
+
+    /**
+     * Retrieves a List of Foods for a meal with the meal_id
+     * equal to the integer provided
+     *
+     * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
+     */
+    @Transaction
+    @Query("""
+        SELECT *
+        FROM food_in_meal
+        WHERE meal_Id = :meal_id
+    """)
+    fun getFoods(meal_id: Int): LiveData<List<MealWithFoodsEntity>>
 
     /**
      * Retrieves a List of Foods for a meal with the meal_id

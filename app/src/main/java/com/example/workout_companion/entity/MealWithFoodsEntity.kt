@@ -6,12 +6,11 @@ import androidx.room.Relation
 /**
  * An entity joining the food_in_meal, meal, and food_type tables in the database
  *
- * @property foodWithMeal      Entity for the food_in_meal table
- * @property meal               Entity for the meal table
+ * @property meal               Entity for the FoodInMealWithNameEntity view
  * @property food               Entity for the food_type table
  */
 data class MealWithFoodsEntity (
-    @Embedded val foodWithMeal: FoodInMealEntity,
+    @Embedded val food_in_meal: FoodInMealEntity,
     @Relation(
         parentColumn = "meal_id",
         entityColumn = "id"
@@ -19,7 +18,9 @@ data class MealWithFoodsEntity (
     val meal: MealEntity,
     @Relation(
         parentColumn = "food_id",
-        entityColumn = "id"
+         entityColumn = "id"
     )
-    val food: FoodTypeEntity
+    val foods: List<FoodTypeEntity>
+
 )
+

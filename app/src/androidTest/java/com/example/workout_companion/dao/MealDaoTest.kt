@@ -59,7 +59,7 @@ class MealDaoTest : TestCase(){
         )
 
         dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getyDate(today).getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByDate(today).getOrAwaitValue()
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(0),))
     }
 
