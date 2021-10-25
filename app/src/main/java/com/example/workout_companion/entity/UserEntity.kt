@@ -39,6 +39,9 @@ data class UserEntity(
         @ColumnInfo(name = "height")
         var height: Double,
 
+        @ColumnInfo(name = "weight")
+        var weight: Double,
+
         @ColumnInfo(name = "activity_level")
         @TypeConverters(ActivityLevelConverter::class)
         var activity_level: ActivityLevel

@@ -121,4 +121,6 @@ interface UserDao {
     @Query("SELECT CAST(ROUND(height / 2.54) as INTEGER) AS inches FROM user WHERE name = :name")
     suspend fun getHeightInInches(name: String): Int
 
+    @Query("SELECT weight FROM user WHERE name = :name")
+    suspend fun getWeight(name: String): Double
 }

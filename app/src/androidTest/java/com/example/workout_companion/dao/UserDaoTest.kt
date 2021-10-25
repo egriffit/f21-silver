@@ -41,7 +41,7 @@ class UserDaoTest : TestCase(){
     @Test
     fun TestWriteAndReadUser() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
         dao.insert(user)
         val byName = dao.getByName("John Smith")
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(user))
@@ -51,8 +51,8 @@ class UserDaoTest : TestCase(){
     fun TestCount() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val birthDate2 = LocalDate.of(1947, Month.JULY, 30)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0,ActivityLevel.MODERATELY_ACTIVE)
-        val user2 = UserEntity("Arnold Schwarzenegger", ExperienceLevel.EXPERT, Sex.MALE, birthDate2, 3, 180.0,ActivityLevel.VERY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user2 = UserEntity("Arnold Schwarzenegger", ExperienceLevel.EXPERT, Sex.MALE, birthDate2, 3, 180.0, 80.0, ActivityLevel.VERY_ACTIVE)
 
         dao.insert(user)
         dao.insert(user2)
@@ -63,7 +63,7 @@ class UserDaoTest : TestCase(){
     @Test
     fun TestCountWithName() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0,ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 65.0, ActivityLevel.MODERATELY_ACTIVE)
 
         dao.insert(user)
         val count: Int = dao.getCountWithName("John Smith")
@@ -73,7 +73,7 @@ class UserDaoTest : TestCase(){
     @Test
     fun TestDelete() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
 
         dao.insert(user)
         dao.delete(user)
@@ -85,8 +85,8 @@ class UserDaoTest : TestCase(){
     fun TestDeleteAll() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val birthDate2 = LocalDate.of(1947, Month.JULY, 30)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
-        val user2 = UserEntity("Arnold Schwarzenegger", ExperienceLevel.EXPERT, Sex.MALE, birthDate2, 3, 180.0, ActivityLevel.EXTRA_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 55.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user2 = UserEntity("Arnold Schwarzenegger", ExperienceLevel.EXPERT, Sex.MALE, birthDate2, 3, 180.0, 75.0, ActivityLevel.EXTRA_ACTIVE)
 
         dao.insert(user)
         dao.insert(user2)
@@ -98,8 +98,8 @@ class UserDaoTest : TestCase(){
     @Test
     fun TestUpdateUser() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
-        val newUser = UserEntity("John Smith", ExperienceLevel.EXPERT, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 90.0, ActivityLevel.MODERATELY_ACTIVE)
+        val newUser = UserEntity("John Smith", ExperienceLevel.EXPERT, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
 
         dao.insert(user)
         dao.update(newUser)
@@ -110,7 +110,7 @@ class UserDaoTest : TestCase(){
     @Test
     fun TestBirthDate() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 60.0, ActivityLevel.MODERATELY_ACTIVE)
 
         dao.insert(user)
         val bDate: LocalDate = dao.getBirthDate("John Smith")
@@ -121,10 +121,21 @@ class UserDaoTest : TestCase(){
     @Test
     fun TestAge() = runBlocking(){
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, ActivityLevel.MODERATELY_ACTIVE)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
 
         dao.insert(user)
         val age: Int = dao.getAge("John Smith")
         MatcherAssert.assertThat(age, CoreMatchers.equalTo(31))
+    }
+
+    @Test
+    fun TestWeight() = runBlocking {
+        val weight = 90.0
+        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
+        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, weight, ActivityLevel.MODERATELY_ACTIVE)
+        dao.insert(user)
+
+        val daoWeight = dao.getWeight(user.name)
+        MatcherAssert.assertThat(weight, CoreMatchers.equalTo(daoWeight))
     }
 }

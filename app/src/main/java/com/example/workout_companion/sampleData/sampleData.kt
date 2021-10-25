@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.Month
 
 val birthDate : LocalDate = LocalDate.of (1990, Month.JANUARY, 1)
-val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 167.64, ActivityLevel.MODERATELY_ACTIVE)
+val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 167.64, 75.0, ActivityLevel.MODERATELY_ACTIVE)
 
 val FrameWorkList : List<FrameworkWithGoalEntity> = listOf(
     FrameworkWithGoalEntity(2, "Frame_work_2", 1, 2, "Gain Mass"),

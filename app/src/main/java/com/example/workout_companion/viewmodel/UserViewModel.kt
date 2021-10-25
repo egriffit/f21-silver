@@ -90,6 +90,14 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
         return heightInInches
     }
+
+    fun getWeight(name: String) : Double {
+        var weight = 0.0
+        viewModelScope.launch(Dispatchers.IO) {
+            weight = repository.getWeight(name)
+        }
+        return weight
+    }
 }
 
 /**
