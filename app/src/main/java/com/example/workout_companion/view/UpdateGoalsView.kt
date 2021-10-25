@@ -25,7 +25,7 @@ fun UpdateGoalsView(navController: NavController){
                 Spacer(modifier=Modifier.padding(top= 50.dp))
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center){
-                    Button(onClick ={ navController.navigate("addGoals") }){
+                    Button(onClick ={ navController.navigate("userForm") }){
                         Text("User Form")
                     }
                 }
