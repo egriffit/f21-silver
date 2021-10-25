@@ -48,9 +48,11 @@ interface FoodInMealDao {
     fun getFoods(meal_id: Int): LiveData<List<MealWithFoodsEntity>>
 
     /**
-     * Retrieves a List of Foods for a meal with the meal_id
-     * equal to the integer provided
+     * Retrieves a List of Foods for a meal with the name and date
+     * equal to the string and Local Date provided
      *
+     * @param type, string
+     * @param date, LocalDate
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
     @Query("""
@@ -162,5 +164,6 @@ interface FoodInMealDao {
      */
     @Query("DELETE FROM food_in_meal")
     suspend fun deleteAll()
+
 
 }
