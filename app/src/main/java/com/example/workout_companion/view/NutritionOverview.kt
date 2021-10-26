@@ -29,8 +29,10 @@ fun NutritionOverview(navController: NavController){
     )
     val foodInMealViewModel: FoodInMealViewModel = viewModel(
         factory = FoodInMealViewModelFactory(context.applicationContext as Application)
-
     )
+//    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
+//        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
+//    )
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},

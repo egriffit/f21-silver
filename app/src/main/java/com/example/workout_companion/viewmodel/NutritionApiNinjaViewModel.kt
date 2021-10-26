@@ -2,16 +2,14 @@ package com.example.workout_companion.viewmodel;
 
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.workout_companion.api.nutrition_api_ninja.Properties
 import com.example.workout_companion.api.nutrition_api_ninja.NutritionApiNinjaApi
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
 import com.example.workout_companion.api.nutrition_api_ninja.nutritionApiNinjaApi
 import com.example.workout_companion.api.nutrition_api_ninja.repository.NutritionApiNinjaRepository
 import com.example.workout_companion.api.utility.FoodData
+import com.example.workout_companion.entity.MealWithFoodsEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
@@ -42,12 +40,15 @@ class NutritionApiNinjaViewModel(application: Application): AndroidViewModel(app
      * @param food: string
      * @return List<FoodData>
      */
-    fun getFood(food: String): List<FoodData> {
+    fun getFood(food: String): LiveData<List<FoodData>> {
         var found: ApiNinjaNutrition? = null
+        var foundFoods = MutableLiveData<List<FoodData>>()
+
         viewModelScope.launch(Dispatchers.IO){
             found = repository.getFood(food).data
         }
-        return getFoodsFromResponse(found)
+        foundFoods.postValue(getFoodsFromResponse(found))
+        return foundFoods
     }
 
     /**
