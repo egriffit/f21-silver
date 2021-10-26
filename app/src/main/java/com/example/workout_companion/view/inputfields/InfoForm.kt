@@ -1,7 +1,5 @@
 package com.example.workout_companion.view.inputfields
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -21,11 +20,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import java.time.Month
+import java.util.Locale as Locale
+import java.time.format.TextStyle as TextStyle
 
 @Composable
 fun InfoForm(navController: NavController, userViewModel: UserViewModel){
@@ -43,23 +47,35 @@ fun DefaultPreview3() {
 
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
+
     // User entity
     // TODO: load existing user entity if it exists
-    val user = UserEntity(
+    var user = UserEntity(
         name = "",
         experience_level = ExperienceLevel.BEGINNER,
         sex = Sex.MALE,
-        birth_date = LocalDate.MAX,
+        birth_date = LocalDate.now(),
         max_workouts_per_week = 0,
         height = 0.0,
         weight = 0.0,
         activity_level = ActivityLevel.SLIGHTLY_ACTIVE
     )
 
+    val userObserver = Observer<List<UserEntity>> { users ->
+        if (users.isNotEmpty()) {
+            user = users[0]
+        }
+    }
+
+    // TODO: How to force a wait until this is loaded
+    val userState = userViewModel.readAll.observeAsState(listOf())
+
+
     // Main state variables for the inputs
-    var nameState by remember { mutableStateOf(user.name) }
-    var ageState by remember { mutableStateOf("") } // TODO: Get rid of this
-    var birthDateState by remember { mutableStateOf("") } // TODO: How to input this?
+    var nameState by remember { mutableStateOf("") }
+    var birthYearState by remember { mutableStateOf(user.birth_date.year.toString()) }
+    var birthMonthState by remember { mutableStateOf(user.birth_date.month.toString()) }
+    var birthDayState by remember { mutableStateOf(user.birth_date.dayOfMonth.toString()) }
     var feetState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString()) }
     var inchesState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString()) }
     var weightState by remember { mutableStateOf(UnitConverter.toPounds(user.weight).toString()) }
@@ -118,21 +134,130 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
         }
-        // Age and Weight
+        // Birth Date
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                var monthExpanded by remember { mutableStateOf(false) }
+                var dayExpanded by remember { mutableStateOf(false) }
+                var yearExpanded by remember { mutableStateOf(false) }
+                var monthTextFieldSize by remember { mutableStateOf(Size.Zero) }
+                var dayTextFieldSize by remember { mutableStateOf(Size.Zero) }
+                var yearTextFieldSize by remember { mutableStateOf(Size.Zero) }
+                val icon = Icons.Default.ArrowDropDown
+
+                // Month
+                OutlinedTextField(
+                    value = Month.valueOf(birthMonthState)
+                        .getDisplayName(TextStyle.SHORT, Locale.US),
+                    onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .weight(4f)
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            monthTextFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text = "Month") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { monthExpanded = !monthExpanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = monthExpanded,
+                    onDismissRequest = { monthExpanded = false },
+                    modifier = Modifier
+                        .width(with(LocalDensity.current) { monthTextFieldSize.width.toDp() })
+                ) {
+                    Month.values().forEach { month ->
+                        DropdownMenuItem(
+                            onClick = {
+                                birthMonthState = month.toString()
+                                monthExpanded = false
+                            }
+                        ) {
+                            Text(text = month.getDisplayName(TextStyle.SHORT, Locale.US))
+                        }
+                    }
+                }
+
+                // Day
+                OutlinedTextField(
+                    value = birthDayState,
+                    onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .weight(4f)
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            dayTextFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text = "Day") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { dayExpanded = !dayExpanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = dayExpanded,
+                    onDismissRequest = { dayExpanded = false },
+                    modifier = Modifier
+                        .width(with(LocalDensity.current) { dayTextFieldSize.width.toDp() })
+                ) {
+                    for (day in 1..Month.valueOf(birthMonthState).length(true)) {
+                        DropdownMenuItem(
+                            onClick = {
+                                birthDayState = day.toString()
+                                dayExpanded = false
+                            }
+                        ) {
+                            Text(text = day.toString())
+                        }
+                    }
+                }
+
+                // Year
+                OutlinedTextField(
+                    value = birthYearState,
+                    onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .weight(5f)
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            yearTextFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text = "Year") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { yearExpanded = !yearExpanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = yearExpanded,
+                    onDismissRequest = { yearExpanded = false },
+                    modifier = Modifier
+                        .width(with(LocalDensity.current) { yearTextFieldSize.width.toDp() })
+                ) {
+                    for (year in 2021 downTo 1940)
+                        DropdownMenuItem(
+                            onClick = {
+                                birthYearState = year.toString()
+                                yearExpanded = false
+                            }
+                        ) {
+                            Text(text = year.toString())
+                        }
+                }
+            }
+        }
+        // Weight
         item{
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                OutlinedTextField(
-                    value = ageState,
-                    onValueChange = { ageState = if (it.toIntOrNull() != null) it else "" },
-                    label = { Text(text = "Age?") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = weightState,
                     onValueChange = { weightState = it },
@@ -210,7 +335,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier.
-                width(with(LocalDensity.current){textFieldSize.width.toDp()})
+                    width(with(LocalDensity.current){textFieldSize.width.toDp()})
             ) {
                 MainGoal.values().forEach { goal ->
                     DropdownMenuItem(onClick = {
@@ -328,15 +453,15 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         user.name = nameState
                         user.experience_level = expLevelState
                         user.sex = genderState
-                        user.birth_date = LocalDate.MAX // TODO: Fix!
+                        user.birth_date = LocalDate.of(birthYearState.toInt(), Month.valueOf(birthMonthState), birthDayState.toInt())
                         user.height = UnitConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble())
                         user.weight = UnitConverter.toKilograms(weightState.toDouble())
                         user.max_workouts_per_week = maxWorkoutsState.toInt()
                         user.activity_level = activityLevelState
 
                         if (userIsValid(user)) {
-                            //userViewModel.addUser(user)
-                            navController.navigate("AddGoals")
+                            userViewModel.addUser(user)
+                            navController.navigate("UpdateGoals")
                         }
                     }) {
                     Text("Submit")
