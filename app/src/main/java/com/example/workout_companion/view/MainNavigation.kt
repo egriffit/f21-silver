@@ -34,9 +34,6 @@ fun MainNavigation() {
             )
             UserForm(navController, userViewModel)
         }
-        composable (route = "AddGoals" ) {
-            AddGoalView(navController)
-        }
         composable (route = "mainView") {
             LandingPage(navController)
         }
