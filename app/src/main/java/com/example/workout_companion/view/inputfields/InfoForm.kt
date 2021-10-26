@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -19,10 +20,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.Month
 import java.util.Locale as Locale
@@ -44,9 +47,10 @@ fun DefaultPreview3() {
 
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
+
     // User entity
     // TODO: load existing user entity if it exists
-    val user = UserEntity(
+    var user = UserEntity(
         name = "",
         experience_level = ExperienceLevel.BEGINNER,
         sex = Sex.MALE,
@@ -57,8 +61,18 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         activity_level = ActivityLevel.SLIGHTLY_ACTIVE
     )
 
+    val userObserver = Observer<List<UserEntity>> { users ->
+        if (users.isNotEmpty()) {
+            user = users[0]
+        }
+    }
+
+    // TODO: How to force a wait until this is loaded
+    val userState = userViewModel.readAll.observeAsState(listOf())
+
+
     // Main state variables for the inputs
-    var nameState by remember { mutableStateOf(user.name) }
+    var nameState by remember { mutableStateOf("") }
     var birthYearState by remember { mutableStateOf(user.birth_date.year.toString()) }
     var birthMonthState by remember { mutableStateOf(user.birth_date.month.toString()) }
     var birthDayState by remember { mutableStateOf(user.birth_date.dayOfMonth.toString()) }
@@ -446,8 +460,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         user.activity_level = activityLevelState
 
                         if (userIsValid(user)) {
-                            //userViewModel.addUser(user)
-                            navController.navigate("AddGoals")
+                            userViewModel.addUser(user)
+                            navController.navigate("mainView")
                         }
                     }) {
                     Text("Submit")
