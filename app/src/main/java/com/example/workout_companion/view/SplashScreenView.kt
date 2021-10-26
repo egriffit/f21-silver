@@ -62,7 +62,7 @@ import kotlinx.coroutines.delay
             }
             else
             {
-                navController.navigate("addGoals")
+                navController.navigate("userForm")
             }
         }
 
