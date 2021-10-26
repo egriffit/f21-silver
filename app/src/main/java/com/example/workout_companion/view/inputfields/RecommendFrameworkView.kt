@@ -1,7 +1,6 @@
 package com.example.workout_companion.view.inputfields
 
 import androidx.compose.foundation.BorderStroke
-import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,8 +19,9 @@ import com.example.workout_companion.sampleData.FrameWorkList
 
 
 @Composable
-fun RecommendFrameworkView(RecommendedFrameworks: List<FrameworkWithGoalEntity>,
-                           currentRecommendedFramework: MutableState<String>)
+fun RecommendFrameworkView(
+    RecommendedFrameworks: List<FrameworkWithGoalEntity>,
+    currentRecommendedFramework: MutableState<String>)
 {
     Column(
         modifier = Modifier
