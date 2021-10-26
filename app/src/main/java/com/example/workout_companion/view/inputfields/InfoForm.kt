@@ -59,11 +59,9 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
 
     // Main state variables for the inputs
     var nameState by remember { mutableStateOf(user.name) }
-    var ageState by remember { mutableStateOf("") } // TODO: Get rid of this
     var birthYearState by remember { mutableStateOf(user.birth_date.year.toString()) }
     var birthMonthState by remember { mutableStateOf(user.birth_date.month.toString()) }
     var birthDayState by remember { mutableStateOf(user.birth_date.dayOfMonth.toString()) }
-    var birthDateState by remember { mutableStateOf("") } // TODO: How to input this?
     var feetState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString()) }
     var inchesState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString()) }
     var weightState by remember { mutableStateOf(UnitConverter.toPounds(user.weight).toString()) }
@@ -246,16 +244,6 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                OutlinedTextField(
-                    value = ageState,
-                    onValueChange = { ageState = if (it.toIntOrNull() != null) it else "" },
-                    label = { Text(text = "Age?") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = weightState,
                     onValueChange = { weightState = it },
@@ -451,7 +439,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                         user.name = nameState
                         user.experience_level = expLevelState
                         user.sex = genderState
-                        user.birth_date = LocalDate.MAX // TODO: Fix!
+                        user.birth_date = LocalDate.of(birthYearState.toInt(), Month.valueOf(birthMonthState), birthDayState.toInt())
                         user.height = UnitConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble())
                         user.weight = UnitConverter.toKilograms(weightState.toDouble())
                         user.max_workouts_per_week = maxWorkoutsState.toInt()
