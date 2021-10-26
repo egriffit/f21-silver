@@ -461,7 +461,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
 
                         if (userIsValid(user)) {
                             userViewModel.addUser(user)
-                            navController.navigate("mainView")
+                            navController.navigate("UpdateGoals")
                         }
                     }) {
                     Text("Submit")
