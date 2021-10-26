@@ -142,7 +142,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                     onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
                     readOnly = true,
                     modifier = Modifier
-                        .weight(5f)
+                        .weight(4f)
                         .onGloballyPositioned { coordinates ->
                             // This value is used to assign to the DropDown the same width
                             monthTextFieldSize = coordinates.size.toSize()
