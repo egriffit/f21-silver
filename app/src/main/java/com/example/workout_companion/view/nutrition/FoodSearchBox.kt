@@ -29,7 +29,7 @@ fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, apiNinjaViewModel: N
             )
             {
                 Text(
-                    "Create Meal:",
+                    "Add Food:",
                     fontSize = 15.sp
                 )
                 TextField(value = food.value,

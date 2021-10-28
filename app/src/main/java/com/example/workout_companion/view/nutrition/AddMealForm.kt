@@ -29,7 +29,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
-                foodInMealViewModel: FoodInMealViewModel){
+                foodInMealViewModel: FoodInMealViewModel, apiNinjaViewModel: NutritionApiNinjaViewModel){
     val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
 
     val mealName = remember{ mutableStateOf("")}
@@ -41,7 +41,7 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 
         //display meals
         if (foundMeals != null) {
-            MealList(foundMeals, foodInMealViewModel)
+            MealList(foundMeals, foodInMealViewModel, apiNinjaViewModel)
         }
         //display form to add meals
         Row(        modifier = Modifier.fillMaxWidth(),
@@ -70,12 +70,12 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
                 }
             }
         }
-//        Button(onClick = {
-//            mealViewModel.deleteAll()
-//        }){
-//            Text("Remove All Meals",
-//                fontSize = 15.sp)
-//        }
+        Button(onClick = {
+            mealViewModel.deleteAll()
+        }){
+            Text("Remove All Meals",
+                fontSize = 15.sp)
+        }
     }
 }
 
@@ -83,8 +83,10 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun addFood(mealName: MutableState<String>, mealViewModel: MealViewModel, ){
-    mealViewModel.insert(mealName.value)
-    mealName.value = ""
+    if(mealName.value != ""){
+        mealViewModel.insert(mealName.value)
+        mealName.value = ""
+    }
 }
 
 

@@ -19,7 +19,7 @@ interface MealDao {
      *
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
-    @Query("SELECT * FROM meal WHERE date = strftime('%Y-%m-%d', DATE('now'))")
+    @Query("SELECT * FROM meal WHERE date = strftime('%Y-%m-%d', DATE('now', 'localtime'))")
     fun getByDate(): LiveData<List<MealEntity>>
 
 
@@ -116,7 +116,7 @@ interface MealDao {
      * for the current date
      * @return void
      */
-    @Query("DELETE FROM meal WHERE date = strftime('%Y-%m-%d', DATE('now'))")
+    @Query("DELETE FROM meal WHERE date = strftime('%Y-%m-%d', DATE('now', 'localtime'))")
     suspend fun deleteAll()
 
     /**

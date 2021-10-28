@@ -30,9 +30,9 @@ fun NutritionOverview(navController: NavController){
     val foodInMealViewModel: FoodInMealViewModel = viewModel(
         factory = FoodInMealViewModelFactory(context.applicationContext as Application)
     )
-//    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
-//        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
-//    )
+    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
+        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
+    )
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
@@ -44,7 +44,7 @@ fun NutritionOverview(navController: NavController){
             )
             {
                 Text("Nutrition Overview Page")
-                AddMealForm(navController, mealViewModel, foodInMealViewModel)
+                AddMealForm(navController, mealViewModel, foodInMealViewModel, apiNinjaViewModel )
             }
 
 

@@ -17,7 +17,8 @@ import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel
+fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
+             apiNinjaViewModel: NutritionApiNinjaViewModel
 ) {
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center){
@@ -38,7 +39,7 @@ fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel
             // Name
                 item {
                     Row(horizontalArrangement =  Arrangement.Center) {
-                        mealButton(meal.type, fodInMealViewModel)
+                        mealButton(meal.type, fodInMealViewModel, apiNinjaViewModel)
                     }
                 }
         }else{

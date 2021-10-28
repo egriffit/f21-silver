@@ -16,8 +16,8 @@ import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel
-) {
+fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel,
+               apiNinjaViewModel: NutritionApiNinjaViewModel) {
     val open = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -38,6 +38,6 @@ fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel
             Spacer(modifier = Modifier.padding(start = 20.dp))
             Text(meal)
         }
-        //FoodList(fodInMealViewModel, meal, open, apiNinjaViewModel)
+        FoodList(fodInMealViewModel, meal, open, apiNinjaViewModel)
     }
 }
