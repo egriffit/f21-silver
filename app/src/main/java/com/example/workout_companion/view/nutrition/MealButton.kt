@@ -14,6 +14,19 @@ import androidx.compose.ui.unit.sp
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 
+/***
+ * Composable to show and hide foods in a meal using a +/- button
+ *
+ * It consists of:
+ * a button that updates a mutableState<boolean> and changes the + toa - and - to a +
+ * a text label, the name of the meal
+ * a FoodList composable to display found foods
+ *
+ * @param meal, string
+ * @param foundINMealViewModel, a view model to work with the the food_in_meal table
+ * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel,

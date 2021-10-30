@@ -15,6 +15,17 @@ import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 
+/***
+ * Composable to display meals for the current day and a button to create a meal
+ *
+ * It consists of:
+ * a lazy column of meal buttons || a text label advising no foods found
+ *
+ * @param meal, a list of MealEntity
+ * @param foundINMealViewModel, a view model to work with the the food_in_meal table
+ * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,

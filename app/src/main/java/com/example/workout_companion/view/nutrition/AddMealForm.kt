@@ -26,6 +26,19 @@ import com.example.workout_companion.viewmodel.MealViewModel
 import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 import java.time.LocalDate
 
+/***
+ * Composable form to add a meal
+ * It consists of:
+ * a MealList, a lazyColumn of Meals)
+ * a button to add a meal
+ * a button to remove meals
+ *
+ * @param navController, a NavController to navigate to different views
+ * @param mealViewModel, a  view model to work with meal table
+ * @param foundINMealViewModel, a view model to work with the the food_in_meal table
+ * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
@@ -44,7 +57,8 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
             MealList(foundMeals, foodInMealViewModel, apiNinjaViewModel)
         }
         //display form to add meals
-        Row(        modifier = Modifier.fillMaxWidth(),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ){
             Row(
@@ -80,7 +94,13 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 }
 
 
-
+/***
+ * function used to create a meal from a string provided and store it in the meal table
+ *
+ * @param mealName, a MutableState<String>
+ * @param mealViewModel, a  view model to work with meal table
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 fun addFood(mealName: MutableState<String>, mealViewModel: MealViewModel, ){
     if(mealName.value != ""){
@@ -88,27 +108,3 @@ fun addFood(mealName: MutableState<String>, mealViewModel: MealViewModel, ){
         mealName.value = ""
     }
 }
-
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//fun FoodList(foodInMealViewModel: FoodInMealViewModel, meal: String, open: MutableState<Boolean>,
-//             apiNinjaViewModel: NutritionApiNinjaViewModel)
-//{
-//    val today = LocalDate.now()
-//    var foundFoods =  foodInMealViewModel.getFoodsInMeal(meal, today).observeAsState(listOf()).value
-//    if(open.value){
-//        Column(){
-//            Text("Foods")
-//            //display current foods in meal
-//            for (food in foundFoods)
-//                // Name
-//                        Row {
-//                            Text("${food.name} - Serving Size: ${food.serving_size} Carbohydrates: ${food.carbohydrates}g  Protein: ${food.protein}g Fat: ${food.fat}")
-//                        }
-//                }
-//                //search box to add food
-//                foodSearchBox(foodInMealViewModel, apiNinjaViewModel)
-//            }
-//        }
-
