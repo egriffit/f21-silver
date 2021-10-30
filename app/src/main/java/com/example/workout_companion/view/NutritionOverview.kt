@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.workout_companion.api.nutrition_api_ninja.NutritionAPIViewModel
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.view.nutrition.AddMealForm
 import com.example.workout_companion.viewmodel.*
@@ -30,9 +32,11 @@ fun NutritionOverview(navController: NavController){
     val foodInMealViewModel: FoodInMealViewModel = viewModel(
         factory = FoodInMealViewModelFactory(context.applicationContext as Application)
     )
-    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
-        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
-    )
+//    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
+//        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
+//    )
+    val nutritionAPIViewModel: NutritionAPIViewModel =  viewModel()
+
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
@@ -44,7 +48,7 @@ fun NutritionOverview(navController: NavController){
             )
             {
                 Text("Nutrition Overview Page")
-                AddMealForm(navController, mealViewModel, foodInMealViewModel, apiNinjaViewModel )
+                AddMealForm(navController, mealViewModel, foodInMealViewModel, nutritionAPIViewModel )
             }
 
 

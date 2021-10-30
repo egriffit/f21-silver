@@ -8,8 +8,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import com.example.workout_companion.api.nutrition_api_ninja.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
-import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 import java.time.LocalDate
 /***
  * Composable to display a column of foods in a meal
@@ -26,7 +26,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FoodList(foodInMealViewModel: FoodInMealViewModel, meal: String, open: MutableState<Boolean>,
-             apiNinjaViewModel: NutritionApiNinjaViewModel
+             nutritionAPIViewModel: NutritionAPIViewModel
 )
 {
     val today = LocalDate.now()
@@ -42,6 +42,6 @@ fun FoodList(foodInMealViewModel: FoodInMealViewModel, meal: String, open: Mutab
             }
         }
         //search box to add food
-        foodSearchBox(foodInMealViewModel, apiNinjaViewModel)
+        foodSearchBox(foodInMealViewModel, nutritionAPIViewModel)
     }
 }

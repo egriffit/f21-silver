@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.example.workout_companion.api.nutrition_api_ninja.NutritionAPIViewModel
 import com.example.workout_companion.api.nutrition_api_ninja.NutritionApiNinjaApi
 import com.example.workout_companion.api.utility.FoodData
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.MealViewModel
-import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 import java.time.LocalDate
 
 /***
@@ -42,7 +42,8 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
-                foodInMealViewModel: FoodInMealViewModel, apiNinjaViewModel: NutritionApiNinjaViewModel){
+                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
+){
     val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
 
     val mealName = remember{ mutableStateOf("")}
@@ -54,7 +55,7 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 
         //display meals
         if (foundMeals != null) {
-            MealList(foundMeals, foodInMealViewModel, apiNinjaViewModel)
+            MealList(foundMeals, foodInMealViewModel, nutritionAPIViewModel)
         }
         //display form to add meals
         Row(

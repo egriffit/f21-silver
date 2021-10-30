@@ -16,9 +16,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import com.example.workout_companion.api.nutrition_api_ninja.NutritionAPIViewModel
 import com.example.workout_companion.api.utility.FoodData
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
-import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
 
 /***
  * Composable with a textField and a button. The button can be pushed and will retrieve foods
@@ -35,11 +35,11 @@ import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
  *
  */
 @Composable
-fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, apiNinjaViewModel: NutritionApiNinjaViewModel){
+fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val food = remember{ mutableStateOf("") }
-    var foundFoods =  MutableLiveData<List<FoodData>>().observeAsState(listOf()).value
+    var foundFoods =  nutritionAPIViewModel.foodResults
 
     Column() {
         Row(        modifier = Modifier.fillMaxWidth(),
@@ -62,12 +62,9 @@ fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, apiNinjaViewModel: N
             {
                 Button(onClick = {
                     focusManager.clearFocus()
-                    var foundFoods = apiNinjaViewModel.getFood(food.value)
-                    Toast.makeText(
-                        context,
-                        "${foundFoods?.value?.elementAt(0)?.name}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    nutritionAPIViewModel.findFood(food.value)
+                    foundFoods = nutritionAPIViewModel.foodResults
+
                 }) {
                     Text(
                         "Search",
@@ -77,21 +74,24 @@ fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, apiNinjaViewModel: N
 
             }
         }
-        Button(onClick = {
-
-        }) {
-            Text(
-                "click",
-                fontSize = 15.sp
-            )
-        }
         Text("Results")
         Column(){
-            for(food in foundFoods){
-                Row(){
-                    Text(food.name)
+            if(foundFoods.size > 0){
+                for(food in foundFoods){
+                    Row(){
+                        Text("${food.elementAt(0).name} \r\n" +
+                                "Serving Size: ${food.elementAt(0).serving_size_g}g \r\n" +
+                                "Carbohydrates: ${food.elementAt(0).carbohydrates_total_g}g \r\n" +
+                                "Protein: ${food.elementAt(0).protein_g}g \r\n" +
+                                "Fat: ${food.elementAt(0).fat_total_g}g ")
+                    }
                 }
             }
+            else
+            {
+                Text("No results found for ${food.value}")
+            }
+
         }
     }
 
