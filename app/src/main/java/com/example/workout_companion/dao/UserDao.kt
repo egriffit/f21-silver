@@ -16,11 +16,16 @@ interface UserDao {
     /**
      * Retrieves a List of UserEntity objects from the user table
      *
-     * @return LiveData<List<UserEntity> a list of UserEntity objects
+     * @return LiveData<List<UserEntity>> a list of UserEntity objects
      */
     @Query("SELECT * FROM user")
     fun getAll(): LiveData<List<UserEntity>>
 
+    /**
+     * Retrieves the single UserEntity object if it exists
+     *
+     * @return LiveData<UserEntity> of the user
+     */
     @Query("SELECT * FROM user LIMIT 1")
     fun getUser(): LiveData<UserEntity>
 
