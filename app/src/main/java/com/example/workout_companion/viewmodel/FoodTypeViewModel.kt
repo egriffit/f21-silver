@@ -49,6 +49,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
         return food
     }
 
+
     /**
      * Function to initialize a coroutine to retrieve a total number of foods with the name
      * equal to the string provided

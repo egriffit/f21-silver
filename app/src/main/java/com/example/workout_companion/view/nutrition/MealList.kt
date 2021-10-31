@@ -11,9 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.workout_companion.api.nutrition_api_ninja.NutritionAPIViewModel
+import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
+import com.example.workout_companion.viewmodel.FoodTypeViewModel
 
 /***
  * Composable to display meals for the current day and a button to create a meal
@@ -29,7 +30,7 @@ import com.example.workout_companion.viewmodel.FoodInMealViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
-             nutritionAPIViewModel: NutritionAPIViewModel
+             nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
 ) {
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center){
@@ -50,7 +51,7 @@ fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
             // Name
                 item {
                     Row(horizontalArrangement =  Arrangement.Center) {
-                        mealButton(meal.type, fodInMealViewModel, nutritionAPIViewModel)
+                        mealButton(meal.type, fodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
                     }
                 }
         }else{

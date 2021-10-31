@@ -1,13 +1,14 @@
-package com.example.workout_companion.api.nutrition_api_ninja
+package com.example.workout_companion.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.workout_companion.api.nutrition_api_ninja.NutritionApiNinjaApi
 import com.example.workout_companion.api.nutrition_api_ninja.Properties.api_key
 import com.example.workout_companion.api.nutrition_api_ninja.Properties.base_url
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
+import com.example.workout_companion.api.nutrition_api_ninja.nutritionApiNinjaApi
 import com.example.workout_companion.api.utility.FoodData
-import com.example.workout_companion.api.utility.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

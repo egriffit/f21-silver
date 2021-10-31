@@ -2,29 +2,24 @@ package com.example.workout_companion.view.nutrition
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
-import com.example.workout_companion.api.nutrition_api_ninja.NutritionAPIViewModel
-import com.example.workout_companion.api.nutrition_api_ninja.NutritionApiNinjaApi
-import com.example.workout_companion.api.utility.FoodData
-import com.example.workout_companion.entity.MealEntity
+import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
+import com.example.workout_companion.viewmodel.FoodTypeViewModel
 import com.example.workout_companion.viewmodel.MealViewModel
-import java.time.LocalDate
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 
 /***
  * Composable form to add a meal
@@ -42,12 +37,28 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
-                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
+                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel,
+                foodTypeViewModel: FoodTypeViewModel
 ){
     val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
+    val confirmremove = rememberMaterialDialogState()
 
     val mealName = remember{ mutableStateOf("")}
-
+    //dialog to confirm to remove all records
+    MaterialDialog(dialogState = confirmremove,
+        buttons = {
+            positiveButton("Ok", onClick = {
+                //remove all meals in a day
+                mealViewModel.deleteAll()
+            })
+            negativeButton("Cancel", onClick = {
+                //do nothing
+            })
+        }){
+        title(text = "Remove all meals?")
+        message("Do you want to remove all of today's meals")
+    }
+    //display add meal form
     Column(
         modifier = Modifier.fillMaxSize(),
 
@@ -55,7 +66,7 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 
         //display meals
         if (foundMeals != null) {
-            MealList(foundMeals, foodInMealViewModel, nutritionAPIViewModel)
+            MealList(foundMeals, foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
         }
         //display form to add meals
         Row(
@@ -86,7 +97,8 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
             }
         }
         Button(onClick = {
-            mealViewModel.deleteAll()
+            //load confirm dialog box
+            confirmremove.show()
         }){
             Text("Remove All Meals",
                 fontSize = 15.sp)
