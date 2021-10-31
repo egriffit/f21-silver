@@ -102,7 +102,7 @@ class UserRepository (private val userDao: UserDao) {
      *
      * @return void
      */
-    suspend fun deletaAll(){
+    suspend fun deleteAll(){
         return userDao.deleteAll()
     }
 
