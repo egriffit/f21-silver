@@ -21,6 +21,9 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): LiveData<List<UserEntity>>
 
+    @Query("SELECT * FROM user LIMIT 1")
+    fun getUser(): LiveData<UserEntity>
+
     /**
      * Retrieves a UserEntity object from user table where
      * the name column matches the provided string.

@@ -1,21 +1,21 @@
 package com.example.workout_companion.repository
 
 import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.UserEntity
-import com.example.workout_companion.utility.ActivityLevel
-import com.example.workout_companion.utility.ExperienceLevel
-import com.example.workout_companion.utility.Sex
+import com.example.workout_companion.utility.*
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
@@ -23,6 +23,9 @@ import java.time.Month
 
 @RunWith(AndroidJUnit4::class)
 class UserRepositoryTest : TestCase() {
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var db: WCDatabase
     private lateinit var dao: UserDao
@@ -51,6 +54,13 @@ class UserRepositoryTest : TestCase() {
     }
 
     @Test
+    fun testUserLiveData() = runBlocking {
+        repository.addUser(TestDataGenerator.USER)
+        val userInDB = repository.user.getOrAwaitValue()
+        assertEquals(TestDataGenerator.USER, userInDB)
+    }
+
+    @Test
     fun testGetCount() = runBlocking{
         val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
         val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2,160.0, 65.0, ActivityLevel.MODERATELY_ACTIVE)
@@ -76,7 +86,6 @@ class UserRepositoryTest : TestCase() {
         val exists: Boolean = repository.checkIfUserExists("John Smith")
         assertTrue(exists)
     }
-
 
     @Test
     fun testUpdateUser() = runBlocking{
@@ -109,7 +118,6 @@ class UserRepositoryTest : TestCase() {
         val count: Int = repository.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
     }
-
 
     @Test
     fun testAge() = runBlocking{
