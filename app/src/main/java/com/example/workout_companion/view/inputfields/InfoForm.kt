@@ -31,6 +31,17 @@ import java.time.Month
 import java.util.Locale as Locale
 import java.time.format.TextStyle as TextStyle
 
+val defaultUser = UserEntity(
+        name = "",
+        experience_level = ExperienceLevel.BEGINNER,
+        sex = Sex.MALE,
+        birth_date = LocalDate.now(),
+        max_workouts_per_week = 0,
+        height = 0.0,
+        weight = 0.0,
+        activity_level = ActivityLevel.SLIGHTLY_ACTIVE
+)
+
 @Composable
 fun InfoForm(navController: NavController, userViewModel: UserViewModel){
     LazyColumnDemo(navController, userViewModel);
@@ -61,15 +72,9 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         activity_level = ActivityLevel.SLIGHTLY_ACTIVE
     )
 
-    val userObserver = Observer<List<UserEntity>> { users ->
-        if (users.isNotEmpty()) {
-            user = users[0]
-        }
-    }
+    var userState by remember { mutableStateOf (defaultUser) }
 
-    // TODO: How to force a wait until this is loaded
-    val userState = userViewModel.readAll.observeAsState(listOf())
-
+    var userDBState = userViewModel
 
     // Main state variables for the inputs
     var nameState by remember { mutableStateOf("") }
