@@ -56,16 +56,24 @@ fun DefaultPreview3() {
     }
 }
 
+class UserState(user: UserEntity) {
+    var name by mutableStateOf(user.name)
+}
+
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     var user = defaultUser
 
+    var state = remember { UserState(defaultUser) }
+
     val userInDB = userViewModel.user.observeAsState()
     if (userInDB.value != null) {
-        user = userInDB.value!!
+        state = UserState(userInDB.value!!)
     }
 
     // Main state variables for the inputs
+    // Unfortunately, it seems we cannot merely use a MutableState<UserEntity>
+    // That's why there is a state variable for every element in our form
     var nameState by remember { mutableStateOf(user.name) }
     var birthYearState by remember { mutableStateOf(user.birth_date.year.toString()) }
     var birthMonthState by remember { mutableStateOf(user.birth_date.month.toString()) }
@@ -92,9 +100,11 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         item{
             Row() {
                 OutlinedTextField(
-                    value = nameState,
-                    onValueChange = { nameState = it },
+                    value = state.name,
+                    onValueChange = { state.name = it },
                     label = { Text(text = "Name?") },
+                    // Since our name is our primary key, existing user names can't be changed
+                    //readOnly = userInDB.value != null,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -444,17 +454,24 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             ) {
                 Button(
                     onClick = {
-                        user.name = nameState
-                        user.experience_level = expLevelState
-                        user.sex = genderState
-                        user.birth_date = LocalDate.of(birthYearState.toInt(), Month.valueOf(birthMonthState), birthDayState.toInt())
-                        user.height = UnitConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble())
-                        user.weight = UnitConverter.toKilograms(weightState.toDouble())
-                        user.max_workouts_per_week = maxWorkoutsState.toInt()
-                        user.activity_level = activityLevelState
+                        val userToSubmit = UserEntity(
+                        name = nameState,
+                        experience_level = expLevelState,
+                        sex = genderState,
+                        birth_date = LocalDate.of(birthYearState.toInt(), Month.valueOf(birthMonthState), birthDayState.toInt()),
+                        height = UnitConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble()),
+                        weight = UnitConverter.toKilograms(weightState.toDouble()),
+                        max_workouts_per_week = maxWorkoutsState.toInt(),
+                        activity_level = activityLevelState
+                        )
 
-                        if (userIsValid(user)) {
-                            userViewModel.addUser(user)
+                        if (userIsValid(userToSubmit)) {
+                            if (userInDB.value == null) {
+                                userViewModel.addUser(userToSubmit)
+                            }
+                            else {
+                                userViewModel.updateUser(userToSubmit)
+                            }
                             navController.navigate("UpdateGoals")
                         }
                     }) {
