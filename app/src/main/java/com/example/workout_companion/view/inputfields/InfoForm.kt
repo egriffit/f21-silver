@@ -58,35 +58,40 @@ fun DefaultPreview3() {
 
 class UserState(user: UserEntity) {
     var name by mutableStateOf(user.name)
+    var birthYear by mutableStateOf(user.birth_date.year.toString())
+    var birthMonth by mutableStateOf(user.birth_date.month.toString())
+    var birthDay by mutableStateOf(user.birth_date.dayOfMonth.toString())
+    var feet by mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toString())
+    var inches by mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString())
+    var weight by mutableStateOf(UnitConverter.toPounds(user.weight).toString())
+    var gender by mutableStateOf(user.sex)
+    var goal by mutableStateOf(MainGoal.BUILD_MUSCLE) // TODO: where stored?
+    var activityLevel by mutableStateOf(user.activity_level)
+    var expLevel by mutableStateOf(user.experience_level)
+    var maxWorkouts by mutableStateOf(user.max_workouts_per_week.toString())
+
+    fun getUser(): UserEntity {
+        return UserEntity (
+            name = name,
+            birth_date = LocalDate.of(birthYear.toInt(), Month.valueOf(birthMonth), birthDay.toInt()),
+            height = UnitConverter.toCentimeters(feet.toDouble(), inches.toDouble()),
+            weight = weight.toDouble(),
+            sex = gender,
+            activity_level = activityLevel,
+            experience_level = expLevel,
+            max_workouts_per_week = maxWorkouts.toInt()
+        )
+    }
 }
 
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
-    var user = defaultUser
-
     var state = remember { UserState(defaultUser) }
 
     val userInDB = userViewModel.user.observeAsState()
     if (userInDB.value != null) {
         state = UserState(userInDB.value!!)
     }
-
-    // Main state variables for the inputs
-    // Unfortunately, it seems we cannot merely use a MutableState<UserEntity>
-    // That's why there is a state variable for every element in our form
-    var nameState by remember { mutableStateOf(user.name) }
-    var birthYearState by remember { mutableStateOf(user.birth_date.year.toString()) }
-    var birthMonthState by remember { mutableStateOf(user.birth_date.month.toString()) }
-    var birthDayState by remember { mutableStateOf(user.birth_date.dayOfMonth.toString()) }
-    var feetState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString()) }
-    var inchesState by remember { mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString()) }
-    var weightState by remember { mutableStateOf(UnitConverter.toPounds(user.weight).toString()) }
-    var genderState by remember { mutableStateOf(user.sex) }
-    var goalState by remember { mutableStateOf(MainGoal.BUILD_MUSCLE) } // TODO: where stored?
-    var activityLevelState by remember { mutableStateOf(user.activity_level) }
-    var expLevelState by remember { mutableStateOf(user.experience_level) }
-    var maxWorkoutsState by remember { mutableStateOf(user.max_workouts_per_week.toString()) }
-
 
     LazyColumn(
         Modifier
@@ -104,7 +109,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                     onValueChange = { state.name = it },
                     label = { Text(text = "Name?") },
                     // Since our name is our primary key, existing user names can't be changed
-                    //readOnly = userInDB.value != null,
+                    readOnly = userInDB.value != null,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -118,8 +123,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = feetState,
-                    onValueChange = { feetState = if (it.toIntOrNull() != null) it else "" },
+                    value = state.feet,
+                    onValueChange = { state.feet = if (it.toIntOrNull() != null) it else "" },
                     label = { Text(text = "Feet?") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
@@ -128,8 +133,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 )
                 Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
-                    value = inchesState,
-                    onValueChange = { inchesState = if (it.toIntOrNull() != null) it else "" },
+                    value = state.inches,
+                    onValueChange = { state.inches = if (it.toIntOrNull() != null) it else "" },
                     label = { Text(text = "Inches?") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
@@ -153,7 +158,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
 
                 // Month
                 OutlinedTextField(
-                    value = Month.valueOf(birthMonthState)
+                    value = Month.valueOf(state.birthMonth)
                         .getDisplayName(TextStyle.SHORT, Locale.US),
                     onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
                     readOnly = true,
@@ -178,7 +183,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                     Month.values().forEach { month ->
                         DropdownMenuItem(
                             onClick = {
-                                birthMonthState = month.toString()
+                                state.birthMonth = month.toString()
                                 monthExpanded = false
                             }
                         ) {
@@ -189,7 +194,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
 
                 // Day
                 OutlinedTextField(
-                    value = birthDayState,
+                    value = state.birthDay,
                     onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
                     readOnly = true,
                     modifier = Modifier
@@ -210,10 +215,10 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                     modifier = Modifier
                         .width(with(LocalDensity.current) { dayTextFieldSize.width.toDp() })
                 ) {
-                    for (day in 1..Month.valueOf(birthMonthState).length(true)) {
+                    for (day in 1..Month.valueOf(state.birthMonth).length(true)) {
                         DropdownMenuItem(
                             onClick = {
-                                birthDayState = day.toString()
+                                state.birthDay = day.toString()
                                 dayExpanded = false
                             }
                         ) {
@@ -224,7 +229,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
 
                 // Year
                 OutlinedTextField(
-                    value = birthYearState,
+                    value = state.birthYear,
                     onValueChange = { /* Do nothing here, the dropdown menu handles it */ },
                     readOnly = true,
                     modifier = Modifier
@@ -248,7 +253,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                     for (year in 2021 downTo 1940)
                         DropdownMenuItem(
                             onClick = {
-                                birthYearState = year.toString()
+                                state.birthYear = year.toString()
                                 yearExpanded = false
                             }
                         ) {
@@ -263,8 +268,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = weightState,
-                    onValueChange = { weightState = it },
+                    value = state.weight,
+                    onValueChange = { state.weight = it },
                     label = { Text(text = "Weight? (In pounds)") },
                     modifier = Modifier.weight(2f),
                     keyboardOptions = KeyboardOptions(
@@ -281,7 +286,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 val icon = Icons.Filled.ArrowDropDown
 
                 OutlinedTextField(
-                    value = genderState.descName,
+                    value = state.gender.descName,
                     onValueChange = { /* Do nothing because users use the menu to edit */ },
                     readOnly = true,
                     modifier = Modifier
@@ -304,7 +309,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 ) {
                     Sex.values().forEach { gender ->
                         DropdownMenuItem(onClick = {
-                            genderState = gender
+                            state.gender = gender
                             expanded = false
                         }) {
                             Text(text = gender.descName)
@@ -320,7 +325,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             val icon = Icons.Default.ArrowDropDown
 
             OutlinedTextField(
-                value = goalState.descName,
+                value = state.goal.descName,
                 onValueChange = { /* Do nothing because users use the menu to edit */ },
                 readOnly = true,
                 modifier = Modifier
@@ -343,7 +348,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             ) {
                 MainGoal.values().forEach { goal ->
                     DropdownMenuItem(onClick = {
-                        goalState = goal
+                        state.goal = goal
                         expanded = false
                     }) {
                         Text(text = goal.descName)
@@ -359,7 +364,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 val icon = Icons.Filled.ArrowDropDown
 
                 OutlinedTextField(
-                    value = activityLevelState.descName,
+                    value = state.activityLevel.descName,
                     onValueChange = { /* Do nothing because users use the menu to edit */ },
                     readOnly = true,
                     modifier = Modifier
@@ -382,7 +387,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 ) {
                     ActivityLevel.values().forEach { level ->
                         DropdownMenuItem(onClick = {
-                            activityLevelState = level
+                            state.activityLevel = level
                             expanded = false
                         }) {
                             Text(text = level.descName)
@@ -399,7 +404,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 val icon = Icons.Filled.ArrowDropDown
 
                 OutlinedTextField(
-                    value = expLevelState.descName,
+                    value = state.expLevel.descName,
                     onValueChange = { /* Do nothing because users use the menu to edit */ },
                     readOnly = true,
                     modifier = Modifier
@@ -422,7 +427,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 ) {
                     ExperienceLevel.values().forEach { level ->
                         DropdownMenuItem(onClick = {
-                            expLevelState = level
+                            state.expLevel = level
                             expanded = false
                         }) {
                             Text(text = level.descName)
@@ -435,8 +440,8 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
         item{
             Row(){
                 OutlinedTextField(
-                    value = maxWorkoutsState,
-                    onValueChange = { maxWorkoutsState = if (it.toIntOrNull() != null) it else "" },
+                    value = state.maxWorkouts,
+                    onValueChange = { state.maxWorkouts = if (it.toIntOrNull() != null) it else "" },
                     label = { Text(text = "Max Number of Workouts/Week?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -454,25 +459,15 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             ) {
                 Button(
                     onClick = {
-                        val userToSubmit = UserEntity(
-                        name = nameState,
-                        experience_level = expLevelState,
-                        sex = genderState,
-                        birth_date = LocalDate.of(birthYearState.toInt(), Month.valueOf(birthMonthState), birthDayState.toInt()),
-                        height = UnitConverter.toCentimeters(feetState.toDouble(), inchesState.toDouble()),
-                        weight = UnitConverter.toKilograms(weightState.toDouble()),
-                        max_workouts_per_week = maxWorkoutsState.toInt(),
-                        activity_level = activityLevelState
-                        )
-
-                        if (userIsValid(userToSubmit)) {
+                        val user = state.getUser()
+                        if (userIsValid(user)) {
                             if (userInDB.value == null) {
-                                userViewModel.addUser(userToSubmit)
+                                userViewModel.addUser(user)
                             }
                             else {
-                                userViewModel.updateUser(userToSubmit)
+                                userViewModel.updateUser(user)
                             }
-                            navController.navigate("UpdateGoals")
+                            navController.navigate("mainView")
                         }
                     }) {
                     Text("Submit")
