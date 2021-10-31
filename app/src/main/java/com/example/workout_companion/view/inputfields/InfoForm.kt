@@ -31,7 +31,7 @@ import java.time.Month
 import java.util.Locale as Locale
 import java.time.format.TextStyle as TextStyle
 
-val defaultUser = UserEntity(
+var defaultUser = UserEntity(
         name = "",
         experience_level = ExperienceLevel.BEGINNER,
         sex = Sex.MALE,
@@ -58,26 +58,15 @@ fun DefaultPreview3() {
 
 @Composable
 fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
+    var user = defaultUser
 
-    // User entity
-    // TODO: load existing user entity if it exists
-    var user = UserEntity(
-        name = "",
-        experience_level = ExperienceLevel.BEGINNER,
-        sex = Sex.MALE,
-        birth_date = LocalDate.now(),
-        max_workouts_per_week = 0,
-        height = 0.0,
-        weight = 0.0,
-        activity_level = ActivityLevel.SLIGHTLY_ACTIVE
-    )
-
-    var userState by remember { mutableStateOf (defaultUser) }
-
-    var userDBState = userViewModel
+    val userInDB = userViewModel.user.observeAsState()
+    if (userInDB.value != null) {
+        user = userInDB.value!!
+    }
 
     // Main state variables for the inputs
-    var nameState by remember { mutableStateOf("") }
+    var nameState by remember { mutableStateOf(user.name) }
     var birthYearState by remember { mutableStateOf(user.birth_date.year.toString()) }
     var birthMonthState by remember { mutableStateOf(user.birth_date.month.toString()) }
     var birthDayState by remember { mutableStateOf(user.birth_date.dayOfMonth.toString()) }

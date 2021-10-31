@@ -20,6 +20,8 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
      */
     val readAll: LiveData<List<UserEntity>>
 
+    val user: LiveData<UserEntity>
+
     /**
      * UserRepository Object
      */
@@ -33,6 +35,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         val userDao = WCDatabase.getInstance(application).userDao()
         repository = UserRepository(userDao = userDao)
         readAll = repository.getAll
+        user = repository.user
     }
 
     /**
