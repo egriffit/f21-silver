@@ -61,7 +61,7 @@ class UserState(user: UserEntity) {
     var birthYear by mutableStateOf(user.birth_date.year.toString())
     var birthMonth by mutableStateOf(user.birth_date.month.toString())
     var birthDay by mutableStateOf(user.birth_date.dayOfMonth.toString())
-    var feet by mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toString())
+    var feet by mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString())
     var inches by mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString())
     var weight by mutableStateOf(UnitConverter.toPounds(user.weight).toString())
     var gender by mutableStateOf(user.sex)
@@ -75,7 +75,7 @@ class UserState(user: UserEntity) {
             name = name,
             birth_date = LocalDate.of(birthYear.toInt(), Month.valueOf(birthMonth), birthDay.toInt()),
             height = UnitConverter.toCentimeters(feet.toDouble(), inches.toDouble()),
-            weight = weight.toDouble(),
+            weight = UnitConverter.toKilograms(weight.toDouble()),
             sex = gender,
             activity_level = activityLevel,
             experience_level = expLevel,
