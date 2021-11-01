@@ -16,11 +16,11 @@ import com.example.workout_companion.entity.GoalTypeEntity
 interface GoalTypeDao {
 
     /**
-     * Gets all goals in the GoalTypeEntity table
+     * Gets all goals in the GoalTypeEntity table sorted by primary key
      *
      * @return a LiveData variable containing all GoalTypeEntity values in the table.
      */
-    @Query("SELECT * FROM goal_type")
+    @Query("SELECT * FROM goal_type ORDER BY id ASC")
     fun getAllGoals(): LiveData<List<GoalTypeEntity>>
 
     /**
