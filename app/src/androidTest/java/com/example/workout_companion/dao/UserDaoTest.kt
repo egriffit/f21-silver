@@ -32,6 +32,8 @@ class UserDaoTest : TestCase(){
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         dao = db.userDao()
+
+        TestDataGenerator.addGoalsToDB(db)
     }
 
     @After
