@@ -41,7 +41,8 @@ var defaultUser = UserEntity(
         max_workouts_per_week = 0,
         height = 0.0,
         weight = 0.0,
-        activity_level = ActivityLevel.SLIGHTLY_ACTIVE
+        activity_level = ActivityLevel.SLIGHTLY_ACTIVE,
+        goal_id = 0
 )
 
 @Composable
@@ -81,7 +82,8 @@ class UserState(user: UserEntity) {
             sex = gender,
             activity_level = activityLevel,
             experience_level = expLevel,
-            max_workouts_per_week = maxWorkouts.toInt()
+            max_workouts_per_week = maxWorkouts.toInt(),
+            goal_id = goal.id
         )
     }
 }
