@@ -44,12 +44,6 @@ var defaultUser = UserEntity(
         goal_id = 0
 )
 
-@Composable
-fun InfoForm(navController: NavController, userViewModel: UserViewModel){
-    LazyColumnDemo(navController, userViewModel);
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview3() {
@@ -91,7 +85,7 @@ class UserState(user: UserEntity) {
 }
 
 @Composable
-fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
+fun InfoForm(navController: NavController, userViewModel: UserViewModel) {
     var state = remember { UserState(defaultUser) }
 
     val userInDB = userViewModel.user.observeAsState()
