@@ -21,13 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import com.example.workout_companion.database.GOALS
 import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.Month
 import java.util.Locale as Locale
@@ -46,8 +45,8 @@ var defaultUser = UserEntity(
 )
 
 @Composable
-fun InfoForm(navController: NavController, userViewModel: UserViewModel, goals: LiveData<List<GoalTypeEntity>>){
-    LazyColumnDemo(navController, userViewModel, goals);
+fun InfoForm(navController: NavController, userViewModel: UserViewModel){
+    LazyColumnDemo(navController, userViewModel);
 }
 
 
@@ -68,7 +67,10 @@ class UserState(user: UserEntity) {
     var inches by mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString())
     var weight by mutableStateOf(UnitConverter.toPounds(user.weight).toString())
     var gender by mutableStateOf(user.sex)
-    var goal by mutableStateOf(GoalTypeEntity(0, "Build Muscle", 250)) // TODO: where stored?
+    // Its not best practice to be using a map with our foreign key, but its better than
+    // wrestling with a LiveData List of goals from the db.
+    // We can be confident that this id value exists since all GOALS entries are added to the db.
+    var goal by mutableStateOf(GOALS.getValue(user.goal_id))
     var activityLevel by mutableStateOf(user.activity_level)
     var expLevel by mutableStateOf(user.experience_level)
     var maxWorkouts by mutableStateOf(user.max_workouts_per_week.toString())
@@ -89,9 +91,8 @@ class UserState(user: UserEntity) {
 }
 
 @Composable
-fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel, goals: LiveData<List<GoalTypeEntity>>) {
+fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
     var state = remember { UserState(defaultUser) }
-    val goalsState = goals.observeAsState(listOf())
 
     val userInDB = userViewModel.user.observeAsState()
     if (userInDB.value != null) {
@@ -351,7 +352,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel, g
                 modifier = Modifier.
                     width(with(LocalDensity.current){textFieldSize.width.toDp()})
             ) {
-                goalsState.value.forEach { goal ->
+                GOALS.values.forEach { goal ->
                     DropdownMenuItem(onClick = {
                         state.goal = goal
                         expanded = false

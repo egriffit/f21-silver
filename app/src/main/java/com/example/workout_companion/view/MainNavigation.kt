@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.workout_companion.database.GOALS
 import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.utility.MainGoal
 import com.example.workout_companion.view.inputfields.InfoForm
@@ -32,8 +33,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             SplashScreen(navController)
         }
         composable (route = "userForm" ) {
-            val goals = goalTypeViewModel.allGoals
-            UserForm(navController, userViewModel, goals)
+            UserForm(navController, userViewModel)
         }
         composable (route = "mainView") {
             LandingPage(navController)
@@ -54,8 +54,16 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     }
 }
 
+/**
+ * Create any default values if necessary. Add your default table values here.
+ *
+ * @property goalViewModel The view model to add goals with
+ */
 fun createDefaults(goalViewModel: GoalTypeViewModel) {
-    goalViewModel.addGoal(GoalTypeEntity(0, "Build Muscle", 250))
-    goalViewModel.addGoal(GoalTypeEntity(1, "Gain Strength", 500))
-    goalViewModel.addGoal(GoalTypeEntity(2, "Lose Weight", -500))
+    for (goal in GOALS.values) {
+        // We are not guarding this statement because our database policy
+        // is to ignore any conflicting adds.
+        // Probably not the best solution, but it works for now
+        goalViewModel.addGoal(goal)
+    }
 }

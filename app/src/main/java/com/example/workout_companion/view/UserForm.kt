@@ -11,11 +11,11 @@ import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.UserViewModel
 
 @Composable
-fun UserForm(navController: NavController, userViewModel: UserViewModel, goals: LiveData<List<GoalTypeEntity>>)
+fun UserForm(navController: NavController, userViewModel: UserViewModel)
 {
     Scaffold(
         topBar = {TopNavigation(navController)},
         bottomBar = {},
-        content = { InfoForm(navController, userViewModel, goals) }
+        content = { InfoForm(navController, userViewModel) }
         )
 }
