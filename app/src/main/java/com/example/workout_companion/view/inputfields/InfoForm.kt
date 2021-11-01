@@ -20,8 +20,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
@@ -43,8 +45,8 @@ var defaultUser = UserEntity(
 )
 
 @Composable
-fun InfoForm(navController: NavController, userViewModel: UserViewModel){
-    LazyColumnDemo(navController, userViewModel);
+fun InfoForm(navController: NavController, userViewModel: UserViewModel, goals: LiveData<List<GoalTypeEntity>>){
+    LazyColumnDemo(navController, userViewModel, goals);
 }
 
 
@@ -65,7 +67,7 @@ class UserState(user: UserEntity) {
     var inches by mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString())
     var weight by mutableStateOf(UnitConverter.toPounds(user.weight).toString())
     var gender by mutableStateOf(user.sex)
-    var goal by mutableStateOf(MainGoal.BUILD_MUSCLE) // TODO: where stored?
+    var goal by mutableStateOf(GoalTypeEntity(0, "Build Muscle", 250)) // TODO: where stored?
     var activityLevel by mutableStateOf(user.activity_level)
     var expLevel by mutableStateOf(user.experience_level)
     var maxWorkouts by mutableStateOf(user.max_workouts_per_week.toString())
@@ -85,8 +87,9 @@ class UserState(user: UserEntity) {
 }
 
 @Composable
-fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
+fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel, goals: LiveData<List<GoalTypeEntity>>) {
     var state = remember { UserState(defaultUser) }
+    val goalsState = goals.observeAsState(listOf())
 
     val userInDB = userViewModel.user.observeAsState()
     if (userInDB.value != null) {
@@ -325,7 +328,7 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
             val icon = Icons.Default.ArrowDropDown
 
             OutlinedTextField(
-                value = state.goal.descName,
+                value = state.goal.goal,
                 onValueChange = { /* Do nothing because users use the menu to edit */ },
                 readOnly = true,
                 modifier = Modifier
@@ -346,12 +349,12 @@ fun LazyColumnDemo(navController: NavController, userViewModel: UserViewModel) {
                 modifier = Modifier.
                     width(with(LocalDensity.current){textFieldSize.width.toDp()})
             ) {
-                MainGoal.values().forEach { goal ->
+                goalsState.value.forEach { goal ->
                     DropdownMenuItem(onClick = {
                         state.goal = goal
                         expanded = false
                     }) {
-                        Text(text = goal.descName)
+                        Text(text = goal.goal)
                     }
                 }
             }

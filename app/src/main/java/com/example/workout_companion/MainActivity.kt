@@ -9,8 +9,10 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import com.example.workout_companion.ui.theme.Workout_companionTheme
 import com.example.workout_companion.view.MainNavigation
+import com.example.workout_companion.viewmodel.GoalTypeViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +22,7 @@ class MainActivity : ComponentActivity() {
             Workout_companionTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-
-                    MainNavigation()
+                    MainNavigation(ViewModelProvider(this))
                 }
             }
         }
