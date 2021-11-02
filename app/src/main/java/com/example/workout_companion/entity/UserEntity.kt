@@ -1,6 +1,7 @@
 package com.example.workout_companion.entity
 
 import androidx.room.*
+import com.example.workout_companion.enumeration.*
 import com.example.workout_companion.utility.*
 import java.time.LocalDate
 

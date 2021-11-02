@@ -1,4 +1,4 @@
-package com.example.workout_companion.utility
+package com.example.workout_companion.enumeration
 
 import androidx.room.TypeConverter
 import java.lang.IllegalArgumentException
@@ -25,7 +25,7 @@ object MuscleGroupConverter {
     @JvmStatic
     fun toMuscleGroup(name: String) : MuscleGroup {
         for (enum in MuscleGroup.values()) {
-            if (enum.name.equals(name)) {
+            if (enum.name == name) {
                 return enum
             }
         }

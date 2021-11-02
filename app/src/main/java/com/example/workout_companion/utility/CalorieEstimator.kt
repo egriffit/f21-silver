@@ -1,6 +1,8 @@
 package com.example.workout_companion.utility
 
 import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.Sex
 import kotlin.math.max
 import kotlin.math.roundToInt
 
