@@ -20,12 +20,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import com.example.workout_companion.dao.UserWithGoal
 import com.example.workout_companion.database.GOALS
-import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.ExperienceLevel
+import com.example.workout_companion.enumeration.Sex
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
 import com.example.workout_companion.viewmodel.UserWithGoalViewModel

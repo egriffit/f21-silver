@@ -1,8 +1,8 @@
 package com.example.workout_companion.entity
 
 import androidx.room.*
-import com.example.workout_companion.utility.MuscleGroup
-import com.example.workout_companion.utility.MuscleGroupConverter
+import com.example.workout_companion.enumeration.MuscleGroup
+import com.example.workout_companion.enumeration.MuscleGroupConverter
 
 /**
  * A framework_component table in the database

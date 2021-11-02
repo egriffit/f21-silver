@@ -2,6 +2,10 @@ package com.example.workout_companion.utility
 
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.*
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.ExperienceLevel
+import com.example.workout_companion.enumeration.MuscleGroup
+import com.example.workout_companion.enumeration.Sex
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.Month

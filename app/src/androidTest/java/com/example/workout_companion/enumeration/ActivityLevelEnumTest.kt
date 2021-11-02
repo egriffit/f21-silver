@@ -1,4 +1,4 @@
-package com.example.workout_companion.utility
+package com.example.workout_companion.enumeration
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase

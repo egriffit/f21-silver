@@ -5,10 +5,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.UserEntity
-import com.example.workout_companion.utility.ActivityLevel
-import com.example.workout_companion.utility.ExperienceLevel
-import com.example.workout_companion.utility.Sex
 import com.example.workout_companion.utility.TestDataGenerator
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
@@ -19,7 +15,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
-import java.time.Month
 
 
 @RunWith(AndroidJUnit4::class)

@@ -1,20 +1,11 @@
 package com.example.workout_companion.view
 
-import android.app.Application
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.workout_companion.database.GOALS
-import com.example.workout_companion.entity.GoalTypeEntity
-import com.example.workout_companion.utility.MainGoal
-import com.example.workout_companion.view.inputfields.InfoForm
 import com.example.workout_companion.view.inputfields.LandingPage
 import com.example.workout_companion.viewmodel.*
 

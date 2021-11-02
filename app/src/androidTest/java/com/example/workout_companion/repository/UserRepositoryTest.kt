@@ -7,7 +7,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.enumeration.ExperienceLevel
 import com.example.workout_companion.utility.*
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
@@ -18,8 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.time.LocalDate
-import java.time.Month
 
 @RunWith(AndroidJUnit4::class)
 class UserRepositoryTest : TestCase() {
