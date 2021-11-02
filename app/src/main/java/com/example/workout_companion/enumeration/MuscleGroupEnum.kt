@@ -7,7 +7,7 @@ import java.lang.IllegalArgumentException
  * Enumeration of all muscle groups
  */
 enum class MuscleGroup {
-    CHEST, BACK, TRICEPS, BICEPS, SHOULDERS, ABS, LEGS
+    CHEST, BACK, TRICEPS, BICEPS, SHOULDERS, ABS, LEGS, CALVES
 }
 
 /**
