@@ -22,6 +22,11 @@ class TestDataGenerator {
             goal_id = 0
         )
 
+        @JvmStatic
+        fun addUserToDB(db: WCDatabase) = runBlocking {
+            db.userDao().insert(USER)
+        }
+
         var next_goal_id = 0
         val GOALS: List<GoalTypeEntity> = listOf(
             GoalTypeEntity(next_goal_id++, "Test Goal 0", 500),
