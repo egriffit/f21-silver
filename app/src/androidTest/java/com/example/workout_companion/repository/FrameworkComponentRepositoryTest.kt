@@ -9,7 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.FrameworkComponentDao
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkComponentEntity
-import com.example.workout_companion.utility.MuscleGroup
+import com.example.workout_companion.enumeration.MuscleGroup
 import com.example.workout_companion.utility.TestDataGenerator
 import com.example.workout_companion.utility.getOrAwaitValue
 import junit.framework.TestCase
