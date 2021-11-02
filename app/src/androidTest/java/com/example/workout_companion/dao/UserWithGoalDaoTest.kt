@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class UserWithGoalTest : TestCase() {
+class UserWithGoalDaoTest : TestCase() {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
