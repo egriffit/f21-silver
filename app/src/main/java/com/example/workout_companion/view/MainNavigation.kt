@@ -24,6 +24,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     // Put the view models you need here
     val goalTypeViewModel by lazy { viewModelProvider.get(GoalTypeViewModel::class.java) }
     val userViewModel by lazy { viewModelProvider.get(UserViewModel::class.java) }
+    val userWithGoalViewModel by lazy { viewModelProvider.get(UserWithGoalViewModel::class.java) }
 
     createDefaults(goalTypeViewModel)
 
@@ -33,7 +34,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             SplashScreen(navController)
         }
         composable (route = "userForm" ) {
-            UserForm(navController, userViewModel)
+            UserForm(navController, userViewModel, userWithGoalViewModel)
         }
         composable (route = "mainView") {
             LandingPage(navController)

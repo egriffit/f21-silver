@@ -22,17 +22,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import com.example.workout_companion.dao.UserWithGoal
 import com.example.workout_companion.database.GOALS
 import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
+import com.example.workout_companion.viewmodel.UserWithGoalViewModel
 import java.time.LocalDate
 import java.time.Month
 import java.util.Locale as Locale
 import java.time.format.TextStyle as TextStyle
 
-var defaultUser = UserEntity(
+val DEFAULT_USER = UserEntity(
         name = "",
         experience_level = ExperienceLevel.BEGINNER,
         sex = Sex.MALE,
@@ -43,6 +45,8 @@ var defaultUser = UserEntity(
         activity_level = ActivityLevel.SLIGHTLY_ACTIVE,
         goal_id = 0
 )
+val DEFAULT_GOAL = GOALS.getValue(DEFAULT_USER.goal_id)
+val DEFAULT_USER_WITH_GOAL = UserWithGoal(DEFAULT_USER, DEFAULT_GOAL)
 
 @Preview(showBackground = true)
 @Composable
@@ -52,22 +56,19 @@ fun DefaultPreview3() {
     }
 }
 
-class UserState(user: UserEntity) {
-    var name by mutableStateOf(user.name)
-    var birthYear by mutableStateOf(user.birth_date.year.toString())
-    var birthMonth by mutableStateOf(user.birth_date.month.toString())
-    var birthDay by mutableStateOf(user.birth_date.dayOfMonth.toString())
-    var feet by mutableStateOf(UnitConverter.toFeetAndInches(user.height).first.toInt().toString())
-    var inches by mutableStateOf(UnitConverter.toFeetAndInches(user.height).second.toInt().toString())
-    var weight by mutableStateOf(UnitConverter.toPounds(user.weight).toString())
-    var gender by mutableStateOf(user.sex)
-    // Its not best practice to be using a map with our foreign key, but its better than
-    // wrestling with a LiveData List of goals from the db.
-    // We can be confident that this id value exists since all GOALS entries are added to the db.
-    var goal by mutableStateOf(GOALS.getValue(user.goal_id))
-    var activityLevel by mutableStateOf(user.activity_level)
-    var expLevel by mutableStateOf(user.experience_level)
-    var maxWorkouts by mutableStateOf(user.max_workouts_per_week.toString())
+class UserState(userWithGoal: UserWithGoal) {
+    var name by mutableStateOf(userWithGoal.user.name)
+    var birthYear by mutableStateOf(userWithGoal.user.birth_date.year.toString())
+    var birthMonth by mutableStateOf(userWithGoal.user.birth_date.month.toString())
+    var birthDay by mutableStateOf(userWithGoal.user.birth_date.dayOfMonth.toString())
+    var feet by mutableStateOf(UnitConverter.toFeetAndInches(userWithGoal.user.height).first.toInt().toString())
+    var inches by mutableStateOf(UnitConverter.toFeetAndInches(userWithGoal.user.height).second.toInt().toString())
+    var weight by mutableStateOf(UnitConverter.toPounds(userWithGoal.user.weight).toString())
+    var gender by mutableStateOf(userWithGoal.user.sex)
+    var goal by mutableStateOf(userWithGoal.goal)
+    var activityLevel by mutableStateOf(userWithGoal.user.activity_level)
+    var expLevel by mutableStateOf(userWithGoal.user.experience_level)
+    var maxWorkouts by mutableStateOf(userWithGoal.user.max_workouts_per_week.toString())
 
     fun getUser(): UserEntity {
         return UserEntity (
@@ -85,12 +86,12 @@ class UserState(user: UserEntity) {
 }
 
 @Composable
-fun InfoForm(navController: NavController, userViewModel: UserViewModel) {
-    var state = remember { UserState(defaultUser) }
+fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWithGoalViewModel: UserWithGoalViewModel) {
+    var state = remember { UserState(DEFAULT_USER_WITH_GOAL) }
 
-    val userInDB = userViewModel.user.observeAsState()
-    if (userInDB.value != null) {
-        state = UserState(userInDB.value!!)
+    val userWithGoalInDB = userWithGoalViewModel.userWithGoal.observeAsState()
+    if (userWithGoalInDB.value != null) {
+        state = UserState(userWithGoalInDB.value!!)
     }
 
     LazyColumn(
@@ -109,7 +110,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel) {
                     onValueChange = { state.name = it },
                     label = { Text(text = "Name?") },
                     // Since our name is our primary key, existing user names can't be changed
-                    readOnly = userInDB.value != null,
+                    readOnly = userWithGoalInDB.value != null,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -461,7 +462,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel) {
                     onClick = {
                         val user = state.getUser()
                         if (userIsValid(user)) {
-                            if (userInDB.value == null) {
+                            if (userWithGoalInDB.value == null) {
                                 userViewModel.addUser(user)
                             }
                             else {
