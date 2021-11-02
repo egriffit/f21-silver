@@ -103,21 +103,3 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 }
-
-/**
-* FrameworkTypeViewModel Factory class that is used to initialize the FrameworkTypeViewModel
- *
-* @param Application context
-*/
-class FrameworkTypeViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    /**
-     * Method to create an instance of the FrameworkTypeViewModel
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(FrameworkTypeViewModel::class.java)) {
-            return FrameworkTypeViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
-    }
-}
