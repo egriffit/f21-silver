@@ -9,30 +9,32 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.Text
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.workout_companion.database.GOALS
+import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.utility.MainGoal
 import com.example.workout_companion.view.inputfields.InfoForm
 import com.example.workout_companion.view.inputfields.LandingPage
-import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
-import com.example.workout_companion.viewmodel.CurrentUserGoalViewModelFactory
-import com.example.workout_companion.viewmodel.UserViewModel
-import com.example.workout_companion.viewmodel.UserViewModelFactory
+import com.example.workout_companion.viewmodel.*
 
 
 @Composable
-fun MainNavigation() {
+fun MainNavigation(viewModelProvider: ViewModelProvider) {
+    // Put the view models you need here
+    val goalTypeViewModel by lazy { viewModelProvider.get(GoalTypeViewModel::class.java) }
+    val userViewModel by lazy { viewModelProvider.get(UserViewModel::class.java) }
+    val userWithGoalViewModel by lazy { viewModelProvider.get(UserWithGoalViewModel::class.java) }
+
+    createDefaults(goalTypeViewModel)
+
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
         composable (route = "splashScreen") {
             SplashScreen(navController)
         }
         composable (route = "userForm" ) {
-            //load user view model
-            val context = LocalContext.current
-
-            val userViewModel: UserViewModel = viewModel(
-                factory = UserViewModelFactory(context.applicationContext as Application)
-            )
-            UserForm(navController, userViewModel)
+            UserForm(navController, userViewModel, userWithGoalViewModel)
         }
         composable (route = "mainView") {
             LandingPage(navController)
@@ -50,5 +52,19 @@ fun MainNavigation() {
             AssessmentView(navController)
         }
         // Other routes go here
+    }
+}
+
+/**
+ * Create any default values if necessary. Add your default table values here.
+ *
+ * @property goalViewModel The view model to add goals with
+ */
+fun createDefaults(goalViewModel: GoalTypeViewModel) {
+    for (goal in GOALS.values) {
+        // We are not guarding this statement because our database policy
+        // is to ignore any conflicting adds.
+        // Probably not the best solution, but it works for now
+        goalViewModel.addGoal(goal)
     }
 }

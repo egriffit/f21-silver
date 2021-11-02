@@ -18,8 +18,14 @@ class TestDataGenerator {
             max_workouts_per_week = 2,
             height = 160.0,
             weight = 70.0,
-            activity_level= ActivityLevel.MODERATELY_ACTIVE
+            activity_level= ActivityLevel.MODERATELY_ACTIVE,
+            goal_id = 0
         )
+
+        @JvmStatic
+        fun addUserToDB(db: WCDatabase) = runBlocking {
+            db.userDao().insert(USER)
+        }
 
         var next_goal_id = 0
         val GOALS: List<GoalTypeEntity> = listOf(

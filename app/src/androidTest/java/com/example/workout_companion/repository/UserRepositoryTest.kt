@@ -37,6 +37,9 @@ class UserRepositoryTest : TestCase() {
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         dao = db.userDao()
         repository = UserRepository(dao)
+
+        // We need some goals to link to
+        TestDataGenerator.addGoalsToDB(db)
     }
 
     @After

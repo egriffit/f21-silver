@@ -19,8 +19,6 @@ import androidx.navigation.NavController
 import com.example.workout_companion.R
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModelFactory
-import com.example.workout_companion.viewmodel.UserViewModel
-import com.example.workout_companion.viewmodel.UserViewModelFactory
 import kotlinx.coroutines.delay
 
 
