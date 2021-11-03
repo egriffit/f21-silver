@@ -4,13 +4,17 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
+import com.vanpra.composematerialdialogs.MaterialDialog
 import java.time.LocalDate
 /***
  * Composable to display a column of foods in a meal
@@ -26,23 +30,29 @@ import java.time.LocalDate
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FoodList(foodInMealViewModel: FoodInMealViewModel, meal: String, open: MutableState<Boolean>,
-             nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
-)
-{
+fun FoodList( meal: String, open: MutableState<Boolean>,
+              foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
+              foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
+) {
     val today = LocalDate.now()
     var foundFoods =  foodInMealViewModel.getFoodsInMeal(meal, today).observeAsState(listOf()).value
     if(open.value){
-        Column(){
+        Column(
+            modifier = Modifier.fillMaxHeight()
+        ){
             Text("Foods")
-            //display current foods in meal
-            for (food in foundFoods) {
-                Row {
-                    Text("${food.name} - Serving Size: ${food.serving_size} Carbohydrates: ${food.carbohydrates}g  Protein: ${food.protein}g Fat: ${food.fat}")
+            Column(){
+                //display current foods in meal
+                for (food in foundFoods) {
+                    Row {
+                        Text("${food.name} - Serving Size: ${food.serving_size} Carbohydrates: ${food.carbohydrates}g  Protein: ${food.protein}g Fat: ${food.fat}")
+                    }
                 }
             }
+
         }
         //search box to add food
-        foodSearchBox(foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
+
+        foodSearchBox(meal, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
     }
 }

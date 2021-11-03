@@ -18,7 +18,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * Retrieves a list of all foods in the food_type table
      */
     val getAllFoods: LiveData<List<FoodTypeEntity>>
-
+    var foodID: Int
 
     /**
      * FoodType Repoository Object
@@ -33,6 +33,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
         val foodTypeDao = WCDatabase.getInstance(application).foodTypeDao()
         repository = FoodTypeRepository(foodTypeDao)
         getAllFoods = repository.getAllFoods
+        foodID = 0
     }
 
     /**
@@ -47,6 +48,22 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
             food = repository.getFoodByName(name).value
         }
         return food
+    }
+
+    /**
+     * Function to initialize a coroutine to retrieve the id for a food
+     * @param name, String
+     * @param calories, Double
+     * @param serving_size, Double
+     * @param carbohydrate, Double
+     * @param protein, Double
+     * @param fat, Double
+     * @return  Int total number of rows found
+     */
+    fun getId(item: FoodTypeEntity){
+        viewModelScope.launch(Dispatchers.IO){
+            foodID = repository.getId(item)
+        }
     }
 
 

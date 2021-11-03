@@ -1,6 +1,10 @@
 package com.example.workout_companion.view.nutrition
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -17,9 +21,11 @@ import androidx.compose.ui.unit.sp
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutritionItem
+import com.example.workout_companion.entity.FoodInMealEntity
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
 import com.vanpra.composematerialdialogs.*
 
 /***
@@ -36,9 +42,11 @@ import com.vanpra.composematerialdialogs.*
  * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel,
-                  foodTypeViewModel: FoodTypeViewModel){
+fun foodSearchBox(meal: String,foodTypeViewModel: FoodTypeViewModel,
+                  mealViewModel: MealViewModel,foodInMealViewModel: FoodInMealViewModel,
+                  nutritionAPIViewModel: NutritionAPIViewModel){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val food = remember{ mutableStateOf("") }
@@ -67,24 +75,37 @@ fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewMode
                     selectedFoundFood.protein_g, selectedFoundFood.fat_total_g)
 
                 foodTypeViewModel.addFoodType(foodType)
+                //get id from food
+                mealViewModel.getMealId(meal)
+                foodTypeViewModel.getId(foodType)
+                var foodId = foodTypeViewModel.foodID
+                //get id from meal
+                var mealId = mealViewModel.mealId
+
                 //add the food to the food in meals table
-                //need a function to get the last insert id or to get the record in food_type Table
+                val foodInMealEntity = FoodInMealEntity(mealId, foodId, 1.0)
 
+                if(mealId != 0 && foodId != 0){
+                    foodInMealViewModel.insert(foodInMealEntity)
+
+                }
                 //remove the found foods from my snapshotstate
-
                 foundFoods.clear()
 
             })
             negativeButton("Cancel", onClick = {foundFoods.clear()})
         }
         ) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
+            LazyColumn(
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .height(400.dp)
+                        .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
-                foodRadioButtonList(foundFoods, food, selectedFoodIndex)
+                item{
+                    foodRadioButtonList(foundFoods, food, selectedFoodIndex)
+                }
            }
         }
     Column() {

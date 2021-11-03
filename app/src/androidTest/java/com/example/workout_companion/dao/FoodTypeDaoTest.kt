@@ -9,6 +9,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.sampleData.sampleFoodTypeList
+import com.example.workout_companion.sampleData.sampleFoodTypeOneFoodList
+import com.example.workout_companion.sampleData.sampleFoodUpdateExample
 import com.example.workout_companion.utility.ActivityLevel
 import com.example.workout_companion.utility.ExperienceLevel
 import com.example.workout_companion.utility.Sex
@@ -48,66 +51,77 @@ class FoodTypeDaoTest : TestCase(){
     }
 
     @Test
-    fun TestGetAll() = runBlocking(){
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-       FoodTypeEntity(2, "lettuce", "-1",
-            80.0, 100.0, 1.3, 98.0, 0.7))
-        dao.insert(foods)
+    fun testGetAll() = runBlocking(){
+        dao.insert(sampleFoodTypeList)
         val foundFoods: List<FoodTypeEntity> = dao.getAll().getOrAwaitValue()
-        MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(foods))
+        MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(sampleFoodTypeList))
     }
 
     @Test
-    fun TestGetByName() = runBlocking(){
-        val food = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7))
-        dao.insert(food)
-        val byName:List<FoodTypeEntity> = dao.getByName("carrot").getOrAwaitValue()
+    fun testGetByName() = runBlocking(){
+        val food = sampleFoodTypeOneFoodList
+        dao.insert(sampleFoodTypeList)
+        val byName: List<FoodTypeEntity> = dao.getByName("carrot").getOrAwaitValue()
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(food))
     }
 
     @Test
-    fun TestGetCount() = runBlocking(){
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
-        dao.insert(foods)
+    fun testGetId() = runBlocking(){
+        val food = sampleFoodTypeList
+        dao.insert(food)
+        val foundId: Int = dao.getId(sampleFoodTypeList.elementAt(0).name,
+            sampleFoodTypeList.elementAt(0).calories, sampleFoodTypeList.elementAt(0).serving_size,
+            sampleFoodTypeList.elementAt(0).carbohydrates, sampleFoodTypeList.elementAt(0).protein,
+            sampleFoodTypeList.elementAt(0).fat)
+
+        val foundId2: Int = dao.getId(sampleFoodTypeList.elementAt(1).name,
+           sampleFoodTypeList.elementAt(1).calories, sampleFoodTypeList.elementAt(1).serving_size,
+            sampleFoodTypeList.elementAt(1).carbohydrates, sampleFoodTypeList.elementAt(1).protein,
+           sampleFoodTypeList.elementAt(1).fat)
+
+        val foundFoods: List<FoodTypeEntity> = dao.getAll().getOrAwaitValue()
+        MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(sampleFoodTypeList))
+        MatcherAssert.assertThat(foundId, CoreMatchers.equalTo(1))
+        MatcherAssert.assertThat(foundId2, CoreMatchers.equalTo(2))
+    }
+
+    @Test
+    fun testGetCount() = runBlocking(){
+        dao.insert(sampleFoodTypeList)
         val foundFoods: Int = dao.getCount()
         MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(2))
     }
 
     @Test
-    fun TestGetCountWithName() = runBlocking(){
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
-        dao.insert(foods)
+    fun testGetCountWithName() = runBlocking(){
+        dao.insert(sampleFoodTypeList)
         val foundFoods: Int = dao.getCountWithName("carrot")
         MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(1))
     }
 
     @Test
-    fun TestUpdate() = runBlocking(){
-        val foods = FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7)
-            val newFood = FoodTypeEntity(1, "carrot", "-1",
-            80.0, 100.0, 1.3, 98.0, 0.7)
+    fun testGetCoun2() = runBlocking(){
+        dao.insert(sampleFoodTypeList)
 
-        dao.insert(foods)
-       dao.update(newFood)
+        val foundFoods: Int = dao.getCount(sampleFoodTypeList.elementAt(0).name,
+            sampleFoodTypeList.elementAt(0).calories, sampleFoodTypeList.elementAt(0).serving_size,
+            sampleFoodTypeList.elementAt(0).carbohydrates, sampleFoodTypeList.elementAt(0).protein,
+            sampleFoodTypeList.elementAt(0).fat)
+        MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(1))
+    }
+
+    @Test
+    fun testUpdate() = runBlocking(){
+        val newFood = sampleFoodUpdateExample
+        dao.insert(sampleFoodTypeList[0])
+        dao.update(newFood)
         val found :List<FoodTypeEntity> = dao.getByName("carrot").getOrAwaitValue()
         MatcherAssert.assertThat(found.elementAt(0).edamam_id, CoreMatchers.equalTo(newFood.edamam_id))
     }
 
     @Test
-    fun TestDelete() = runBlocking(){
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
+    fun testDelete() = runBlocking(){
+        val foods = sampleFoodTypeList
 
         dao.insert(foods)
         dao.delete(foods[0])
@@ -115,12 +129,8 @@ class FoodTypeDaoTest : TestCase(){
         MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(0))
     }
 
-    fun TestDeleteAll() = runBlocking(){
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
-
+    fun testDeleteAll() = runBlocking(){
+        val foods = sampleFoodTypeList
         dao.insert(foods)
         dao.deleteAll()
         val foundFoods: Int = dao.getCount()

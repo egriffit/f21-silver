@@ -15,6 +15,7 @@ import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
 
 /***
  * Composable to display meals for the current day and a button to create a meal
@@ -29,8 +30,9 @@ import com.example.workout_companion.viewmodel.FoodTypeViewModel
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
-             nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
+fun MealList(meals: List<MealEntity>, foodTypeViewModel: FoodTypeViewModel,
+             mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
+             nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center){
@@ -51,7 +53,9 @@ fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
             // Name
                 item {
                     Row(horizontalArrangement =  Arrangement.Center) {
-                        mealButton(meal.type, fodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
+
+                        mealButton(meal.type, foodTypeViewModel, mealViewModel, foodInMealViewModel,
+                            nutritionAPIViewModel)
                     }
                 }
         }else{

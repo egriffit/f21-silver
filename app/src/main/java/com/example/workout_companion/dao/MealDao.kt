@@ -47,7 +47,36 @@ interface MealDao {
     """)
     fun getByName(type: String): LiveData<List<MealEntity>>
 
+    /**
+     * Retrieves the ide of a meal based on the name of the meal
+     * and date
+     *
+     * @param type, a string equal to the type of meal
+     * @param date, LocalDate
+     * @return  id, Int
+     */
+    @Query("""
+       SELECT id FROM meal 
+        WHERE type = :type 
+        AND date = :date
+        LIMIT 1
+    """)
+    fun getMealId(type: String, date: LocalDate): Int
 
+    /**
+     * Retrieves the id of a meal based on the name of the meal
+     * where the date is today
+     *
+     * @param type, a string equal to the type of meal
+     * @return  id, Int
+     */
+    @Query("""
+       SELECT id FROM meal 
+        WHERE type = :type 
+        AND date = strftime('%Y-%m-%d', DATE('now'))
+        LIMIT 1
+    """)
+    fun getMealId(type: String): Int
 
     /**
      * Retrieves the row count for the total of records in the meal table

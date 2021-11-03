@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
 
 /***
  * Composable to show and hide foods in a meal using a +/- button
@@ -30,8 +31,9 @@ import com.example.workout_companion.viewmodel.FoodTypeViewModel
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel,
-               nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
+fun mealButton(meal: String, foodTypeViewModel: FoodTypeViewModel,
+               mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
+               nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     val open = remember { mutableStateOf(false) }
     Column(
@@ -53,6 +55,7 @@ fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel,
             Spacer(modifier = Modifier.padding(start = 20.dp))
             Text(meal)
         }
-        FoodList(fodInMealViewModel, meal, open, nutritionAPIViewModel, foodTypeViewModel)
+
+        FoodList(meal, open, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
     }
 }

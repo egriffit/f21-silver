@@ -28,6 +28,17 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
     }
 
     /**
+     * Retrieves the row count for the number of records with
+     * the fields equal to the fields in the foodEntity object provided
+     *
+     * @param item, FoodTypeEntity
+     */
+    suspend fun getId(item: FoodTypeEntity): Int{
+        return foodTypeDao.getId(item.name, item.calories, item.serving_size,
+            item.carbohydrates, item.protein, item.fat)
+    }
+
+    /**
      * Retrieves number of foods in food_type table
      *
      * @return Int
@@ -47,13 +58,54 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
     }
 
     /**
-     * Add a list of foods to the food_type table
+     * Retrieves the row count for the number of records with
+     * the fields equal to the fields in the foodEntity object provided
+     *
+     * @param name, String
+     * @param calories, Double
+     * @param serving_size, Double
+     * @param carbohydrate, Double
+     * @param protein, Double
+     * @param fat, Double
+     * @return  Int total number of rows found
+     */
+    suspend fun getCount(name: String, calories: Double, serving_size: Double,
+                         carbohydrates: Double, protein: Double, fat: Double): Int{
+        return foodTypeDao.getCount(name, calories, serving_size, carbohydrates, protein, fat)
+    }
+
+    /**
+     * Checks if a food entity provided is already in the table
+     *
+     * @param item foodEntity
+     * @return  Boolean
+     */
+    suspend fun checkIfExists(item: FoodTypeEntity): Boolean{
+        val found = foodTypeDao.getCount(item.name, item.calories, item.serving_size, item.carbohydrates,
+                                        item.protein, item.fat)
+        if(found > 0){
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Add a list of foods to the food_type table. Add if not found,
+     * update if found
      *
      *@param foods List<FoodTypeEntity>
      * @return void
      */
+
     suspend fun insert(foods: List<FoodTypeEntity>){
-        return foodTypeDao.insert(foods)
+        for(food in foods){
+            val found = checkIfExists(food)
+            if(!found){
+                foodTypeDao.insert(food)
+            }else{
+                foodTypeDao.update(food)
+            }
+        }
     }
 
 
@@ -64,9 +116,13 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
      * @return void
      */
     suspend fun insert(food: FoodTypeEntity){
-        return foodTypeDao.insert(food)
+        val found = checkIfExists(food)
+        if(!found){
+            foodTypeDao.insert(food)
+        }else{
+            foodTypeDao.update(food)
+        }
     }
-
 
     /**
      * Update a food in the food_type table

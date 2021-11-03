@@ -29,6 +29,32 @@ interface FoodTypeDao {
     @Query("SELECT * FROM food_type WHERE name = :name")
     fun getByName(name: String): LiveData<List<FoodTypeEntity>>
 
+
+    /**
+     * Retrieves the row count for the number of records with
+     * the fields equal to the fields in the foodEntity object provided
+     *
+     * @param name, String
+     * @param calories, Double
+     * @param serving_size, Double
+     * @param carbohydrate, Double
+     * @param protein, Double
+     * @param fat, Double
+     * @return  Int total number of rows found
+     */
+    @Transaction
+    @Query("""SELECT CAST(id as integer) 
+                    FROM food_type 
+                    WHERE name = :name
+                    AND calories = :calories
+                    AND serving_size = :serving_size
+                    AND carbohydrates = :carbohydrates
+                    AND protein = :protein
+                    AND fat = :fat
+                   """)
+    suspend fun getId(name: String, calories: Double, serving_size: Double,
+                      carbohydrates: Double, protein: Double, fat: Double): Int
+
     /**
      * Retrieves the row count for the total of records in the food_type table
      *
@@ -46,6 +72,30 @@ interface FoodTypeDao {
      */
     @Query("SELECT COUNT(*) FROM food_type WHERE name = :name")
     suspend fun getCountWithName(name: String): Int
+
+    /**
+     * Retrieves the row count for the number of records with
+     * the fields equal to the fields in the foodEntity object provided
+     *
+     * @param name, String
+     * @param calories, Double
+     * @param serving_size, Double
+     * @param carbohydrate, Double
+     * @param protein, Double
+     * @param fat, Double
+     * @return  Int total number of rows found
+     */
+    @Query("""SELECT COUNT(*) FROM food_type 
+                    WHERE name = :name
+                    AND calories = :calories
+                    AND serving_size = :serving_size
+                    AND carbohydrates = :carbohydrates
+                    AND protein = :protein
+                    AND fat = :fat
+                   """)
+    suspend fun getCount(name: String, calories: Double, serving_size: Double,
+                         carbohydrates: Double, protein: Double, fat: Double): Int
+
 
     /**
      * Insert a FoodTypeEntity object into the food_type table
