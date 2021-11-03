@@ -66,24 +66,3 @@ class FrameworkDayViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 }
-
-/**
- * Factory for creating a [FrameworkDayViewModel]
- *
- * @property application    the application.
- */
-class FrameworkDayViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-
-    /**
-     * Create a [FrameworkDayViewModel]
-     *
-     * @return a [FrameworkDayViewModel]
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(FrameworkDayViewModel::class.java)) {
-            return FrameworkDayViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
-    }
-}

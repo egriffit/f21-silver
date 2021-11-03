@@ -2,6 +2,8 @@ package com.example.workout_companion.utility
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.Sex
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

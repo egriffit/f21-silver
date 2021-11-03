@@ -1,15 +1,35 @@
 package com.example.workout_companion.utility
 
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.FrameworkComponentEntity
-import com.example.workout_companion.entity.FrameworkDayEntity
-import com.example.workout_companion.entity.FrameworkTypeEntity
-import com.example.workout_companion.entity.GoalTypeEntity
+import com.example.workout_companion.entity.*
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.ExperienceLevel
+import com.example.workout_companion.enumeration.MuscleGroup
+import com.example.workout_companion.enumeration.Sex
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.time.Month
 
 class TestDataGenerator {
 
     companion object {
+
+        val USER = UserEntity(
+            name = "John Smith",
+            experience_level = ExperienceLevel.BEGINNER,
+            sex = Sex.MALE,
+            birth_date = LocalDate.of (1990, Month.JANUARY, 1),
+            max_workouts_per_week = 2,
+            height = 160.0,
+            weight = 70.0,
+            activity_level= ActivityLevel.MODERATELY_ACTIVE,
+            goal_id = 0
+        )
+
+        @JvmStatic
+        fun addUserToDB(db: WCDatabase) = runBlocking {
+            db.userDao().insert(USER)
+        }
 
         var next_goal_id = 0
         val GOALS: List<GoalTypeEntity> = listOf(

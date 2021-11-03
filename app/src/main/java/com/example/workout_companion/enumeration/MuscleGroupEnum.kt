@@ -1,4 +1,4 @@
-package com.example.workout_companion.utility
+package com.example.workout_companion.enumeration
 
 import androidx.room.TypeConverter
 import java.lang.IllegalArgumentException
@@ -7,7 +7,7 @@ import java.lang.IllegalArgumentException
  * Enumeration of all muscle groups
  */
 enum class MuscleGroup {
-    CHEST, BACK, TRICEPS, BICEPS, SHOULDERS, ABS, LEGS
+    CHEST, BACK, TRICEPS, BICEPS, SHOULDERS, ABS, LEGS, CALVES
 }
 
 /**
@@ -25,7 +25,7 @@ object MuscleGroupConverter {
     @JvmStatic
     fun toMuscleGroup(name: String) : MuscleGroup {
         for (enum in MuscleGroup.values()) {
-            if (enum.name.equals(name)) {
+            if (enum.name == name) {
                 return enum
             }
         }

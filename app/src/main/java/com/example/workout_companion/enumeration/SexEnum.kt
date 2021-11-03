@@ -1,4 +1,4 @@
-package com.example.workout_companion.utility
+package com.example.workout_companion.enumeration
 
 import androidx.room.TypeConverter
 import java.lang.IllegalArgumentException

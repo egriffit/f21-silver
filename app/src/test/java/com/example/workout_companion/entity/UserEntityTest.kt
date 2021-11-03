@@ -20,7 +20,9 @@ class UserEntityTest {
         val activityLevel = ActivityLevel.MODERATELY_ACTIVE
         val height = 160.0
         val weight = 70.0
-        val user = UserEntity(name, experienceLevel, sex, birthDate, maxWorkoutsPerWeek, height, weight, activityLevel)
+        val goalId = 0
+        val user = UserEntity(name, experienceLevel, sex,
+            birthDate, maxWorkoutsPerWeek, height, weight, activityLevel, goalId)
 
         Assert.assertEquals(user.name, name)
         Assert.assertEquals(user.experience_level, experienceLevel)
@@ -28,7 +30,8 @@ class UserEntityTest {
         Assert.assertEquals(user.birth_date, birthDate)
         Assert.assertEquals(user.max_workouts_per_week, maxWorkoutsPerWeek)
         Assert.assertEquals(user.max_workouts_per_week, maxWorkoutsPerWeek)
-        Assert.assertEquals(user.weight, weight)
+        Assert.assertEquals(user.weight, weight, 0.01)
         Assert.assertEquals(user.activity_level, activityLevel)
+        Assert.assertEquals(user.goal_id, goalId)
     }
 }
