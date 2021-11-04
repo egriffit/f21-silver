@@ -36,7 +36,7 @@ fun NutritionOverview(navController: NavController){
     )
 //    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
 //        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
-//    )
+//    )M
     val nutritionAPIViewModel: NutritionAPIViewModel =  viewModel()
 
     Scaffold(

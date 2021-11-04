@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.navigation.NavController
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
@@ -26,7 +27,7 @@ import java.time.LocalDate
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FoodList(foodInMealViewModel: FoodInMealViewModel, meal: String, open: MutableState<Boolean>,
+fun FoodList(navController: NavController, foodInMealViewModel: FoodInMealViewModel, meal: String, open: MutableState<Boolean>,
              nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
 )
 {
@@ -43,6 +44,6 @@ fun FoodList(foodInMealViewModel: FoodInMealViewModel, meal: String, open: Mutab
             }
         }
         //search box to add food
-        foodSearchBox(foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
+        foodSearchBox(navController, foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
     }
 }

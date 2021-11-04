@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
@@ -30,7 +31,7 @@ import com.example.workout_companion.viewmodel.FoodTypeViewModel
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel,
+fun mealButton(navController: NavController, meal: String, foodInMealViewModel: FoodInMealViewModel,
                nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
 ) {
     val open = remember { mutableStateOf(false) }
@@ -53,6 +54,6 @@ fun mealButton(meal: String, fodInMealViewModel: FoodInMealViewModel,
             Spacer(modifier = Modifier.padding(start = 20.dp))
             Text(meal)
         }
-        FoodList(fodInMealViewModel, meal, open, nutritionAPIViewModel, foodTypeViewModel)
+        FoodList(navController, foodInMealViewModel, meal, open, nutritionAPIViewModel, foodTypeViewModel)
     }
 }

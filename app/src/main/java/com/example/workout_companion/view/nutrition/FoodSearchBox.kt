@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutritionItem
@@ -37,7 +38,7 @@ import com.vanpra.composematerialdialogs.*
  *
  */
 @Composable
-fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel,
+fun foodSearchBox(navController: NavController, foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel,
                   foodTypeViewModel: FoodTypeViewModel){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -109,12 +110,14 @@ fun foodSearchBox(foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewMode
                 Button(onClick = {
                     //should check to see if the food exists in the table
 
-                    //make an api call for the search term
-                    nutritionAPIViewModel.findFood(food.value)
-                    //store the foods
-                    foundFoods = nutritionAPIViewModel.foodResults
-                    //create the pick food form
-                    dialogState.show()
+//                    //make an api call for the search term
+//                    nutritionAPIViewModel.findFood(food.value)
+//                    //store the foods
+//                    foundFoods = nutritionAPIViewModel.foodResults
+//                    //create the pick food form
+//                    dialogState.show()
+                    navController.navigate("searchFood/${food.value}/${meal.value}")
+
                 }) {
                     Text(
                         "Search",

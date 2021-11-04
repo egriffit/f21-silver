@@ -66,7 +66,7 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 
         //display meals
         if (foundMeals != null) {
-            MealList(foundMeals, foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
+            MealList(navController, foundMeals, foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
         }
         //display form to add meals
         Row(
