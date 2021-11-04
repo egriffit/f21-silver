@@ -18,6 +18,15 @@ import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.sampleData.sampleFoodTypeList
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 
+/***
+ * Composable to show a lazy column of FoodListItems.
+ * Consists of:
+ * FoodListItem which consists of the food name, serving size, macronutrient and calorie composition,
+ * and a text field to specify the number of servings,
+ *
+ * @param foods, a list of FoodTypeEntity
+ * @param servings, a list of MutableStates to track te serving quantity
+ */
 @Composable
 fun FoodList(foods: List<FoodTypeEntity>, servings: List<MutableState<Double>>){
   LazyColumn(){
@@ -31,6 +40,17 @@ fun FoodList(foods: List<FoodTypeEntity>, servings: List<MutableState<Double>>){
 
 }
 
+/***
+ * Composable to show display the servings, calories and macronutrient information for a food
+ * Consists of:
+ * food name,
+ * serving size,
+ * macronutrient and calorie composition,
+ * a text field to specify the number of servings,
+ *
+ * @param foods, a FoodTypeEntity
+ * @param servings, a  MutableStates to track te serving quantity
+ */
 @Composable
 fun FoodListItem(food: FoodTypeEntity, serving: MutableState<Double>) {
     Row() {

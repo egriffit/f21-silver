@@ -1,5 +1,6 @@
 package com.example.workout_companion.view.inputfields
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -35,6 +36,7 @@ import java.time.Month
 import java.util.Locale as Locale
 import java.time.format.TextStyle as TextStyle
 
+@SuppressLint("NewApi")
 val DEFAULT_USER = UserEntity(
         name = "",
         experience_level = ExperienceLevel.BEGINNER,
@@ -57,6 +59,7 @@ fun DefaultPreview3() {
     }
 }
 
+@SuppressLint("NewApi")
 class UserState(userWithGoal: UserWithGoal) {
     var name by mutableStateOf(userWithGoal.user.name)
     var birthYear by mutableStateOf(userWithGoal.user.birth_date.year.toString())
@@ -86,6 +89,7 @@ class UserState(userWithGoal: UserWithGoal) {
     }
 }
 
+@SuppressLint("NewApi")
 @Composable
 fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWithGoalViewModel: UserWithGoalViewModel) {
     var state = remember { UserState(DEFAULT_USER_WITH_GOAL) }
@@ -506,6 +510,7 @@ fun sexIsValid(sex: Sex) : Boolean {
     return Sex.values().contains(sex)
 }
 
+@SuppressLint("NewApi")
 fun birthDateIsValid(date: LocalDate) : Boolean {
     return date < LocalDate.now()
 }

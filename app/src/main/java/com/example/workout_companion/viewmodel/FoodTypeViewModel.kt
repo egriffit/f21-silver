@@ -1,13 +1,10 @@
 package com.example.workout_companion.viewmodel
 
 import android.app.Application
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.CurrentNutritionPlanAndFrameworkEntity
-import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.FoodTypeEntity
-import com.example.workout_companion.entity.FrameworkComponentEntity
-import com.example.workout_companion.repository.CurrentUserGoalRepository
 import com.example.workout_companion.repository.FoodTypeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

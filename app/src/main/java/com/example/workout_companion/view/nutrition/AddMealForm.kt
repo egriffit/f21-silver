@@ -28,17 +28,19 @@ import com.vanpra.composematerialdialogs.title
  * a button to add a meal
  * a button to remove meals
  *
- * @param navController, a NavController to navigate to different views
- * @param mealViewModel, a  view model to work with meal table
+ * @param navController, a NavController to navigate to different view
+ * @param foodTypeViewModel, a  view model to work with food_type table
+ * @param mealViewModel, a view model to work with the the meal table
  * @param foundINMealViewModel, a view model to work with the the food_in_meal table
- * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
-                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel,
-                foodTypeViewModel: FoodTypeViewModel
+fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewModel,
+                mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
+                nutritionAPIViewModel: NutritionAPIViewModel
 ){
     val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
     val confirmremove = rememberMaterialDialogState()
@@ -66,7 +68,7 @@ fun AddMealForm(navController: NavController, mealViewModel: MealViewModel,
 
         //display meals
         if (foundMeals != null) {
-            MealList(navController, foundMeals, foodInMealViewModel, nutritionAPIViewModel, foodTypeViewModel)
+            MealList(navController, foundMeals, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel, )
         }
         //display form to add meals
         Row(

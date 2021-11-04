@@ -18,11 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
 
 /***
  * Composable to show and hide foods in a meal using a +/- button
@@ -32,15 +32,20 @@ import com.example.workout_companion.viewmodel.FoodTypeViewModel
  * a text label, the name of the meal
  * a FoodList composable to display found foods
  *
+ * @param navController, a NavController to navigate to different view
  * @param meal, string
- * @param foundINMealViewModel, a view model to work with the the food_in_meal table
- * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ * @param calories, double, total calories for meal
+ * @param foodTypeViewModel, a  view model to work with food_type table
+ * @param mealViewModel, a view model to work with the the meal table
+ * @param foundInMealViewModel, a view model to work with the the food_in_meal table
+ * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun mealButton(navController: NavController, meal: String, calories: Double,
-               foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel, foodTypeViewModel: FoodTypeViewModel
+               foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
+               foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     val open = remember { mutableStateOf(false) }
     Column(

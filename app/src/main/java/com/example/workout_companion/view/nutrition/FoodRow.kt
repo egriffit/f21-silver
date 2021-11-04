@@ -12,6 +12,11 @@ import androidx.compose.ui.unit.dp
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.sampleData.sampleFoodTypeList
 
+/***
+ * Composable to show a list of foods with their name and calories
+ *
+ * @param food, a FoodTypeEntity
+ */
 @Composable
 fun FoodRow(food: FoodTypeEntity){
     Row(modifier = Modifier.fillMaxWidth()

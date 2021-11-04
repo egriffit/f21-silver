@@ -21,6 +21,7 @@ import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNu
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
 import com.vanpra.composematerialdialogs.*
 
 /***
@@ -38,8 +39,10 @@ import com.vanpra.composematerialdialogs.*
  *
  */
 @Composable
-fun foodSearchBox(navController: NavController, foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel,
-                  foodTypeViewModel: FoodTypeViewModel){
+fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel: FoodTypeViewModel,
+                  mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
+                  nutritionAPIViewModel: NutritionAPIViewModel
+){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val food = remember{ mutableStateOf("") }
@@ -116,7 +119,7 @@ fun foodSearchBox(navController: NavController, foodInMealViewModel: FoodInMealV
 //                    foundFoods = nutritionAPIViewModel.foodResults
 //                    //create the pick food form
 //                    dialogState.show()
-                    navController.navigate("searchFood/${food.value}/${meal.value}")
+                    navController.navigate("searchFood/${food.value}/${meal}")
 
                 }) {
                     Text(

@@ -21,23 +21,22 @@ import com.example.workout_companion.view.nutrition.AddMealForm
 import com.example.workout_companion.viewmodel.*
 
 @RequiresApi(Build.VERSION_CODES.O)
+/***
+ * Composable form to display current nutrition and a form to create and update meals
+ *
+ * @param navController, a NavController to navigate to different view
+ * @param foodTypeViewModel, a  view model to work with food_type table
+ * @param mealViewModel, a view model to work with the the meal table
+ * @param foundINMealViewModel, a view model to work with the the food_in_meal table
+ * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
+ *
+ */
 @Composable
-fun NutritionOverview(navController: NavController){
+fun NutritionOverview(navController: NavController,
+                      foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
+                      foodInMealViewModel: FoodInMealViewModel,
+                      nutritionAPIViewModel: NutritionAPIViewModel){
     val context = LocalContext.current
-
-    val mealViewModel: MealViewModel = viewModel(
-        factory = MealViewModelFactory(context.applicationContext as Application)
-    )
-    val foodInMealViewModel: FoodInMealViewModel = viewModel(
-        factory = FoodInMealViewModelFactory(context.applicationContext as Application)
-    )
-    val foodTypeViewModel: FoodTypeViewModel = viewModel(
-        factory = FoodTypeViewModelFactory(context.applicationContext as Application)
-    )
-//    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
-//        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
-//    )M
-    val nutritionAPIViewModel: NutritionAPIViewModel =  viewModel()
 
     Scaffold(
         topBar = { TopNavigation(navController) },
@@ -50,8 +49,8 @@ fun NutritionOverview(navController: NavController){
             )
             {
                 Text("Nutrition Overview Page")
-                AddMealForm(navController, mealViewModel, foodInMealViewModel,
-                    nutritionAPIViewModel, foodTypeViewModel )
+                AddMealForm(navController, foodTypeViewModel, mealViewModel,
+                    foodInMealViewModel, nutritionAPIViewModel)
             }
         }
     )
