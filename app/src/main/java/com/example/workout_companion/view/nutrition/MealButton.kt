@@ -2,13 +2,20 @@ package com.example.workout_companion.view.nutrition
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
@@ -31,7 +38,7 @@ import com.example.workout_companion.viewmodel.MealViewModel
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun mealButton(meal: String, foodTypeViewModel: FoodTypeViewModel,
+fun mealButton(meal: String, calories: Double, foodTypeViewModel: FoodTypeViewModel,
                mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
                nutritionAPIViewModel: NutritionAPIViewModel
 ) {
@@ -42,20 +49,35 @@ fun mealButton(meal: String, foodTypeViewModel: FoodTypeViewModel,
     {
         Row(modifier = Modifier
             .fillMaxWidth()){
-            Button(onClick = {open.value = !open.value}) {
+            Button(onClick = {open.value = !open.value},
+            modifier = Modifier.background(color = Color.LightGray),
+                border= BorderStroke(1.dp, Color.Black),
+            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)) {
                 if(open.value){
-                    Text("-",
-                        fontSize = 15.sp)
+                    Icon(
+                        Icons.Sharp.ExpandMore,
+                        contentDescription = "",
+                        modifier = Modifier.background(color = Color.LightGray)
+                            .size(20.dp),
+                        tint = Color.Black
+                    )
                 }else{
-                    Text("+",
-                        fontSize = 15.sp)
+                    Icon(
+                        Icons.Sharp.NavigateNext,
+                        contentDescription = "",
+                        modifier = Modifier.background(color = Color.LightGray)
+                            .size(20.dp),
+                        tint = Color.Black
+                    )
                 }
 
             }
             Spacer(modifier = Modifier.padding(start = 20.dp))
             Text(meal)
+            Spacer(modifier = Modifier.padding(start = 20.dp))
+            Text("${calories.toInt()} cal")
         }
 
-        FoodList(meal, open, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
+        FoodsInMeals(meal, open, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
     }
 }

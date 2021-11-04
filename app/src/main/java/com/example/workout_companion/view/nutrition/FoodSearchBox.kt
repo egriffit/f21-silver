@@ -85,7 +85,7 @@ fun foodSearchBox(meal: String,foodTypeViewModel: FoodTypeViewModel,
                 //add the food to the food in meals table
                 val foodInMealEntity = FoodInMealEntity(mealId, foodId, 1.0)
 
-                if(mealId != 0 && foodId != 0){
+                if((mealId != 0 && mealId != null) && (foodId != 0 && foodId != null) ){
                     foodInMealViewModel.insert(foodInMealEntity)
 
                 }

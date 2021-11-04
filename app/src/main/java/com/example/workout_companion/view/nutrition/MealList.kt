@@ -54,7 +54,7 @@ fun MealList(meals: List<MealEntity>, foodTypeViewModel: FoodTypeViewModel,
                 item {
                     Row(horizontalArrangement =  Arrangement.Center) {
 
-                        mealButton(meal.type, foodTypeViewModel, mealViewModel, foodInMealViewModel,
+                        mealButton(meal.type, meal.calories, foodTypeViewModel, mealViewModel, foodInMealViewModel,
                             nutritionAPIViewModel)
                     }
                 }

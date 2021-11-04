@@ -1,8 +1,8 @@
 package com.example.workout_companion.entity
 
-import com.example.workout_companion.utility.ActivityLevel
-import com.example.workout_companion.utility.ExperienceLevel
-import com.example.workout_companion.utility.Sex
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.ExperienceLevel
+import com.example.workout_companion.enumeration.Sex
 import org.junit.Assert
 import org.junit.Test
 import java.time.LocalDate
