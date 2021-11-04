@@ -1,28 +1,29 @@
 package com.example.workout_companion.repository
 
 import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.UserDao
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.UserEntity
-import com.example.workout_companion.utility.ActivityLevel
-import com.example.workout_companion.utility.ExperienceLevel
-import com.example.workout_companion.utility.Sex
+import com.example.workout_companion.enumeration.ExperienceLevel
+import com.example.workout_companion.utility.*
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.time.LocalDate
-import java.time.Month
 
 @RunWith(AndroidJUnit4::class)
 class UserRepositoryTest : TestCase() {
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var db: WCDatabase
     private lateinit var dao: UserDao
@@ -34,6 +35,9 @@ class UserRepositoryTest : TestCase() {
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         dao = db.userDao()
         repository = UserRepository(dao)
+
+        // We need some goals to link to
+        TestDataGenerator.addGoalsToDB(db)
     }
 
     @After
@@ -43,93 +47,78 @@ class UserRepositoryTest : TestCase() {
 
     @Test
     fun testWriteAndReadUser() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
-        repository.addUser(user)
+        repository.addUser(TestDataGenerator.USER)
         val byName = repository.getByName("John Smith")
-        MatcherAssert.assertThat(byName, CoreMatchers.equalTo(user))
+        MatcherAssert.assertThat(byName, CoreMatchers.equalTo(TestDataGenerator.USER))
+    }
+
+    @Test
+    fun testUserLiveData() = runBlocking {
+        repository.addUser(TestDataGenerator.USER)
+        val userInDB = repository.user.getOrAwaitValue()
+        assertEquals(TestDataGenerator.USER, userInDB)
     }
 
     @Test
     fun testGetCount() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2,160.0, 65.0, ActivityLevel.MODERATELY_ACTIVE)
-        repository.addUser(user)
+        repository.addUser(TestDataGenerator.USER)
         val count: Int = repository.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
     }
 
     @Test
     fun testGetCountWithName() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2,160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
-        repository.addUser(user)
+        repository.addUser(TestDataGenerator.USER)
         val count: Int = repository.getCountWithName("John Smith")
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
     }
 
     @Test
     fun testCheckIfUserExists() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 60.0, ActivityLevel.MODERATELY_ACTIVE)
-        repository.addUser(user)
-        val exists: Boolean = repository.checkIfUserExists("John Smith")
+        repository.addUser(TestDataGenerator.USER)
+        val exists: Boolean = repository.checkIfUserExists(TestDataGenerator.USER.name)
         assertTrue(exists)
     }
 
-
     @Test
     fun testUpdateUser() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 55.0, ActivityLevel.MODERATELY_ACTIVE)
-        val newUser = UserEntity("John Smith", ExperienceLevel.EXPERT, Sex.MALE, birthDate, 2, 180.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
+        val updatedUser = TestDataGenerator.USER
+        updatedUser.experience_level = ExperienceLevel.EXPERT
 
-        dao.insert(user)
-        dao.update(newUser)
-        val byName = dao.getByName("John Smith")
+        dao.insert(TestDataGenerator.USER)
+        dao.update(updatedUser)
+        val byName = dao.getByName(updatedUser.name)
         MatcherAssert.assertThat(byName.experience_level, CoreMatchers.equalTo(ExperienceLevel.EXPERT))
     }
 
     @Test
     fun testDelete() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 60.0, ActivityLevel.MODERATELY_ACTIVE)
-        repository.addUser(user)
-        repository.deleteUser(user)
-        val exists: Boolean = repository.checkIfUserExists("John Smith")
+        repository.addUser(TestDataGenerator.USER)
+        repository.deleteUser(TestDataGenerator.USER)
+        val exists: Boolean = repository.checkIfUserExists(TestDataGenerator.USER.name)
         assertFalse(exists)
     }
 
     @Test
     fun testDeleteAll() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 60.0, ActivityLevel.MODERATELY_ACTIVE)
-        repository.addUser(user)
-        repository.deletaAll()
+        repository.addUser(TestDataGenerator.USER)
+        repository.deleteAll()
         val count: Int = repository.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
     }
 
-
     @Test
     fun testAge() = runBlocking{
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, 70.0, ActivityLevel.MODERATELY_ACTIVE)
-
-        repository.addUser(user)
-        val age: Int = repository.getAge("John Smith")
+        repository.addUser(TestDataGenerator.USER)
+        val age: Int = repository.getAge(TestDataGenerator.USER.name)
         MatcherAssert.assertThat(age, CoreMatchers.equalTo(31))
     }
 
     @Test
     fun testWeight() = runBlocking {
-        val weight = 75.0
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, birthDate, 2, 160.0, weight, ActivityLevel.MODERATELY_ACTIVE)
-
-        repository.addUser(user)
-        val repoWeight = repository.getWeight(user.name)
-        MatcherAssert.assertThat(user.weight, CoreMatchers.equalTo(repoWeight))
+        repository.addUser(TestDataGenerator.USER)
+        val repoWeight = repository.getWeight(TestDataGenerator.USER.name)
+        MatcherAssert.assertThat(TestDataGenerator.USER.weight, CoreMatchers.equalTo(repoWeight))
     }
 
 }

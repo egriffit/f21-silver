@@ -1,6 +1,6 @@
 package com.example.workout_companion.entity
 
-import com.example.workout_companion.utility.MuscleGroup
+import com.example.workout_companion.enumeration.MuscleGroup
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

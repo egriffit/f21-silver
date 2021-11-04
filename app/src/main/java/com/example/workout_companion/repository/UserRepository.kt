@@ -17,6 +17,11 @@ class UserRepository (private val userDao: UserDao) {
     val getAll: LiveData<List<UserEntity>> = userDao.getAll()
 
     /**
+     * LiveData value of the user in the database. If no user exists, this will be null.
+     */
+    val user: LiveData<UserEntity> = userDao.getUser()
+
+    /**
      * Retrieves a UserEntity from the users table where the name is equal to the string provided
      *
      * @param String name
@@ -97,7 +102,7 @@ class UserRepository (private val userDao: UserDao) {
      *
      * @return void
      */
-    suspend fun deletaAll(){
+    suspend fun deleteAll(){
         return userDao.deleteAll()
     }
 

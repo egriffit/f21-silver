@@ -20,6 +20,8 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
      */
     val readAll: LiveData<List<UserEntity>>
 
+    val user: LiveData<UserEntity>
+
     /**
      * UserRepository Object
      */
@@ -33,6 +35,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         val userDao = WCDatabase.getInstance(application).userDao()
         repository = UserRepository(userDao = userDao)
         readAll = repository.getAll
+        user = repository.user
     }
 
     /**
@@ -97,25 +100,5 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             weight = repository.getWeight(name)
         }
         return weight
-    }
-}
-
-/**
- * UserViewModel Factory class that is used to initialize the UserViewModel
- * @param Application context
- * @return ViewModelProvider.Factory
- */
-class UserViewModelFactory(
-    private val application: Application
-): ViewModelProvider.Factory{
-    /**
-     * Method to create an instance of the UserModelView
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T{
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
-            return UserViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unkown View Model Class")
     }
 }

@@ -1,13 +1,19 @@
-package com.example.workout_companion.dao
+package com.example.workout_companion.repository
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.workout_companion.dao.FoodTypeDao
+import com.example.workout_companion.dao.MealDao
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.MealEntity
+import com.example.workout_companion.sampleData.sampleFoodTypeList
 import com.example.workout_companion.utility.getOrAwaitValue
+import org.junit.Assert.*
+
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -20,25 +26,25 @@ import org.junit.runner.RunWith
 import java.time.LocalDate
 import java.time.Month
 
-
 @RunWith(AndroidJUnit4::class)
-class MealDaoTest : TestCase(){
-
+class MealRepositoryTest : TestCase() {
     private lateinit var db: WCDatabase
     private lateinit var dao: MealDao
+    private lateinit var repository: MealRepository
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    public override fun setUp(){
+    public override fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         dao = db.mealDao()
+        repository = MealRepository(dao)
     }
 
     @After
-    fun closeDB(){
+    public override fun tearDown() {
         db.close()
     }
 
@@ -49,11 +55,11 @@ class MealDaoTest : TestCase(){
         val yesterday = LocalDate.of(2021, Month.OCTOBER, 23)
         val meals = listOf(
             MealEntity(1, "breakfast", 500.0, 40.1, 20.1, 15.0, today),
-                    MealEntity(2, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
+            MealEntity(2, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
         )
 
-        dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getByDate(today).getOrAwaitValue()
+        repository.insert(meals)
+        val foundMeal: List<MealEntity> = repository.getMealsByDate(today).getOrAwaitValue()
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(0),))
     }
 
@@ -68,8 +74,8 @@ class MealDaoTest : TestCase(){
             MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
         )
 
-        dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getByName("breakfast").getOrAwaitValue()
+        repository.insert(meals)
+        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast").getOrAwaitValue()
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(1),))
     }
 
@@ -84,8 +90,8 @@ class MealDaoTest : TestCase(){
             MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
         )
 
-        dao.insert(meals)
-        val mealCount: Int = dao.getCount()
+        repository.insert(meals)
+        val mealCount: Int = repository.getCount()
         MatcherAssert.assertThat(mealCount, CoreMatchers.equalTo(2))
     }
 
@@ -99,10 +105,10 @@ class MealDaoTest : TestCase(){
             MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
         )
 
-        dao.insert(meals)
-        val firstMealId: Int = dao.getMealId("lunch")
-        val secondMealID: Int = dao.getMealId("breakfast")
-        val thirdMealID: Int = dao.getMealId("breakfast", yesterday)
+        repository.insert(meals)
+        val firstMealId: Int = repository.getMealId("lunch")
+        val secondMealID: Int = repository.getMealId("breakfast")
+        val thirdMealID: Int = repository.getMealId("breakfast", yesterday)
 
         MatcherAssert.assertThat(firstMealId, CoreMatchers.equalTo(1))
         MatcherAssert.assertThat(secondMealID, CoreMatchers.equalTo(2))
@@ -121,9 +127,9 @@ class MealDaoTest : TestCase(){
         )
         val updateMeal = MealEntity(2, "breakfast", 700.0, 40.1, 20.1, 15.0, today)
 
-        dao.insert(meals)
-        dao.update(updateMeal)
-        val foundMeal: List<MealEntity> = dao.getByName("breakfast").getOrAwaitValue()
+        repository.insert(meals)
+        repository.update(updateMeal)
+        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast").getOrAwaitValue()
         MatcherAssert.assertThat(foundMeal.elementAt(0).calories, CoreMatchers.equalTo(updateMeal.calories))
     }
 
@@ -139,9 +145,9 @@ class MealDaoTest : TestCase(){
         )
         val updateMeal = MealEntity(2, "breakfast", 700.0, 40.1, 20.1, 15.0, today)
 
-        dao.insert(meals)
-        dao.delete(meals.elementAt(1))
-        val mealCount: Int = dao.getCount()
+        repository.insert(meals)
+        repository.delete(meals.elementAt(1))
+        val mealCount: Int = repository.getCount()
         MatcherAssert.assertThat(mealCount, CoreMatchers.equalTo(1))
     }
 
@@ -157,9 +163,9 @@ class MealDaoTest : TestCase(){
         )
         val updateMeal = MealEntity(2, "breakfast", 700.0, 40.1, 20.1, 15.0, today)
 
-        dao.insert(meals)
-        dao.deleteAll()
-        val mealCount: Int = dao.getCount()
+        repository.insert(meals)
+        repository.deleteAll()
+        val mealCount: Int = repository.getCount()
         MatcherAssert.assertThat(mealCount, CoreMatchers.equalTo(0))
     }
 }

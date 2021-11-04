@@ -54,7 +54,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * @return List<FoodTypeEntity> a list of FoodTypeEntity objects
      */
     fun getFoodsInMeal(meal_id: Int): List<FoodTypeEntity> {
-        var mealFoods: List<MealWithFoodsEntity>? = listOf<MealWithFoodsEntity>()
+        var mealFoods: List<MealWithFoodsEntity>?
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -77,7 +77,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * @return List<FoodTypeEntity> a list of FoodTypeEntity objects
      */
     fun getFoodsInMeal(type: String, date: LocalDate): LiveData<List<FoodTypeEntity>> {
-        var mealFoods: List<MealWithFoodsEntity>? = listOf<MealWithFoodsEntity>()
+        var mealFoods: List<MealWithFoodsEntity>?
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         var found= MutableLiveData<List<FoodTypeEntity>>()
 

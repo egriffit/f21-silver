@@ -22,7 +22,7 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * Retrieves a list of all meals in the meal table for the current date
      */
     val getAllMeals: LiveData<List<MealEntity>>
-
+    var mealId: Int
     /**
      * Meal Repoository Object
      */
@@ -36,6 +36,7 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         val mealDao = WCDatabase.getInstance(application).mealDao()
         repository = MealRepository(mealDao)
         getAllMeals = repository.getAllMeals
+        mealId = 0
     }
 
     /**
@@ -81,6 +82,35 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
             count = repository.getCount()
         }
         return count
+    }
+
+    /**
+     * Function to initialize a coroutine to retrieve the id of a meal based on the name of the meal
+     * where the date is today
+     *
+     * @param type, a string equal to the type of meal
+     * @return  id, Int
+     */
+    fun getMealId(name: String) {
+        viewModelScope.launch(Dispatchers.IO){
+            mealId = repository.getMealId(name)
+        }
+    }
+
+    /**
+     * Function to initialize a coroutine to retrieve the id of a meal based on the name of the meal
+     * and the date equal to the string and LocalDate provided
+     *
+     * @param type, a string equal to the type of meal
+     * @param date, LocalDate
+     * @return  id, Int
+     */
+    fun getMealId(name: String, date: LocalDate): Int {
+        var mealId: Int = 0
+        viewModelScope.launch(Dispatchers.IO){
+            mealId = repository.getMealId(name, date)
+        }
+        return mealId
     }
 
 

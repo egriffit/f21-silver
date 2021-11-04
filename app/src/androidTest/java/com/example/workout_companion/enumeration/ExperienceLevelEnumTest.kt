@@ -1,4 +1,4 @@
-package com.example.workout_companion.utility
+package com.example.workout_companion.enumeration
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase
@@ -18,7 +18,10 @@ class ExperienceLevelEnumTest {
     @Test
     fun convertToExperienceLevel() {
         val name = "Intermediate"
-        TestCase.assertEquals(ExperienceLevelConverter.toExperienceLevel(name), ExperienceLevel.INTERMEDIATE)
+        TestCase.assertEquals(
+            ExperienceLevelConverter.toExperienceLevel(name),
+            ExperienceLevel.INTERMEDIATE
+        )
     }
 
     @Test(expected = IllegalArgumentException::class)
