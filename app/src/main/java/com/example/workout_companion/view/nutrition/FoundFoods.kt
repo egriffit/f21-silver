@@ -117,7 +117,7 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                     .fillMaxHeight()
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
-                foodRadioButtonList(foundFoods, foodState, selectedFoodIndex)
+                foodRadioButtonList(navController, foundFoods, foodState, selectedFoodIndex)
             }
         }
     )

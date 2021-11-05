@@ -88,7 +88,7 @@ fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel:
                     .fillMaxHeight()
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
-                foodRadioButtonList(foundFoods, food, selectedFoodIndex)
+                foodRadioButtonList(navController, foundFoods, food, selectedFoodIndex)
            }
         }
     Column() {
@@ -135,13 +135,13 @@ fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel:
 
 
 @Composable
-fun foodRadioButtonList(foundFoods: SnapshotStateList<ApiNinjaNutrition>,
+fun foodRadioButtonList(navController: NavController, foundFoods: SnapshotStateList<ApiNinjaNutrition>,
                         food: MutableState<String>, selectedFoodIndex: MutableState<Int>){
     Text("Results")
     Column(){
         if(foundFoods.size > 0){
             for(found in foundFoods){
-                FoodRadioButtons(found, selectedFoodIndex)
+                FoodRadioButtons(navController, found, selectedFoodIndex)
             }
         }
         else
@@ -153,7 +153,7 @@ fun foodRadioButtonList(foundFoods: SnapshotStateList<ApiNinjaNutrition>,
 
 
 @Composable
-fun FoodRadioButtons(found: ApiNinjaNutrition, selectedFoodIndex: MutableState<Int>) {
+fun FoodRadioButtons(navController: NavController, found: ApiNinjaNutrition, selectedFoodIndex: MutableState<Int>) {
 
     Row(Modifier
         .fillMaxWidth()) {
@@ -164,17 +164,22 @@ fun FoodRadioButtons(found: ApiNinjaNutrition, selectedFoodIndex: MutableState<I
                 enabled = true,
                 colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
             )
-            foodRadioButton(food)
+            foodRadioButton(navController, food)
         }
     }
 }
 
 @Composable
-fun foodRadioButton(food: ApiNinjaNutritionItem){
+fun foodRadioButton(navController: NavController, food: ApiNinjaNutritionItem){
     Row(){
         Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center){
-            Text("${food.name}")
+            Button(onClick = {
+                navController.navigate("foodView/${food.name}/${food.serving_size_g}/${food.calories}/${food.carbohydrates_total_g}/${food.protein_g}/${food.fat_total_g}")
+            })
+            {
+                Text(text = food.name)
+            }
         }
         Column(){
             Text("Serving Size: ${food.serving_size_g}g")

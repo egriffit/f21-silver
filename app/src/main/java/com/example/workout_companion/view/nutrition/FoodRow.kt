@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.sampleData.sampleFoodTypeList
 
@@ -18,18 +20,23 @@ import com.example.workout_companion.sampleData.sampleFoodTypeList
  * @param food, a FoodTypeEntity
  */
 @Composable
-fun FoodRow(food: FoodTypeEntity){
+fun FoodRow(navController: NavController, food: FoodTypeEntity){
     Row(modifier = Modifier.fillMaxWidth()
         .padding(start=20.dp, end = 20.dp)
     ){
-        Text(text = food.name)
+        Button(onClick = {
+            navController.navigate("foodView/${food.name}/${food.serving_size}/${food.calories}/${food.carbohydrates}/${food.protein}/${food.fat}")
+        })
+        {
+            Text(text = food.name)
+        }
         Spacer(modifier = Modifier.padding(start = 50.dp))
         Text(text = "${food.calories} cal")
     }
 }
 
-@Preview
-@Composable
-fun previewFoodRow(){
-    FoodRow(sampleFoodTypeList[0])
-}
+//@Preview
+//@Composable
+//fun previewFoodRow(){
+//    FoodRow(sampleFoodTypeList[0])
+//}

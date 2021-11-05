@@ -1,21 +1,16 @@
 package com.example.workout_companion.view
 
 import android.annotation.SuppressLint
-import android.app.Application
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import com.example.workout_companion.view.inputfields.InfoForm
 import com.example.workout_companion.view.inputfields.LandingPage
+import com.example.workout_companion.view.nutrition.FoodView
 import com.example.workout_companion.view.nutrition.FoundFoods
 import com.example.workout_companion.viewmodel.*
 
@@ -65,6 +60,27 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 foodTypeViewModel, mealViewModel, foodInMealViewModel,
                 nutritionAPIViewModel
                     )
+        }
+        composable (route = "foodView/{foodName}/{servingSize}/{calories}/{carbohydrates}/{protein}/{fat}",
+            arguments = listOf(
+                navArgument("foodName") { type = NavType.StringType } ,
+                navArgument("servingSize") { type = NavType.StringType },
+                navArgument("calories") { type = NavType.StringType },
+                navArgument("carbohydrates") { type = NavType.StringType },
+                navArgument("protein") { type = NavType.StringType },
+                navArgument("fat") { type = NavType.StringType },
+
+                )
+        ){ backStackEntry ->
+            FoodView(navController, backStackEntry.arguments?.getString("foodName"),
+                backStackEntry.arguments?.getString("servingSize")?.toDouble(),
+                backStackEntry.arguments?.getString("calories")?.toDouble(),
+                backStackEntry.arguments?.getString("carbohydrates")?.toDouble(),
+                backStackEntry.arguments?.getString("protein")?.toDouble(),
+                backStackEntry.arguments?.getString("fat")?.toDouble(),
+                foodTypeViewModel, mealViewModel, foodInMealViewModel,
+                nutritionAPIViewModel
+            )
         }
         composable (route = "UpdateGoals") {
             UpdateGoalsView(navController)

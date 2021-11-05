@@ -54,7 +54,7 @@ fun FoodsInMeals(
                 //display current foods in meal
                 for (food in foundFoods) {
                     Row {
-                        FoodRow(food)
+                        FoodRow(navController, food)
                     }
                 }
             }
