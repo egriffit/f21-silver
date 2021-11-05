@@ -1,5 +1,6 @@
 package com.example.workout_companion.view.nutrition
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
@@ -32,6 +33,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
  * @param meal, a string
  *
  */
+@SuppressLint("NewApi")
 @Composable
 fun FoundFoods(navController: NavController, food: String?, meal: String?,
                foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
@@ -57,48 +59,54 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {
-                    Row(modifier = Modifier.padding(start = 100.dp, end = 20.dp)
-                        .fillMaxWidth()){
-                        Button(onClick = {
-                            selectedFoundFood = foundFoods.elementAt(0).elementAt(selectedFoodIndex.value)
-                            selectedFoodName.value = selectedFoundFood.name
-                            //store the food in the food table
-                            var foodType = FoodTypeEntity(0, selectedFoundFood.name, "-1",
-                                selectedFoundFood.serving_size_g,
-                                selectedFoundFood.calories, selectedFoundFood.carbohydrates_total_g,
-                                selectedFoundFood.protein_g, selectedFoundFood.fat_total_g)
+            Column(){
+                Row(modifier = Modifier.padding(start = 100.dp, end = 20.dp)
+                    .fillMaxWidth()){
+                    Button(onClick = {
+                        selectedFoundFood = foundFoods.elementAt(0).elementAt(selectedFoodIndex.value)
+                        selectedFoodName.value = selectedFoundFood.name
+                        //store the food in the food table
+                        var foodType = FoodTypeEntity(0, selectedFoundFood.name, "-1",
+                            selectedFoundFood.serving_size_g,
+                            selectedFoundFood.calories, selectedFoundFood.carbohydrates_total_g,
+                            selectedFoundFood.protein_g, selectedFoundFood.fat_total_g)
 
-                            foodTypeViewModel.addFoodType(foodType)
-                            //retrieve the food id and meal id
-                            var foodId = 0
-                            var mealId = 0
-                            foodTypeViewModel.getId(foodType)
-                            if (meal != null) {
-                                mealViewModel.getMealId(meal)
-                            }
-                            foodId = foodTypeViewModel.foodID
-                            mealId = mealViewModel.mealId
-
-                            //create a food_inMeal_object and add to database
-                            if(((mealId !=0)&& (mealId != null) )&&(foodId !=0)&& (foodId != null)){
-                                var foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
-                                foodInMealViewModel.insert(foodInMeal)
-                            }
-                            //remove the found foods from my snapshotstate
-                            foundFoods.clear()
-                            //navigate back to nutrition overview view
-                            navController.navigate("NutritionOverview")
-
-                        }){
-                            Text("Add Food")
+                        foodTypeViewModel.addFoodType(foodType)
+                        //retrieve the food id and meal id
+                        var foodId = 0
+                        var mealId = 0
+                        foodTypeViewModel.getId(foodType)
+                        if (meal != null) {
+                            mealViewModel.getMealId(meal)
                         }
-                        Spacer(modifier = Modifier.padding(start=50.dp))
-                        Button(onClick = {
-                            navController.navigate("NutritionOverview")
-                        }){
-                            Text("Cancel")
+                        foodId = foodTypeViewModel.foodID
+                        mealId = mealViewModel.mealId
+
+                        //create a food_inMeal_object and add to database
+                        if(((mealId !=0)&& (mealId != null) )&&(foodId !=0)&& (foodId != null)){
+                            var foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
+                            foodInMealViewModel.insert(foodInMeal)
+                            mealViewModel.addToMeal(foodType.name, foodType.calories, foodType.carbohydrates,
+                                foodType.protein, foodType.fat,)
                         }
+                        //remove the found foods from my snapshotstate
+                        foundFoods.clear()
+                        //navigate back to nutrition overview view
+                        navController.navigate("NutritionOverview")
+
+                    }){
+                        Text("Add Food")
                     }
+                    Spacer(modifier = Modifier.padding(start=50.dp))
+                    Button(onClick = {
+                        navController.navigate("NutritionOverview")
+                    }){
+                        Text("Cancel")
+                    }
+                }
+                Spacer(modifier = Modifier.padding(bottom = 50.dp))
+            }
+
         },
         content = {
 

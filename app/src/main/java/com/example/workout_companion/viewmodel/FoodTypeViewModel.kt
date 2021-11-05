@@ -1,7 +1,6 @@
 package com.example.workout_companion.viewmodel
 
 import android.app.Application
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FoodTypeEntity
@@ -39,7 +38,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @param name, String
      * @return List of FoodTypeEntity objects
      */
-    fun getFood(name: String): List<FoodTypeEntity>?{
+     fun getFood(name: String): List<FoodTypeEntity>?{
         var food: List<FoodTypeEntity>? = listOf<FoodTypeEntity>()
         viewModelScope.launch(Dispatchers.IO){
             food = repository.getFoodByName(name).value
@@ -49,15 +48,10 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
 
     /**
      * Function to initialize a coroutine to retrieve the id for a food
-     * @param name, String
-     * @param calories, Double
-     * @param serving_size, Double
-     * @param carbohydrate, Double
-     * @param protein, Double
-     * @param fat, Double
+     * @param  item, FoodTypeEntity
      * @return  Int total number of rows found
      */
-    fun getId(item: FoodTypeEntity){
+     fun getId(item: FoodTypeEntity){
         viewModelScope.launch(Dispatchers.IO){
             foodID = repository.getId(item)
         }
@@ -70,7 +64,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @param name, String
      * @return List of FoodTypeEntity objects
      */
-    fun getCount(name: String): Int{
+     fun getCount(name: String): Int{
         var count: Int = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount(name)
@@ -80,10 +74,9 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
 
     /**
      * Function to initialize a coroutine to retrieve a total number of foods in the food_type table
-     * @param name, String
      * @return Int, number of rows
      */
-    fun getCount(): Int{
+     fun getCount(): Int{
         var count: Int = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount()
@@ -105,7 +98,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * Function to initialize a coroutine to add a list of FoodTypeEntity objects to the database
      * @param item, List<FoodTypeEntity>
      */
-    fun addFoodType(item: List<FoodTypeEntity>){
+     fun addFoodType(item: List<FoodTypeEntity>){
         viewModelScope.launch(Dispatchers.IO){
             repository.insert(item)
         }
