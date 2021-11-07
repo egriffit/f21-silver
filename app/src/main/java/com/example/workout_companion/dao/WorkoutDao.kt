@@ -15,11 +15,11 @@ interface WorkoutDao {
     fun getWorkoutOnDate(date: LocalDate): LiveData<WorkoutEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addWorkout(workout: WorkoutEntity)
+    suspend fun addWorkout(workout: WorkoutEntity)
 
     @Update
-    fun updateWorkout(workout: WorkoutEntity)
+    suspend fun updateWorkout(workout: WorkoutEntity)
 
     @Delete
-    fun deleteWorkout(workout: WorkoutEntity)
+    suspend fun deleteWorkout(workout: WorkoutEntity)
 }

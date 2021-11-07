@@ -13,15 +13,15 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
         return workoutDao.getWorkoutOnDate(date)
     }
 
-    fun addWorkout(workout: WorkoutEntity) {
+    suspend fun addWorkout(workout: WorkoutEntity) {
         workoutDao.addWorkout(workout)
     }
 
-    fun updateWorkout(workout: WorkoutEntity) {
+    suspend fun updateWorkout(workout: WorkoutEntity) {
         workoutDao.updateWorkout(workout)
     }
 
-    fun deleteWorkout(workout: WorkoutEntity) {
+    suspend fun deleteWorkout(workout: WorkoutEntity) {
         workoutDao.deleteWorkout(workout)
     }
 }
