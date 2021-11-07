@@ -12,7 +12,7 @@ interface WorkoutDao {
     fun getAllWorkouts(): LiveData<List<WorkoutEntity>>
 
     @Query("SELECT * FROM workout WHERE date=:date")
-    fun getWorkoutOnDate(date: LocalDate)
+    fun getWorkoutOnDate(date: LocalDate): LiveData<WorkoutEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addWorkout(workout: WorkoutEntity)
