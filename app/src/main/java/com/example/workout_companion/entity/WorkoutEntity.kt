@@ -6,6 +6,13 @@ import com.example.workout_companion.enumeration.ProgressConverter
 import com.example.workout_companion.utility.DateTimeConverter
 import java.time.LocalDate
 
+/**
+ * Entity representing the workout table in the database
+ *
+ * @property date The date of the workout.
+ * @property status The status of the workout.
+ * @property framework_id The framework id of the workout.
+ */
 @Entity(tableName = "workout",
         foreignKeys = [ForeignKey(entity = FrameworkTypeEntity::class,
             parentColumns = ["id"],
