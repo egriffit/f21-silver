@@ -15,9 +15,6 @@ import java.time.LocalDate
 )
 data class WorkoutEntity(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int,
-
     @ColumnInfo(name = "date")
     @TypeConverters(DateTimeConverter::class)
     var date: LocalDate,
@@ -25,9 +22,6 @@ data class WorkoutEntity(
     @ColumnInfo(name = "status")
     @TypeConverters(ProgressConverter::class)
     var status: Progress,
-
-    @ColumnInfo(name = "name")
-    var name: String,
 
     @ColumnInfo(name = "framework_id", index = true)
     var framework_id: Int,
