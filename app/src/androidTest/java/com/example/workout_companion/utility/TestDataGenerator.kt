@@ -1,6 +1,5 @@
 package com.example.workout_companion.utility
 
-import com.example.workout_companion.database.FRAMEWORK_TYPES
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.*
 import com.example.workout_companion.enumeration.*
@@ -183,5 +182,12 @@ class TestDataGenerator {
             WorkoutEntity(LocalDate.of(2021, 10, 3), Progress.COMPLETE, FRAMEWORK_1_DAYS[2].id),
             WorkoutEntity(LocalDate.of(2021, 10, 4), Progress.NOT_STARTED, FRAMEWORK_4_DAYS[0].id),
         )
+
+        @JvmStatic
+        fun addWorkoutsToDB(db: WCDatabase) = runBlocking {
+            for (workout in WORKOUTS) {
+                db.workoutDao().addWorkout(workout)
+            }
+        }
     }
 }
