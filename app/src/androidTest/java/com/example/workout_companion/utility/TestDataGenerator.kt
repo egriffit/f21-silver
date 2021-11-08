@@ -178,10 +178,10 @@ class TestDataGenerator {
         }
 
         val WORKOUTS: List<WorkoutEntity> = listOf(
-            WorkoutEntity(LocalDate.of(2021, 10, 1), Progress.NOT_STARTED, FRAMEWORK_TYPES[0].id),
-            WorkoutEntity(LocalDate.of(2021, 10, 2), Progress.IN_PROGRESS, FRAMEWORK_TYPES[1].id),
-            WorkoutEntity(LocalDate.of(2021, 10, 3), Progress.COMPLETE, FRAMEWORK_TYPES[2].id),
-            WorkoutEntity(LocalDate.of(2021, 10, 4), Progress.NOT_STARTED, FRAMEWORK_TYPES[0].id),
+            WorkoutEntity(LocalDate.of(2021, 10, 1), Progress.NOT_STARTED, FRAMEWORK_0_DAYS[0].id),
+            WorkoutEntity(LocalDate.of(2021, 10, 2), Progress.IN_PROGRESS, FRAMEWORK_2_DAYS[1].id),
+            WorkoutEntity(LocalDate.of(2021, 10, 3), Progress.COMPLETE, FRAMEWORK_1_DAYS[2].id),
+            WorkoutEntity(LocalDate.of(2021, 10, 4), Progress.NOT_STARTED, FRAMEWORK_4_DAYS[0].id),
         )
     }
 }

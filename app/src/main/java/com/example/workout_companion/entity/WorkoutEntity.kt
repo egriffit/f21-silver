@@ -11,12 +11,12 @@ import java.time.LocalDate
  *
  * @property date The date of the workout.
  * @property status The status of the workout.
- * @property framework_id The framework id of the workout.
+ * @property framework_day_id The framework day id of the workout.
  */
 @Entity(tableName = "workout",
-        foreignKeys = [ForeignKey(entity = FrameworkTypeEntity::class,
+        foreignKeys = [ForeignKey(entity = FrameworkDayEntity::class,
             parentColumns = ["id"],
-            childColumns = ["framework_id"],
+            childColumns = ["framework_day_id"],
             onDelete = ForeignKey.NO_ACTION
         )]
 )
@@ -30,6 +30,6 @@ data class WorkoutEntity(
     @TypeConverters(ProgressConverter::class)
     var status: Progress,
 
-    @ColumnInfo(name = "framework_id", index = true)
-    var framework_id: Int,
+    @ColumnInfo(name = "framework_day_id", index = true)
+    var framework_day_id: Int,
 )

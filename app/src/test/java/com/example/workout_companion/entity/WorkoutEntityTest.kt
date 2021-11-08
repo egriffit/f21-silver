@@ -10,13 +10,13 @@ class WorkoutEntityTest {
     @Test
     fun constructorTest() {
         val date = LocalDate.of(2021, 10, 31)
-        val frameworkId = 0
+        val frameworkDayId = 0
         val status = Progress.NOT_STARTED
 
-        val entity = WorkoutEntity(date, status, frameworkId)
+        val entity = WorkoutEntity(date, status, frameworkDayId)
 
         assertEquals(entity.date, date)
-        assertEquals(entity.framework_id, frameworkId)
+        assertEquals(entity.framework_day_id, frameworkDayId)
         assertEquals(entity.status, status)
     }
 }

@@ -33,9 +33,10 @@ class WorkoutRepositoryTest : TestCase() {
         val dao = db.workoutDao()
         repository = WorkoutRepository(dao)
 
-        // The workouts need frameworks
+        // The workouts need framework days
         TestDataGenerator.addGoalsToDB(db)
         TestDataGenerator.addFrameworksToDB(db)
+        TestDataGenerator.addFrameworkDaysToDB(db)
     }
 
     @After
