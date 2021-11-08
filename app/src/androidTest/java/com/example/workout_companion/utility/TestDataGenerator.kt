@@ -218,7 +218,7 @@ class TestDataGenerator {
         )
 
         @JvmStatic
-        fun addFrameworkComponentSetsToDB(db: WCDatabase) {
+        fun addFrameworkComponentSetsToDB(db: WCDatabase) = runBlocking {
             for (set in WORKOUT_0_COMPONENT_SETS + WORKOUT_1_COMPONENT_SETS + WORKOUT_2_COMPONENT_SETS + WORKOUT_3_COMPONENT_SETS) {
                 db.frameworkComponentSetDao().addFrameworkComponentSet(set)
             }
