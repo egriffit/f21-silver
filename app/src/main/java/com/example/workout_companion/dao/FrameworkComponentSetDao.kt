@@ -9,11 +9,14 @@ import java.time.LocalDate
 interface FrameworkComponentSetDao {
 
     @Query("SELECT * FROM framework_component_set WHERE workout_date=:date")
-    fun getFrameworkComponentSetsForDate(date: LocalDate): LiveData<List<FrameworkComponentSetEntity>>
+    suspend fun getFrameworkComponentSetsForDate(date: LocalDate): List<FrameworkComponentSetEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addFrameworkComponentSet(frameworkComponentSet: FrameworkComponentSetEntity)
+    suspend fun addFrameworkComponentSet(frameworkComponentSet: FrameworkComponentSetEntity)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    fun updateFrameworkComponentSet(frameworkComponentSet: FrameworkComponentSetEntity)
+    suspend fun updateFrameworkComponentSet(frameworkComponentSet: FrameworkComponentSetEntity)
+
+    @Delete
+    suspend fun deleteFrameworkComponentSet(frameworkComponentSet: FrameworkComponentSetEntity)
 }
