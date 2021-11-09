@@ -4,6 +4,7 @@ import com.example.workout_companion.dao.FoodTypeDao
 import com.example.workout_companion.entity.FoodTypeEntity
 
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 
 /**
  * FoodTypeRepository class that abstracts the methods in the FoodType DAO
@@ -23,7 +24,7 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
      *
      * @return LiveData<List<FoodTypeEntity>>
      */
-    suspend fun getFoodByName(name: String): LiveData<List<FoodTypeEntity>>{
+    fun getFoodByName(name: String): LiveData<List<FoodTypeEntity>>{
         return foodTypeDao.getByName(name)
     }
 
@@ -43,7 +44,7 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
      *
      * @return Int
      */
-    suspend fun getCount(): Int{
+     fun getCount(): Int{
         return foodTypeDao.getCount()
     }
 
@@ -64,7 +65,7 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
      * @param name, String
      * @param calories, Double
      * @param serving_size, Double
-     * @param carbohydrate, Double
+     * @param carbohydrates, Double
      * @param protein, Double
      * @param fat, Double
      * @return  Int total number of rows found
@@ -96,25 +97,27 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
      *@param foods List<FoodTypeEntity>
      * @return void
      */
-
+    @Transaction
     suspend fun insert(foods: List<FoodTypeEntity>){
-        for(food in foods){
-            val found = checkIfExists(food)
-            if(!found){
-                foodTypeDao.insert(food)
-            }else{
-                foodTypeDao.update(food)
-            }
-        }
+
+          for(food in foods) {
+              val found = checkIfExists(food)
+              if (!found) {
+                  foodTypeDao.insert(food)
+              } else {
+                  foodTypeDao.update(food)
+              }
+          }
     }
 
 
     /**
      * Add a food to the food_type table
      *
-     *@param foods FoodTypeEntity
+     *@param food FoodTypeEntity
      * @return void
      */
+    @Transaction
     suspend fun insert(food: FoodTypeEntity){
         val found = checkIfExists(food)
         if(!found){
@@ -127,7 +130,7 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
     /**
      * Update a food in the food_type table
      *
-     *@param foods FoodTypeEntity
+     *@param food FoodTypeEntity
      * @return void
      */
     suspend fun update(food: FoodTypeEntity){
@@ -138,7 +141,7 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
     /**
      * Delete a food in the food_type table
      *
-     *@param foods FoodTypeEntity
+     *@param food FoodTypeEntity
      * @return void
      */
     suspend fun delete(food: FoodTypeEntity){
