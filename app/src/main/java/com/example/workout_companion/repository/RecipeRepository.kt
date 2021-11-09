@@ -1,11 +1,7 @@
 package com.example.workout_companion.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.example.workout_companion.dao.MealDao
-import com.example.workout_companion.entity.MealEntity
-import java.time.LocalDate
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import com.example.workout_companion.dao.RecipeDao
 import com.example.workout_companion.entity.RecipeEntity
 
@@ -25,10 +21,10 @@ class RecipeRepository (private val recipeDao: RecipeDao) {
      * Retrieves a List of recipeEntity objects from the recipe table
      * for a given name
      *
-     * @param string, LocalDate
+     * @param name, LocalDate
      * @return LiveData<List<RecipeEntity>>
      */
-    suspend fun getRecipeByName(name: String): LiveData<List<RecipeEntity>>{
+    fun getRecipeByName(name: String): LiveData<List<RecipeEntity>>{
         return recipeDao.getRecipe(name)
     }
 
@@ -69,8 +65,9 @@ class RecipeRepository (private val recipeDao: RecipeDao) {
      * @param recipe, a RecipeEntity
      * @return void
      */
+    @Transaction
     suspend fun insert(recipe: RecipeEntity){
-        if(recipeDao.getCountByName(recipe.name) > 0)
+        if(recipeDao.getCountByName(recipe.name) < 0)
         {
             recipeDao.insert(recipe)
         }
@@ -79,12 +76,14 @@ class RecipeRepository (private val recipeDao: RecipeDao) {
     /**
      * Insert a RecipeEntity object into the recipe table
      *
-     * @param recipe, a RecipeEntity
+     * @param name, a String
      * @return void
      */
+    @Transaction
     suspend fun insert(name: String){
-        val recipe: RecipeEntity = RecipeEntity(0, name)
-        if(recipeDao.getCountByName(recipe.name) > 0) {
+        val recipe = RecipeEntity(0, name)
+        if(recipeDao.getCountByName(recipe.name) < 1)
+        {
             recipeDao.insert(recipe)
         }
     }
@@ -95,19 +94,21 @@ class RecipeRepository (private val recipeDao: RecipeDao) {
      * @param recipes, a list of RecipeEntity
      * @return void
      */
+    @Transaction
     suspend fun insert(recipes: List<RecipeEntity>){
-        recipes.forEach{ recipe ->
-            if(recipeDao.getCountByName(recipe.name) > 0)
+        recipes.forEach{recipe->
+            if(recipeDao.getCountByName(recipe.name) < 1)
             {
-                recipeDao.insert(recipe)
+                recipeDao.insert(recipes)
             }
         }
+
     }
 
     /**
      * Update the recipe record with the values in the provided RecipeEntity object
      *
-     * @param item, a RecipeEntity
+     * @param recipe, a RecipeEntity
      * @return void
      */
     suspend fun update(recipe: RecipeEntity){

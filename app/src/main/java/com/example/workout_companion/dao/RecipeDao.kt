@@ -2,10 +2,7 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.workout_companion.entity.FoodTypeEntity
-import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.entity.RecipeEntity
-import java.time.LocalDate
 
 /**
  * The Data Abstraction Object for the RecipeEntity
@@ -20,6 +17,7 @@ interface RecipeDao {
      *
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
+    @Transaction
     @Query("SELECT * FROM recipes")
     fun getRecipes(): LiveData<List<RecipeEntity>>
 
@@ -39,7 +37,7 @@ interface RecipeDao {
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
     @Query("SELECT id FROM recipes WHERE name = :name")
-    fun getRecipeId(name: String): Int
+    suspend fun getRecipeId(name: String): Int
 
     /**
      * Retrieves the row count for the total of records in the recipe table
@@ -49,7 +47,7 @@ interface RecipeDao {
     @Query("""
         SELECT COUNT(*) FROM recipes
         """)
-    fun getCount(): Int
+    suspend fun getCount(): Int
 
     /**
      * Retrieves the row count for the total of records in the recipe table
@@ -62,7 +60,7 @@ interface RecipeDao {
         SELECT COUNT(*) FROM recipes 
         WHERE name = :name
         """)
-    fun getCountByName(name: String): Int
+    suspend fun getCountByName(name: String): Int
 
 
     /**
