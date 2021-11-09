@@ -24,5 +24,5 @@ data class UserWeightHistoryEntity (
     var user_weight_name: String,
 
     @ColumnInfo(name = "user_weight")
-    var user_weight: Int
+    var user_weight: Double
 )
