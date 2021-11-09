@@ -26,7 +26,7 @@ fun FrameworkComponentSetRow() {
     // TODO: remember the weight of the given set entity
     var weightState by remember { mutableStateOf(0.0) }
     // TODO: remember the reps of the given set entity
-    var setState by remember { mutableStateOf(0) }
+    var setState by remember { mutableStateOf("0") }
 
     val focusManager = LocalFocusManager.current
 
@@ -50,7 +50,7 @@ fun FrameworkComponentSetRow() {
             readOnly = checkState,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            keyboardActions = KeyboardActions(onNext = {
+            keyboardActions = KeyboardActions(onDone = {
                 focusManager.moveFocus(FocusDirection.Right)
             }),
             modifier = Modifier.weight(2f)
@@ -66,9 +66,15 @@ fun FrameworkComponentSetRow() {
         // Reps Input Field
         TextField(
             value = setState.toString(), 
-            onValueChange = { if (it.toIntOrNull() != null) setState = it.toInt() },
+            onValueChange = { newValue ->
+                if (newValue.length <= 2) {
+                    setState = newValue.filter { it.isDigit() }
+                }
+            },
             readOnly = checkState,
-            keyboardActions = KeyboardActions(onNext = {
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardActions = KeyboardActions(onDone = {
                 focusManager.clearFocus()
             }),
             modifier = Modifier.weight(2f)
