@@ -57,7 +57,6 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-
     /**
      * Function to initialize a coroutine to retrieve a total number of foods with the name
      * equal to the string provided
@@ -65,7 +64,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @return List of FoodTypeEntity objects
      */
      fun getCount(name: String): Int{
-        var count: Int = 0
+        var count = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount(name)
         }
@@ -77,7 +76,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @return Int, number of rows
      */
      fun getCount(): Int{
-        var count: Int = 0
+        var count = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount()
         }
