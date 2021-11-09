@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Checkbox
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,10 +23,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FrameworkComponentSetRow() {
 
+    // NOTE: Keep these items as the string versions here. It makes your life easier
+    // Worry about conversion to the proper type when writing stuff to the database
     // TODO: remember the progress state of the set entity
     var checkState by remember { mutableStateOf(false) }
     // TODO: remember the weight of the given set entity
-    var weightState by remember { mutableStateOf(0.0) }
+    var weightState by remember { mutableStateOf("0.0") }
     // TODO: remember the reps of the given set entity
     var setState by remember { mutableStateOf("0") }
 
@@ -33,22 +37,31 @@ fun FrameworkComponentSetRow() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.padding(12.dp)
     ) {
         // Progress state check box
         Checkbox(
             checked = checkState,
             // TODO: write the new state to the database with the view model
-            onCheckedChange = { checkState = it },
+            onCheckedChange = {
+                checkState = it
+                focusManager.clearFocus()
+            },
             modifier = Modifier.weight(1f)
         )
 
         // Weight Input Field
-        TextField(
-            value = weightState.toString(),
+        OutlinedTextField(
+            value = weightState,
             // TODO: write the new weight state to the database with the view model
-            onValueChange = { if (it.toDoubleOrNull() != null) weightState = it.toDouble() },
-            readOnly = checkState,
+            onValueChange = { newValue ->
+                if (newValue.isEmpty() or (newValue.toDoubleOrNull() != null) ) {
+                    weightState = newValue
+                }
+            },
+            enabled = !checkState,
             singleLine = true,
+            textStyle = TextStyle(textAlign = TextAlign.Center),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             keyboardActions = KeyboardActions(onDone = {
                 focusManager.moveFocus(FocusDirection.Right)
@@ -64,15 +77,14 @@ fun FrameworkComponentSetRow() {
         )
         
         // Reps Input Field
-        TextField(
-            value = setState.toString(), 
+        OutlinedTextField(
+            value = setState,
             onValueChange = { newValue ->
-                if (newValue.length <= 2) {
-                    setState = newValue.filter { it.isDigit() }
-                }
+                setState = newValue.filter { it.isDigit() }
             },
-            readOnly = checkState,
+            enabled = !checkState,
             singleLine = true,
+            textStyle = TextStyle(textAlign = TextAlign.Center),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             keyboardActions = KeyboardActions(onDone = {
                 focusManager.clearFocus()
