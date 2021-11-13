@@ -208,7 +208,7 @@ class MealRepository (private val mealDao: MealDao) {
      * @return void
      */
     suspend fun deleteAll(){
-        return mealDao.deleteAll()
+        mealDao.deleteAll()
     }
 
     /**
@@ -217,6 +217,6 @@ class MealRepository (private val mealDao: MealDao) {
      * @return void
      */
     suspend fun deleteAll(date: LocalDate){
-        return mealDao.deleteAll(date)
+        mealDao.deleteAll(date)
     }
 }

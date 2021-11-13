@@ -6,18 +6,19 @@ import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.repository.FoodTypeRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
+import kotlinx.coroutines.runBlocking
 
 class FoodTypeViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Retrieves a list of all foods in the food_type table
      */
     val getAllFoods: LiveData<List<FoodTypeEntity>>
-    var foodID: Int
+    var foodID: Int = 0
 
     /**
-     * FoodType Repoository Object
+     * FoodType Repository Object
      */
     private val repository: FoodTypeRepository
 
@@ -39,7 +40,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @return List of FoodTypeEntity objects
      */
      fun getFood(name: String): List<FoodTypeEntity>?{
-        var food: List<FoodTypeEntity>? = listOf<FoodTypeEntity>()
+        var food: List<FoodTypeEntity>? = listOf()
         viewModelScope.launch(Dispatchers.IO){
             food = repository.getFoodByName(name).value
         }
@@ -51,9 +52,9 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @param  item, FoodTypeEntity
      * @return  Int total number of rows found
      */
-     fun getId(item: FoodTypeEntity){
+     fun getId(item: FoodTypeEntity) = runBlocking{
         viewModelScope.launch(Dispatchers.IO){
-            foodID = repository.getId(item)
+                foodID = repository.getId(item)
         }
     }
 
@@ -87,7 +88,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * Function to initialize a coroutine to add a FoodTypeEntity object to the database
      * @param item, a FoodTypeEntity
      */
-    fun addFoodType(item: FoodTypeEntity){
+    fun addFoodType(item: FoodTypeEntity)=runBlocking{
         viewModelScope.launch(Dispatchers.IO){
             repository.insert(item)
         }
@@ -135,24 +136,5 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO){
             repository.deleteAll()
         }
-    }
-}
-/**
- * FoodTypeViewModel Factory class that is used to initialize the FoodTypeViewModel
- * @param application context
- * @return ViewModelProvider.Factory
- */
-class FoodTypeViewModelFactory(
-    private val application: Application
-): ViewModelProvider.Factory{
-    /**
-     * Method to create an instance of the UserModelView
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T{
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(FoodTypeViewModel::class.java)) {
-            return FoodTypeViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
     }
 }

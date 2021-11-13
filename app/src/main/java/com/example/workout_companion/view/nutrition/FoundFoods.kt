@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
@@ -23,6 +24,10 @@ import com.example.workout_companion.viewmodel.FoodTypeViewModel
 import com.example.workout_companion.viewmodel.MealViewModel
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /***
  * Composable to display a the found foods from the Nutrition API
@@ -39,6 +44,7 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
 ){
+    val coroutineScope = rememberCoroutineScope()
     var foundFoods =  nutritionAPIViewModel.foodResults
     val foodState = remember{ mutableStateOf("") }
     val dialogState = rememberMaterialDialogState()
@@ -70,24 +76,31 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                             selectedFoundFood.serving_size_g,
                             selectedFoundFood.calories, selectedFoundFood.carbohydrates_total_g,
                             selectedFoundFood.protein_g, selectedFoundFood.fat_total_g)
+                        coroutineScope.launch(Dispatchers.IO){
 
-                        foodTypeViewModel.addFoodType(foodType)
-                        //retrieve the food id and meal id
-                        var foodId = 0
-                        var mealId = 0
-                        foodTypeViewModel.getId(foodType)
-                        if (meal != null) {
-                            mealViewModel.getMealId(meal)
-                        }
-                        foodId = foodTypeViewModel.foodID
-                        mealId = mealViewModel.mealId
+                            foodTypeViewModel.addFoodType(foodType)
+                            //retrieve the food id and meal id
+                            delay(1000L)
 
-                        //create a food_inMeal_object and add to database
-                        if(((mealId !=0)&& (mealId != null) )&&(foodId !=0)&& (foodId != null)){
-                            var foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
-                            foodInMealViewModel.insert(foodInMeal)
-                            mealViewModel.addToMeal(foodType.name, foodType.calories, foodType.carbohydrates,
-                                foodType.protein, foodType.fat,)
+                            var foodId = 0
+                            var mealId = 0
+                            foodTypeViewModel.getId(foodType)
+                            delay(1000L)
+
+                            if (meal != null) {
+                                mealViewModel.getMealId(meal)
+                                delay(1000L)
+                            }
+                            foodId = foodTypeViewModel.foodID
+                            mealId = mealViewModel.mealId
+
+                            //create a food_inMeal_object and add to database
+                            if(((mealId !=0)&& (mealId != null) )&&(foodId !=0)&& (foodId != null)){
+                                var foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
+                                foodInMealViewModel.insert(foodInMeal)
+                                mealViewModel.addToMeal(foodType.name, foodType.calories, foodType.carbohydrates,
+                                    foodType.protein, foodType.fat,)
+                            }
                         }
                         //remove the found foods from my snapshotstate
                         foundFoods.clear()

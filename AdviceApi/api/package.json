@@ -1,0 +1,25 @@
+{
+  "name": "advice_api",
+  "version": "1.0.0",
+  "description": "API to retrieve and create expert fitness advice",
+  "main": "server.js",
+  "scripts": {
+    "run": "nodemon server.js",
+    "test": "mocha --timeout 10000"
+  },
+  "author": "ODU CS411W 2021 Team Silver",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.15",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "supertest": "^6.1.6"
+  }
+}
