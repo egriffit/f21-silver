@@ -14,14 +14,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class NutritionAppNinjaApiKtTest: TestCase() {
     @Test
-    fun testGetFood() = runBlocking() {
+    fun testGetFood() = runBlocking {
         val api = nutritionApiNinjaApi().create(NutritionApiNinjaApi::class.java)
         val call: ApiNinjaNutrition = api.getFood(api_key,"carrot")
         MatcherAssert.assertThat(call[0].name, CoreMatchers.equalTo("carrot"))
     }
 
     @Test
-    fun testGetFirstFoodId() = runBlocking() {
+    fun testGetFirstFoodId() = runBlocking {
         val api = nutritionApiNinjaApi().create(NutritionApiNinjaApi::class.java)
         val call: ApiNinjaNutrition = api.getFood(api_key,"carrot")
         MatcherAssert.assertThat(call[0].calories, CoreMatchers.equalTo(34.0))

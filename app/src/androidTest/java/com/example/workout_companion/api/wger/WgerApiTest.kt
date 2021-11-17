@@ -7,6 +7,7 @@ import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNu
 import com.example.workout_companion.api.utility.ExerciseData
 import com.example.workout_companion.api.wger.entities.ExerciseInfo
 import com.example.workout_companion.api.wger.entities.wgerExercise
+import com.example.workout_companion.api.wger.utility.muscleName
 import com.example.workout_companion.api.wger.utility.muscleNameConverter.toMuscleName
 import com.example.workout_companion.enumeration.MuscleGroupConverter.fromMuscleGroup
 import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
@@ -17,7 +18,6 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Collections.replaceAll
 
 @RunWith(AndroidJUnit4::class)
 class WgerApiTest: TestCase() {
@@ -25,10 +25,10 @@ class WgerApiTest: TestCase() {
     @Test
     fun testGetExerciseByMuscle() = runBlocking() {
         val api = wgerApi().create(WgerApi::class.java)
-        var muscleName = toMuscleName("Biceps brachii")
+        val muscleName = toMuscleName("Biceps brachii")
         val call: wgerExercise = api.getExerciseByMuscle(2, muscleName)
         MatcherAssert.assertThat(
-            call.results?.elementAt(0).name, CoreMatchers.equalTo("Biceps Curls With Barbell")
+            call.results.elementAt(0).name, CoreMatchers.equalTo("Biceps Curls With Barbell")
         )
     }
 
