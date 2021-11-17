@@ -1,6 +1,7 @@
 import React, {useReducer, useState, useEffect} from 'react'
 import '../App.css'
 import './CreateSourceForm.css'
+import api from '../environment.js'
 const axios = require('axios').default;
 
 function CreateSourceForm(props){
@@ -21,7 +22,7 @@ function CreateSourceForm(props){
         event.preventDefault()
             setSubmitting(true)
             //handle authors
-            axios.post('http://localhost:7000/adviceapi/addSource',
+            axios.post(api + '/addSource',
             {
                     sourceType: formData.sourceType,
                     title: formData.title,

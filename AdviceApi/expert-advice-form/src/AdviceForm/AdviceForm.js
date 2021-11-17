@@ -1,6 +1,7 @@
 import React, {useState, useReducer, useEffect} from 'react'
 import '../App.css'
 import  CreateSourceForm from '../CreateSource/CreateSourceForm'
+import api from '../environment.js'
 const axios = require('axios').default;
 
 
@@ -19,7 +20,7 @@ function AdviceForm(){
     const [showSourceForm, setShowSourceForm] = useState(false);
 
     const getSources = async() => {
-        await axios.get('http://localhost:7000/adviceapi/sources')
+        await axios.get(api+'/sources')
         .then(response => {
             setSource(response.data)
         })

@@ -1,6 +1,6 @@
 import React, {useState, useReducer} from 'react'
 import '../App.css'
-
+import api from '../environment.js'
 const axios = require('axios').default;
 
 function CreateUserForm(){
@@ -28,7 +28,7 @@ function CreateUserForm(){
         if(formData.password === formData.password2)
         {
             setSubmitting(true)
-            axios.post('http://localhost:7000/adviceapi/createUser', { username: formData.username, password: formData.password })
+            axios.post(api + '/createUser', { username: formData.username, password: formData.password })
             .then(response => {
               setSubmitting(false);
               setResponse(response.data)
