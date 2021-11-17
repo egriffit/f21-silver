@@ -51,7 +51,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         composable (route = "searchFood/{foodName}/{meal}",
             arguments = listOf(
                 navArgument("foodName") { type = NavType.StringType } ,
-                navArgument("meal") { type = androidx.navigation.NavType.StringType }
+                navArgument("meal") { type = NavType.StringType }
 
             )
         ){ backStackEntry ->
@@ -61,7 +61,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 nutritionAPIViewModel
                     )
         }
-        composable (route = "foodView/{foodName}/{servingSize}/{calories}/{carbohydrates}/{protein}/{fat}",
+        composable (route = "foodView/{foodName}/{servingSize}/{calories}/{carbohydrates}/{protein}/{fat}/{meal}",
             arguments = listOf(
                 navArgument("foodName") { type = NavType.StringType } ,
                 navArgument("servingSize") { type = NavType.StringType },
@@ -69,7 +69,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("carbohydrates") { type = NavType.StringType },
                 navArgument("protein") { type = NavType.StringType },
                 navArgument("fat") { type = NavType.StringType },
-
+                navArgument("meal") { type = NavType.StringType },
                 )
         ){ backStackEntry ->
             FoodView(navController, backStackEntry.arguments?.getString("foodName"),
@@ -78,8 +78,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 backStackEntry.arguments?.getString("carbohydrates")?.toDouble(),
                 backStackEntry.arguments?.getString("protein")?.toDouble(),
                 backStackEntry.arguments?.getString("fat")?.toDouble(),
-                foodTypeViewModel, mealViewModel, foodInMealViewModel,
-                nutritionAPIViewModel
+                backStackEntry.arguments?.getString("meal"),
+                foodTypeViewModel, mealViewModel, foodInMealViewModel
             )
         }
         composable (route = "UpdateGoals") {

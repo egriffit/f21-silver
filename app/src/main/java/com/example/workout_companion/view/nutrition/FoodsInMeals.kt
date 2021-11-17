@@ -28,7 +28,7 @@ import java.time.LocalDate
  * @param open, a mutableStateBoolean to check if foods list is visible
  * @param foodTypeViewModel, a  view model to work with food_type table
  * @param mealViewModel, a view model to work with the the meal table
- * @param foundInMealViewModel, a view model to work with the the food_in_meal table
+ * @param foodInMealViewModel, a view model to work with the the food_in_meal table
  * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
@@ -44,7 +44,7 @@ fun FoodsInMeals(
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     val today = LocalDate.now()
-    var foundFoods =  foodInMealViewModel.getFoodsInMeal(meal, today).observeAsState(listOf()).value
+    val foundFoods =  foodInMealViewModel.getFoodsInMeal(meal, today).observeAsState(listOf()).value
     if(open.value){
         Column(
             modifier = Modifier.fillMaxHeight()
@@ -62,6 +62,6 @@ fun FoodsInMeals(
         }
         //search box to add food
 
-        foodSearchBox(navController, meal, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
+        FoodSearchBox(navController, meal, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
     }
 }

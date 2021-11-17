@@ -10,10 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutritionItem
 import com.example.workout_companion.entity.FoodInMealEntity
@@ -27,7 +25,6 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /***
  * Composable to display a the found foods from the Nutrition API
@@ -40,20 +37,17 @@ import kotlinx.coroutines.runBlocking
  */
 @SuppressLint("NewApi")
 @Composable
-fun FoundFoods(navController: NavController, food: String?, meal: String?,
-               foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
-               foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
+fun FoundFoods(
+    navController: NavController, food: String?, meal: String?,
+    foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
+    foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
 ){
     val coroutineScope = rememberCoroutineScope()
-    var foundFoods =  nutritionAPIViewModel.foodResults
+    val foundFoods =  nutritionAPIViewModel.foodResults
     val foodState = remember{ mutableStateOf("") }
     val dialogState = rememberMaterialDialogState()
     val selectedFoodIndex = remember { mutableStateOf(0)}
-    var selectedFoundFood: ApiNinjaNutritionItem = ApiNinjaNutritionItem(
-        0.0, 0.0, 0,
-        0.0,0.0,0.0,
-        "",0, 0.0,
-        0.0, 0, 0.0)
+    var selectedFoundFood: ApiNinjaNutritionItem
     val selectedFoodName = remember { mutableStateOf("")}
     if (food != null) {
         foodState.value = food
@@ -61,7 +55,6 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
     }
 
     //dialog box called when a food is searched for
-    val textState = remember { mutableStateOf(TextFieldValue()) }
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {
@@ -72,7 +65,7 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                         selectedFoundFood = foundFoods.elementAt(0).elementAt(selectedFoodIndex.value)
                         selectedFoodName.value = selectedFoundFood.name
                         //store the food in the food table
-                        var foodType = FoodTypeEntity(0, selectedFoundFood.name, "-1",
+                        val foodType = FoodTypeEntity(0, selectedFoundFood.name, "-1",
                             selectedFoundFood.serving_size_g,
                             selectedFoundFood.calories, selectedFoundFood.carbohydrates_total_g,
                             selectedFoundFood.protein_g, selectedFoundFood.fat_total_g)
@@ -82,8 +75,6 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                             //retrieve the food id and meal id
                             delay(1000L)
 
-                            var foodId = 0
-                            var mealId = 0
                             foodTypeViewModel.getId(foodType)
                             delay(1000L)
 
@@ -91,12 +82,12 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                                 mealViewModel.getMealId(meal)
                                 delay(1000L)
                             }
-                            foodId = foodTypeViewModel.foodID
-                            mealId = mealViewModel.mealId
+                            val foodId = foodTypeViewModel.foodID
+                            val mealId = mealViewModel.mealId
 
                             //create a food_inMeal_object and add to database
-                            if(((mealId !=0)&& (mealId != null) )&&(foodId !=0)&& (foodId != null)){
-                                var foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
+                            if((mealId !=0) &&(foodId !=0)){
+                                val foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
                                 foodInMealViewModel.insert(foodInMeal)
                                 mealViewModel.addToMeal(foodType.name, foodType.calories, foodType.carbohydrates,
                                     foodType.protein, foodType.fat,)
@@ -130,7 +121,9 @@ fun FoundFoods(navController: NavController, food: String?, meal: String?,
                     .fillMaxHeight()
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
-                foodRadioButtonList(navController, foundFoods, foodState, selectedFoodIndex)
+                if(meal != null){
+                    FoodRadioButtonList(navController, meal, foundFoods, foodState, selectedFoodIndex)
+                }
             }
         }
     )

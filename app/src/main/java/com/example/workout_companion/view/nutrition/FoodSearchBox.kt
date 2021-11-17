@@ -34,30 +34,27 @@ import com.vanpra.composematerialdialogs.*
  * a button to request data from the NutritionAPI
  * a column of text labels with foods found from the API
  *
- * @param foundINMealViewModel, a view model to work with the the food_in_meal table
- * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ *  @param navController, a NavController
+ *  @param meal, name of meal
+ *  @param foodTypeViewModel, a view model to work with the food_type table
+ *  @param mealViewModel, a view model to work with the meal table
+ * @param foodInMealViewModel, a view model to work with the the food_in_meal table
+ * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
 @Composable
-fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel: FoodTypeViewModel,
+fun FoodSearchBox(navController: NavController, meal: String, foodTypeViewModel: FoodTypeViewModel,
                   mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
                   nutritionAPIViewModel: NutritionAPIViewModel
 ){
-    val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
     val food = remember{ mutableStateOf("") }
-    var foundFoods =  nutritionAPIViewModel.foodResults
+    val foundFoods =  nutritionAPIViewModel.foodResults
     val dialogState = rememberMaterialDialogState()
     val selectedFoodIndex = remember { mutableStateOf(0)}
-    var selectedFoundFood: ApiNinjaNutritionItem = ApiNinjaNutritionItem(
-        0.0, 0.0, 0,
-        0.0,0.0,0.0,
-        "",0, 0.0,
-        0.0, 0, 0.0)
+    var selectedFoundFood: ApiNinjaNutritionItem
     val selectedFoodName = remember { mutableStateOf("")}
 
     //dialog box called when a food is searched for
-    val textState = remember { mutableStateOf(TextFieldValue()) }
     MaterialDialog(dialogState = dialogState,
        buttons = {
             positiveButton("Ok", onClick = {
@@ -65,7 +62,7 @@ fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel:
                 selectedFoundFood = foundFoods.elementAt(0).elementAt(selectedFoodIndex.value)
                 selectedFoodName.value = selectedFoundFood.name
                 //store the food in the food table
-                var foodType = FoodTypeEntity(0, selectedFoundFood.name, "-1",
+                val foodType = FoodTypeEntity(0, selectedFoundFood.name, "-1",
                     selectedFoundFood.serving_size_g,
                     selectedFoundFood.calories, selectedFoundFood.carbohydrates_total_g,
                     selectedFoundFood.protein_g, selectedFoundFood.fat_total_g)
@@ -88,7 +85,7 @@ fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel:
                     .fillMaxHeight()
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
-                foodRadioButtonList(navController, foundFoods, food, selectedFoodIndex)
+                FoodRadioButtonList(navController, meal, foundFoods, food, selectedFoodIndex)
            }
         }
     Column() {
@@ -129,19 +126,19 @@ fun foodSearchBox(navController: NavController, meal: String, foodTypeViewModel:
                 }
             }
         }
-        Text(text = "${selectedFoodName.value}")
+        Text(selectedFoodName.value)
     }
 }
 
 
 @Composable
-fun foodRadioButtonList(navController: NavController, foundFoods: SnapshotStateList<ApiNinjaNutrition>,
+fun FoodRadioButtonList(navController: NavController, meal: String, foundFoods: SnapshotStateList<ApiNinjaNutrition>,
                         food: MutableState<String>, selectedFoodIndex: MutableState<Int>){
     Text("Results")
     Column(){
         if(foundFoods.size > 0){
             for(found in foundFoods){
-                FoodRadioButtons(navController, found, selectedFoodIndex)
+                FoodRadioButtons(navController, meal, found, selectedFoodIndex)
             }
         }
         else
@@ -153,7 +150,7 @@ fun foodRadioButtonList(navController: NavController, foundFoods: SnapshotStateL
 
 
 @Composable
-fun FoodRadioButtons(navController: NavController, found: ApiNinjaNutrition, selectedFoodIndex: MutableState<Int>) {
+fun FoodRadioButtons(navController: NavController, meal: String, found: ApiNinjaNutrition, selectedFoodIndex: MutableState<Int>) {
 
     Row(Modifier
         .fillMaxWidth()) {
@@ -164,18 +161,18 @@ fun FoodRadioButtons(navController: NavController, found: ApiNinjaNutrition, sel
                 enabled = true,
                 colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
             )
-            foodRadioButton(navController, food)
+            FoodRadioButton(navController, meal, food)
         }
     }
 }
 
 @Composable
-fun foodRadioButton(navController: NavController, food: ApiNinjaNutritionItem){
+fun FoodRadioButton(navController: NavController, meal: String, food: ApiNinjaNutritionItem){
     Row(){
         Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center){
             Button(onClick = {
-                navController.navigate("foodView/${food.name}/${food.serving_size_g}/${food.calories}/${food.carbohydrates_total_g}/${food.protein_g}/${food.fat_total_g}")
+                navController.navigate("foodView/${food.name}/${food.serving_size_g}/${food.calories}/${food.carbohydrates_total_g}/${food.protein_g}/${food.fat_total_g}/${meal}")
             })
             {
                 Text(text = food.name)
