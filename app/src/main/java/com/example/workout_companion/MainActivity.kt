@@ -8,9 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.workout_companion.sampleData.FrameWorkList
-import com.example.workout_companion.sampleData.currentUser
-import com.example.workout_companion.sampleData.user
+import androidx.lifecycle.ViewModelProvider
 import com.example.workout_companion.ui.theme.Workout_companionTheme
 import com.example.workout_companion.view.MainNavigation
 
@@ -22,13 +20,12 @@ class MainActivity : ComponentActivity() {
             Workout_companionTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainNavigation()
+                    MainNavigation(ViewModelProvider(this))
                 }
             }
         }
     }
 }
-
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")

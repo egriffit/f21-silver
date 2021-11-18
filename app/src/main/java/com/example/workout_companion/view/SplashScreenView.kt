@@ -30,6 +30,7 @@ import kotlinx.coroutines.delay
             factory = CurrentUserGoalViewModelFactory(context.applicationContext as Application)
         )
 
+
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity? = currentUserGoalViewModel.getCurrentGoals.value
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity =
 //            CurrentNutritionPlanAndFrameworkEntity(nutritionPlanType = NutritionPlanTypeEntity(1, 1, 2500.0, .40, .35, .25),
@@ -59,7 +60,7 @@ import kotlinx.coroutines.delay
             }
             else
             {
-                navController.navigate("addGoals")
+                navController.navigate("userForm")
             }
         }
 

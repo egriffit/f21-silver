@@ -100,9 +100,9 @@ class NutritionPlanTypeDaoTest: TestCase(){
     @Test
     fun testGetNutritionPlansWithGoals() = runBlocking{
         val goal = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val plan = NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25)
         goalDao.addGoal(goal[0])
@@ -117,9 +117,9 @@ class NutritionPlanTypeDaoTest: TestCase(){
     @Test
     fun testGetNutritionPlansByGoal() = runBlocking{
         val goal = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val plans = listOf(
             NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),
@@ -142,9 +142,9 @@ class NutritionPlanTypeDaoTest: TestCase(){
     @Test
     fun testGetNutritionPlanCountByGoal() = runBlocking{
         val goal = listOf(
-            GoalTypeEntity(1, "Lose Weight"),
-            GoalTypeEntity(2, "Gain Mass"),
-            GoalTypeEntity(3, "Gain Strength"),
+            GoalTypeEntity(1, "Lose Weight", -500),
+            GoalTypeEntity(2, "Gain Mass", 500),
+            GoalTypeEntity(3, "Gain Strength", 250),
         )
         val plans = listOf(
             NutritionPlanTypeEntity(1, 1, 2000.0, 0.45, .30, .25),

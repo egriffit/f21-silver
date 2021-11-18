@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.utility.TestDataGenerator
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
-import java.time.Month
 
 
 @RunWith(AndroidJUnit4::class)
@@ -28,6 +27,8 @@ class UserDaoTest : TestCase(){
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         dao = db.userDao()
+
+        TestDataGenerator.addGoalsToDB(db)
     }
 
     @After
@@ -37,56 +38,36 @@ class UserDaoTest : TestCase(){
 
     @Test
     fun TestWriteAndReadUser() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-        dao.insert(user)
-        val byName = dao.getByName("John Smith")
-        MatcherAssert.assertThat(byName, CoreMatchers.equalTo(user))
+        dao.insert(TestDataGenerator.USER)
+        val byName = dao.getByName(TestDataGenerator.USER.name)
+        MatcherAssert.assertThat(byName, CoreMatchers.equalTo(TestDataGenerator.USER))
     }
 
     @Test
     fun TestCount() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val birthDate2 = LocalDate.of(1947, Month.JULY, 30)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-        val user2 = UserEntity("Arnold Schwarzenegger", "expert", "male", birthDate2, 3, "active")
-
-        dao.insert(user)
-        dao.insert(user2)
+        dao.insert(TestDataGenerator.USER)
         val count: Int = dao.getCount()
-        MatcherAssert.assertThat(count, CoreMatchers.equalTo(2))
+        MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
     }
 
     @Test
     fun TestCountWithName() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-
-        dao.insert(user)
-        val count: Int = dao.getCountWithName("John Smith")
+        dao.insert(TestDataGenerator.USER)
+        val count: Int = dao.getCountWithName(TestDataGenerator.USER.name)
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(1))
     }
 
     @Test
     fun TestDelete() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-
-        dao.insert(user)
-        dao.delete(user)
-        val count: Int = dao.getCountWithName("John Smith")
+        dao.insert(TestDataGenerator.USER)
+        dao.delete(TestDataGenerator.USER)
+        val count: Int = dao.getCountWithName(TestDataGenerator.USER.name)
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
     }
 
     @Test
     fun TestDeleteAll() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val birthDate2 = LocalDate.of(1947, Month.JULY, 30)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-        val user2 = UserEntity("Arnold Schwarzenegger", "expert", "male", birthDate2, 3, "active")
-
-        dao.insert(user)
-        dao.insert(user2)
+        dao.insert(TestDataGenerator.USER)
         dao.deleteAll()
         val count: Int = dao.getCount()
         MatcherAssert.assertThat(count, CoreMatchers.equalTo(0))
@@ -94,34 +75,34 @@ class UserDaoTest : TestCase(){
 
     @Test
     fun TestUpdateUser() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-        val newUser = UserEntity("John Smith", "experienced", "male", birthDate, 2, "moderate")
+        var updatedUser = TestDataGenerator.USER
+        updatedUser.weight = 18240.03
 
-        dao.insert(user)
-        dao.update(newUser)
-        val byName = dao.getByName("John Smith")
-        MatcherAssert.assertThat(byName.experience_level, CoreMatchers.equalTo("experienced"))
+        dao.insert(TestDataGenerator.USER)
+        dao.update(updatedUser)
+        val byName = dao.getByName(TestDataGenerator.USER.name)
+        MatcherAssert.assertThat(byName, CoreMatchers.equalTo(updatedUser))
     }
 
     @Test
     fun TestBirthDate() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-
-        dao.insert(user)
-        val bDate: LocalDate = dao.getBirthDate("John Smith")
-        MatcherAssert.assertThat(bDate, CoreMatchers.equalTo(birthDate))
+        dao.insert(TestDataGenerator.USER)
+        val bDate: LocalDate = dao.getBirthDate(TestDataGenerator.USER.name)
+        MatcherAssert.assertThat(bDate, CoreMatchers.equalTo(TestDataGenerator.USER.birth_date))
     }
 
 
     @Test
     fun TestAge() = runBlocking(){
-        val birthDate = LocalDate.of (1990, Month.JANUARY, 1)
-        val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
-
-        dao.insert(user)
-        val age: Int = dao.getAge("John Smith")
+        dao.insert(TestDataGenerator.USER)
+        val age: Int = dao.getAge(TestDataGenerator.USER.name)
         MatcherAssert.assertThat(age, CoreMatchers.equalTo(31))
+    }
+
+    @Test
+    fun TestWeight() = runBlocking {
+        dao.insert(TestDataGenerator.USER)
+        val daoWeight = dao.getWeight(TestDataGenerator.USER.name)
+        MatcherAssert.assertThat(TestDataGenerator.USER.weight, CoreMatchers.equalTo(daoWeight))
     }
 }

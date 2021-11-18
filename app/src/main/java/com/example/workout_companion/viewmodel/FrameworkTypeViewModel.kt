@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkTypeEntity
+import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.repository.FrameworkTypeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,6 +56,32 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
     }
 
     /**
+     * Gets all frameworks with the given goal name
+     *
+     * @property goal    the name of the goal
+     *
+     * @return a LiveData List of all FrameworkWithGoalEntity objects meeting the criteria
+     */
+    fun getFrameworkByGoalName(goal: String) : LiveData<List<FrameworkWithGoalEntity>> {
+        return repository.getFrameworkByGoalName(goal)
+    }
+
+    /**
+     * Gets all frameworks with the given goal and within the number
+     * of workouts equal to or fewer than the maxWorkouts provided
+     *
+     * @property goal    the name of the goal
+     * @Property maxWorkouts the max number of workouts a user will do
+     *
+     * @return a LiveData List of all FrameworkWithGoalEntity objects meeting the criteria
+     */
+    fun getFrameworksWithGoalNameWithinMaxWorkouts(goal: String, maxWorkouts: Int) : LiveData<List<FrameworkWithGoalEntity>> {
+        return repository.getFrameworksWithGoalNameWithinMaxWorkouts(goal, maxWorkouts)
+    }
+
+
+
+    /**
      * Adds a framework to the database
      *
      * @property framework  the framework to add to the database.
@@ -74,23 +101,5 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFramework(framework)
         }
-    }
-}
-
-/**
-* FrameworkTypeViewModel Factory class that is used to initialize the FrameworkTypeViewModel
- *
-* @param Application context
-*/
-class FrameworkTypeViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    /**
-     * Method to create an instance of the FrameworkTypeViewModel
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(FrameworkTypeViewModel::class.java)) {
-            return FrameworkTypeViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
     }
 }

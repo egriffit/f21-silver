@@ -1,16 +1,15 @@
 package com.example.workout_companion.sampleData
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.example.workout_companion.mock.entity.CurrentUserGoalEntity
+import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.UserEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.enumeration.ActivityLevel
+import com.example.workout_companion.enumeration.ExperienceLevel
+import com.example.workout_companion.enumeration.Sex
 import java.time.LocalDate
 import java.time.Month
 
-@RequiresApi(Build.VERSION_CODES.O)
-val birthDate : LocalDate = LocalDate.of (1990, Month.JANUARY, 1)
-val user = UserEntity("John Smith", "beginner", "male", birthDate, 2, "moderate")
+val user = UserEntity("John Smith", ExperienceLevel.BEGINNER, Sex.MALE, LocalDate.of (1990, Month.JANUARY, 1), 2, 167.64, 75.0, ActivityLevel.MODERATELY_ACTIVE, 0)
 
 val FrameWorkList : List<FrameworkWithGoalEntity> = listOf(
     FrameworkWithGoalEntity(2, "Frame_work_2", 1, 2, "Gain Mass"),

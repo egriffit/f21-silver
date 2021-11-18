@@ -1,7 +1,8 @@
 package com.example.workout_companion.entity
 
 import androidx.room.*
-import com.example.workout_companion.utility.DateTimeConverter
+import com.example.workout_companion.enumeration.*
+import com.example.workout_companion.utility.*
 import java.time.LocalDate
 
 /**
@@ -14,17 +15,27 @@ import java.time.LocalDate
  * @property max_workouts_per_week      The number of workouts the user can do per week
  * @property activity_level             The user's reported activity level
  */
-@Entity(tableName = "user")
+@Entity(tableName = "user",
+        foreignKeys = [
+                ForeignKey(entity = GoalTypeEntity::class,
+                        parentColumns = ["id"],
+                        childColumns = ["goal_id"],
+                        onDelete = ForeignKey.NO_ACTION
+                )
+        ]
+)
 data class UserEntity(
         @PrimaryKey(autoGenerate = false)
         @ColumnInfo(name = "name")
         var name: String,
 
         @ColumnInfo(name = "experience_level")
-        var experience_level: String,
+        @TypeConverters(ExperienceLevelConverter::class)
+        var experience_level: ExperienceLevel,
 
         @ColumnInfo(name = "sex")
-        var sex: String,
+        @TypeConverters(SexConverter::class)
+        var sex: Sex,
 
         @ColumnInfo(name = "birth_date")
         @TypeConverters(DateTimeConverter::class)
@@ -34,6 +45,16 @@ data class UserEntity(
         @ColumnInfo(name = "max_workouts_per_week")
         var max_workouts_per_week: Int,
 
+        @ColumnInfo(name = "height")
+        var height: Double,
+
+        @ColumnInfo(name = "weight")
+        var weight: Double,
+
         @ColumnInfo(name = "activity_level")
-        var activity_level: String
+        @TypeConverters(ActivityLevelConverter::class)
+        var activity_level: ActivityLevel,
+
+        @ColumnInfo(name = "goal_id", index = true)
+        var goal_id: Int,
 )

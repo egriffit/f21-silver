@@ -17,6 +17,11 @@ class UserRepository (private val userDao: UserDao) {
     val getAll: LiveData<List<UserEntity>> = userDao.getAll()
 
     /**
+     * LiveData value of the user in the database. If no user exists, this will be null.
+     */
+    val user: LiveData<UserEntity> = userDao.getUser()
+
+    /**
      * Retrieves a UserEntity from the users table where the name is equal to the string provided
      *
      * @param String name
@@ -97,7 +102,7 @@ class UserRepository (private val userDao: UserDao) {
      *
      * @return void
      */
-    suspend fun deletaAll(){
+    suspend fun deleteAll(){
         return userDao.deleteAll()
     }
 
@@ -109,5 +114,25 @@ class UserRepository (private val userDao: UserDao) {
      */
     suspend fun getAge(name: String): Int{
        return userDao.getAge(name)
+    }
+
+    /**
+     * Retrieves the age of the user with the provided name
+     *
+     * @param name String
+     * @return Int, age
+     */
+    suspend fun getHeightInInches(name: String): Int{
+        return userDao.getHeightInInches(name)
+    }
+
+    /**
+     * Retrieves the weight of the user in kilograms
+     *
+     * @param name The name of the user
+     * @return The weight in kilograms
+     */
+    suspend fun getWeight(name: String): Double {
+        return userDao.getWeight(name)
     }
 }
