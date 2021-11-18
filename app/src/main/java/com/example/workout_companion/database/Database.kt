@@ -3,9 +3,7 @@ package com.example.workout_companion.database
 import android.content.Context
 import androidx.room.*
 import com.example.workout_companion.dao.*
-import com.example.workout_companion.mock.dao.CurrentUserGoalDao
 import com.example.workout_companion.entity.*
-import com.example.workout_companion.mock.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.utility.DateTimeConverter
 
 /**

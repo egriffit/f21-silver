@@ -10,6 +10,8 @@ fun AssessmentView(navController: NavController){
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
-        content = { WorkoutsView(navController) }
+        content = {
+            WorkoutsView(navController)
+        }
     )
 }
