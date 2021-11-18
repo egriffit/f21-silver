@@ -62,6 +62,6 @@ fun FoodsInMeals(
         }
         //search box to add food
 
-        FoodSearchBox(navController, meal, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
+        FoodSearchBox(navController, meal)
     }
 }

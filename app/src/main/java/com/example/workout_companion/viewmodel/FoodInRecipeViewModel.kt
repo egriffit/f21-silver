@@ -94,7 +94,7 @@ class FoodInRecipeViewModel(application: Application) : AndroidViewModel(applica
      * equal to the string
      *
      * @param name, string
-     * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
+     * @return LiveData<List<RecipeWithFoodsEntity> a list of RecipeWithFoodsEntity objects
      */
     fun getFoodInRecipe(name: String): List<RecipeWithFoodsEntity>?{
         var mealFoods: List<RecipeWithFoodsEntity>? = listOf<RecipeWithFoodsEntity>()
