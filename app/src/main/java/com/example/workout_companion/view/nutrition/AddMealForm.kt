@@ -2,13 +2,17 @@ package com.example.workout_companion.view.nutrition
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.ExpandMore
+import androidx.compose.material.icons.sharp.NavigateNext
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -28,9 +32,9 @@ import com.vanpra.composematerialdialogs.title
  * @param navController, a NavController to navigate to different view
  * @param foodTypeViewModel, a  view model to work with food_type table
  * @param mealViewModel, a view model to work with the the meal table
- * @param foundINMealViewModel, a view model to work with the the food_in_meal table
+ * @param foodInMealViewModel, a view model to work with the the food_in_meal table
  * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
- * @parm recipeViewModel, a view model to work with the recipe table
+ * @param recipeViewModel, a view model to work with the recipe table
  */
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,11 +44,13 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
                 nutritionAPIViewModel: NutritionAPIViewModel, recipeViewModel: RecipeViewModel
 ){
     val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
-    val confirmremove = rememberMaterialDialogState()
+    val confirmRemove = rememberMaterialDialogState()
+    val showRecipeForm = remember { mutableStateOf(false)}
+    val showAddMealForm = remember { mutableStateOf(false)}
 
     val mealName = remember{ mutableStateOf("")}
     //dialog to confirm to remove all records
-    MaterialDialog(dialogState = confirmremove,
+    MaterialDialog(dialogState = confirmRemove,
         buttons = {
             positiveButton("Ok", onClick = {
                 //remove all meals in a day
@@ -65,45 +71,110 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
     ){
 
         //display meals
-        if (foundMeals != null) {
-            MealList(navController, foundMeals, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel )
-        }
-        //display form to add meals
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ){
-            Row(
-                modifier = Modifier.width(200.dp)
-            )
-            {
-                Text("Create Meal:",
-                    fontSize = 15.sp)
-                TextField(value = mealName.value,
-                    onValueChange = {mealName.value = it})
-            }
-            Row(
-                modifier = Modifier.width(200.dp)
-            )
-            {
-                Button(onClick = {
-                    addFood(mealName, mealViewModel)
-//                    mealViewModel.insert(mealName.value)
-//                    mealName.value = ""
-                }){
-                    Text("Add meal",
-                        fontSize = 15.sp)
+        MealList(navController, foundMeals, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel )
+
+        //show /hide form to add a meal
+        Row{
+            Button(onClick = {showAddMealForm.value = !showAddMealForm.value},
+                modifier = Modifier.background(color = Color.LightGray),
+                border= BorderStroke(1.dp, Color.Black),
+                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)
+            ){
+                if(showAddMealForm.value){
+                    Icon(
+                        Icons.Sharp.ExpandMore,
+                        contentDescription = "",
+                        modifier = Modifier.background(color = Color.LightGray)
+                            .size(20.dp),
+                        tint = Color.Black
+                    )
+                }else{
+                    Icon(
+                        Icons.Sharp.NavigateNext,
+                        contentDescription = "",
+                        modifier = Modifier.background(color = Color.LightGray)
+                            .size(20.dp),
+                        tint = Color.Black
+                    )
                 }
             }
+            Spacer(modifier = Modifier.padding(start = 30.dp))
+            Text("Create Meal")
         }
-        Button(onClick = {
-            //load confirm dialog box
-            confirmremove.show()
-        }){
-            Text("Remove All Meals",
-                fontSize = 15.sp)
+        if(showAddMealForm.value) {
+            //display form to add meals
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.width(200.dp)
+                )
+                {
+                    Text(
+                        "Create Meal:",
+                        fontSize = 15.sp
+                    )
+                    TextField(value = mealName.value,
+                        onValueChange = { mealName.value = it })
+                }
+                Row(
+                    modifier = Modifier.width(200.dp)
+                )
+                {
+                    Button(onClick = {
+                        addFood(mealName, mealViewModel)
+                        //                    mealViewModel.insert(mealName.value)
+                        //                    mealName.value = ""
+                    }) {
+                        Text(
+                            "Add meal",
+                            fontSize = 15.sp
+                        )
+                    }
+                }
+            }
+            Button(onClick = {
+                //load confirm dialog box
+                confirmRemove.show()
+            }) {
+                Text(
+                    "Remove All Meals",
+                    fontSize = 15.sp
+                )
+            }
         }
-        AddRecipeForm(navController, recipeViewModel)
+        //show hide recipe form
+        Row{
+            Button(onClick = {showRecipeForm.value = !showRecipeForm.value},
+                modifier = Modifier.background(color = Color.LightGray),
+                border= BorderStroke(1.dp, Color.Black),
+                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)
+            ){
+                if(showRecipeForm.value){
+                        Icon(
+                            Icons.Sharp.ExpandMore,
+                            contentDescription = "",
+                            modifier = Modifier.background(color = Color.LightGray)
+                                .size(20.dp),
+                            tint = Color.Black
+                        )
+                    }else{
+                        Icon(
+                            Icons.Sharp.NavigateNext,
+                            contentDescription = "",
+                            modifier = Modifier.background(color = Color.LightGray)
+                                .size(20.dp),
+                            tint = Color.Black
+                        )
+                }
+            }
+            Spacer(modifier = Modifier.padding(start = 30.dp))
+            Text("Create Recipe")
+        }
+        if(showRecipeForm.value){
+            AddRecipeForm(navController, recipeViewModel)
+        }
     }
 }
 
@@ -116,7 +187,7 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
-fun addFood(mealName: MutableState<String>, mealViewModel: MealViewModel, ){
+fun addFood(mealName: MutableState<String>, mealViewModel: MealViewModel ){
     if(mealName.value != ""){
         mealViewModel.insert(mealName.value)
         mealName.value = ""

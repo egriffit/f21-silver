@@ -10,10 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
 import com.example.workout_companion.view.inputfields.LandingPage
-import com.example.workout_companion.view.nutrition.AddRecipeForm
-import com.example.workout_companion.view.nutrition.FoodView
-import com.example.workout_companion.view.nutrition.FoundFoods
-import com.example.workout_companion.view.nutrition.RecipeView
+import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
 
 
@@ -64,6 +61,22 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 recipeViewModel, foodInRecipeViewModel, nutritionAPIViewModel
                     )
         }
+
+        composable (route = "searchRecipeFood/{foodName}/{recipe}",
+            arguments = listOf(
+                navArgument("foodName") { type = NavType.StringType } ,
+                navArgument("recipe") { type = NavType.StringType }
+            )
+        ){ backStackEntry ->
+            FoundRecipeFoods(navController,
+                backStackEntry.arguments?.getString("foodName"),
+                backStackEntry.arguments?.getString("recipe"),
+                foodTypeViewModel,
+                recipeViewModel,
+                foodInRecipeViewModel,
+                nutritionAPIViewModel
+            )
+        }
         composable (route = "foodView/{foodName}/{servingSize}/{calories}/{carbohydrates}/{protein}/{fat}/{meal}",
             arguments = listOf(
                 navArgument("foodName") { type = NavType.StringType } ,
@@ -83,6 +96,27 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 backStackEntry.arguments?.getString("fat")?.toDouble(),
                 backStackEntry.arguments?.getString("meal"),
                 foodTypeViewModel, mealViewModel, foodInMealViewModel
+            )
+        }
+        composable (route = "foodView/{foodName}/{servingSize}/{calories}/{carbohydrates}/{protein}/{fat}/r/{recipe}",
+            arguments = listOf(
+                navArgument("foodName") { type = NavType.StringType } ,
+                navArgument("servingSize") { type = NavType.StringType },
+                navArgument("calories") { type = NavType.StringType },
+                navArgument("carbohydrates") { type = NavType.StringType },
+                navArgument("protein") { type = NavType.StringType },
+                navArgument("fat") { type = NavType.StringType },
+                navArgument("recipe") { type = NavType.StringType },
+            )
+        ){ backStackEntry ->
+            FoodView(navController, backStackEntry.arguments?.getString("foodName"),
+                backStackEntry.arguments?.getString("servingSize")?.toDouble(),
+                backStackEntry.arguments?.getString("calories")?.toDouble(),
+                backStackEntry.arguments?.getString("carbohydrates")?.toDouble(),
+                backStackEntry.arguments?.getString("protein")?.toDouble(),
+                backStackEntry.arguments?.getString("fat")?.toDouble(),
+                backStackEntry.arguments?.getString("recipe"),
+                foodTypeViewModel, recipeViewModel, foodInRecipeViewModel
             )
         }
         composable(route = "addRecipeForm"){

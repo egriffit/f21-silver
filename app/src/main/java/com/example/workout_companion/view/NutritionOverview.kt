@@ -10,12 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.view.nutrition.AddMealForm
-import com.example.workout_companion.view.nutrition.RecipeButton
 import com.example.workout_companion.viewmodel.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,8 +33,6 @@ fun NutritionOverview(navController: NavController,
                       foodInMealViewModel: FoodInMealViewModel,
                       nutritionAPIViewModel: NutritionAPIViewModel,
                       recipeViewModel: RecipeViewModel){
-    val context = LocalContext.current
-
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},

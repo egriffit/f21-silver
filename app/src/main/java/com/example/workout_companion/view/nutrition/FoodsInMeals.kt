@@ -50,7 +50,7 @@ fun FoodsInMeals(
             modifier = Modifier.fillMaxHeight()
         ){
             Text("Foods")
-            Column(){
+            Column{
                 //display current foods in meal
                 for (food in foundFoods) {
                     Row {

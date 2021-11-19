@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
-
 /***
  * Composable with a textField and a button. The button can be pushed and will retrieve foods
  * from the NutritionAPI that match the string provided
@@ -22,10 +21,10 @@ import androidx.navigation.NavController
  * a column of text labels with foods found from the API
  *
  *  @param navController, a NavController
- *  @param meal, name of meal
+ *  @param recipe, name of meal
  */
 @Composable
-fun FoodSearchBox(navController: NavController, meal: String){
+fun RecipeSearchBox(navController: NavController, recipe: String){
     val food = remember{ mutableStateOf("") }
     val selectedFoodName = remember { mutableStateOf("")}
 
@@ -46,10 +45,11 @@ fun FoodSearchBox(navController: NavController, meal: String){
             }
             Row(
                 modifier = Modifier.width(200.dp)
-            )
-            {
+            ){
                 Button(onClick = {
-                    navController.navigate("searchFood/${food.value}/${meal}")
+                    if(food.value.isNotEmpty()){
+                        navController.navigate("searchRecipeFood/${food.value}/${recipe}")
+                    }
                 }) {
                     Text(
                         "Search",
