@@ -30,6 +30,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val nutritionAPIViewModel: NutritionAPIViewModel =  viewModel()
     val recipeViewModel by lazy { viewModelProvider.get(RecipeViewModel::class.java) }
     val foodInRecipeViewModel by lazy { viewModelProvider.get(FoodInRecipeViewModel::class.java) }
+    val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
 
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
@@ -47,7 +48,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,
-                foodInMealViewModel, nutritionAPIViewModel, recipeViewModel)
+                foodInMealViewModel, nutritionAPIViewModel, recipeViewModel,
+                currentUserGoalViewModel)
         }
         composable (route = "searchFood/{foodName}/{meal}",
             arguments = listOf(
