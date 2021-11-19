@@ -9,38 +9,48 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
-import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutritionItem
 import com.example.workout_companion.entity.*
 import com.example.workout_companion.sampleData.emptyFoodTypeEntity
 import com.example.workout_companion.sampleData.emptyNutritionAPiItem
 import com.example.workout_companion.sampleData.emptyRecipeEntity
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.*
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/***
- * Composable to display a the found foods from the Nutrition API
- *
- *
- * @param navController, a NavController to navigate to different view
- * @param food, string
- * @param meal, a string
- *
+
+/**
+ * FoodIndex - simple dataclass to keep track of the selected radiobutton for found foods
+ * and recipes and ties it to the index for the appropriate list of FoodTypeEntity, APINutrition,
+ * or RecipeEntity objects
+ * @property type, type of list, DBFood, API, Recipe,
+ * @property foodName, name of food,
+ * @property index, integer for the index in the appropriate list
  */
 data class FoodIndex(
     var type: String,
     var foodName: String,
     var index: Int
 )
+
+/***
+ * Composable to display a the found foods from the Nutrition API
+ *
+ *
+ * @param navController, a NavController to navigate to different view
+ * @param food, name of food being added
+ * @param meal, name of meal
+ * @param foodTypeViewModel, view model to work with the food_type table
+ * @param mealViewModel, view model to work with the meal table
+ * @param recipeViewModel, view model to work with the recipe table
+ * @param foodInRecipeViewModel, view model to work with the food_in_recipe table
+ * @param nutritionAPIViewModel, view model to work with the nutrition api by API Ninja
+ *
+ */
 @SuppressLint("NewApi")
 @Composable
 fun FoundFoods(
@@ -63,21 +73,17 @@ fun FoundFoods(
         //3. get foods from nutrition api
         nutritionAPIViewModel.findFood(food)
     }
-    var apiFoods = nutritionAPIViewModel.foodResults
+    val apiFoods = nutritionAPIViewModel.foodResults
 
     //Store foods names in an array with type
-    var foodIndexes = mutableListOf<FoodIndex>()
-    if(dbFoods != null){
-        dbFoods.forEachIndexed{index, food ->
-            foodIndexes.add(FoodIndex(food.name, "DBFood", index))
-        }
+    val foodIndexes = mutableListOf<FoodIndex>()
+    dbFoods?.forEachIndexed{ index, f ->
+        foodIndexes.add(FoodIndex(f.name, "DBFood", index))
     }
-    if(dbRecipes != null){
-        dbRecipes.forEachIndexed{index, recipe ->
-            foodIndexes.add(FoodIndex(recipe.name, "Recipe", index))
-        }
+    dbRecipes?.forEachIndexed{ index, recipe ->
+        foodIndexes.add(FoodIndex(recipe.name, "Recipe", index))
     }
-    if(apiFoods != null && apiFoods.size != 0){
+    if(apiFoods.size != 0){
         apiFoods.elementAt(0).forEachIndexed{index, apiFood ->
             foodIndexes.add(FoodIndex(apiFood.name, "API", index))
         }
@@ -85,20 +91,20 @@ fun FoundFoods(
 
 
     //create a list of pairs with type and relative index
-    //keek track of indexes, states and entities
+    //keeps track of indexes, states and entities
     val selectedFoodIndex = remember{mutableStateOf(FoodIndex("", "", 0))}
     val coroutineScope = rememberCoroutineScope()
-    var selectedFoundAPIFood = remember {mutableStateOf(emptyNutritionAPiItem)}
+    val selectedFoundAPIFood = remember {mutableStateOf(emptyNutritionAPiItem)}
     val selectedFoodName = remember { mutableStateOf("")}
-    var selectedFoundRecipe = remember { mutableStateOf(emptyRecipeEntity)}
-    var selectedFoundFood = remember { mutableStateOf(emptyFoodTypeEntity)}
+    val selectedFoundRecipe = remember { mutableStateOf(emptyRecipeEntity)}
+    val selectedFoundFood = remember { mutableStateOf(emptyFoodTypeEntity)}
 
 
     //dialog box called when a food is searched for
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {
-            Column(){
+            Column{
                 Row(modifier = Modifier.padding(start = 100.dp, end = 20.dp)
                     .fillMaxWidth()){
                     Button(onClick = {
@@ -163,21 +169,19 @@ fun FoundFoods(
                                 mealViewModel.getMealId(meal)
                             }
                             //retrieve the foods in the recipe
-                            var recipe: List<RecipeWithFoodsEntity>? = foodInRecipeViewModel.getFoodInRecipe(selectedFoundRecipe.value.name)
+                            val recipe: List<RecipeWithFoodsEntity>? = foodInRecipeViewModel.getFoodInRecipe(selectedFoundRecipe.value.name)
                             if(recipe != null){
-                                var recipeFoods: List<FoodTypeEntity> = recipe.elementAt(0).foods
-                                var mealId = mealViewModel.mealId
-                                if(recipeFoods != null){
-                                    recipeFoods.forEach{
-                                        if((mealId !=0) &&(it.id !=0)){
-                                            val foodInMeal = FoodInMealEntity(mealId, it.id, 1.0)
-                                            foodInMealViewModel.insert(foodInMeal)
-                                            mealViewModel.addToMeal(it.name,
-                                                it.calories,
-                                                it.carbohydrates,
-                                                it.protein,
-                                                it.fat)
-                                        }
+                                val recipeFoods: List<FoodTypeEntity> = recipe.elementAt(0).foods
+                                val mealId = mealViewModel.mealId
+                                recipeFoods.forEach{
+                                    if((mealId !=0) &&(it.id !=0)){
+                                        val foodInMeal = FoodInMealEntity(mealId, it.id, 1.0)
+                                        foodInMealViewModel.insert(foodInMeal)
+                                        mealViewModel.addToMeal(it.name,
+                                            it.calories,
+                                            it.carbohydrates,
+                                            it.protein,
+                                            it.fat)
                                     }
                                 }
                             }
@@ -216,7 +220,7 @@ fun FoundFoods(
                             }
                         }
 
-                        //remove the found foods from my snapshotstate
+                        //remove the found foods from my snapshot state
                         apiFoods.clear()
                         //navigate back to nutrition overview view
                         navController.navigate("NutritionOverview")
@@ -246,8 +250,7 @@ fun FoundFoods(
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
                 if(meal != null){
-                    Text("Don't crash")
-                //      FoodRadioButtonList(navController, meal, selectedFoodName.value, dbFoods, dbRecipes, apiFoods, selectedFoodIndex)
+                     FoodRadioButtonList(navController, meal, dbFoods, dbRecipes, apiFoods, selectedFoodIndex)
                 }
             }
         }
