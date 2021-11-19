@@ -12,10 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.workout_companion.viewmodel.NutritionAPIViewModel
-import com.example.workout_companion.viewmodel.FoodInMealViewModel
-import com.example.workout_companion.viewmodel.FoodTypeViewModel
-import com.example.workout_companion.viewmodel.MealViewModel
+import com.example.workout_companion.viewmodel.*
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -33,14 +30,14 @@ import com.vanpra.composematerialdialogs.title
  * @param mealViewModel, a view model to work with the the meal table
  * @param foundINMealViewModel, a view model to work with the the food_in_meal table
  * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
- *
+ * @parm recipeViewModel, a view model to work with the recipe table
  */
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewModel,
                 mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
-                nutritionAPIViewModel: NutritionAPIViewModel
+                nutritionAPIViewModel: NutritionAPIViewModel, recipeViewModel: RecipeViewModel
 ){
     val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
     val confirmremove = rememberMaterialDialogState()
@@ -62,13 +59,14 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
     }
     //display add meal form
     Column(
-        modifier = Modifier.fillMaxSize(),
-
+        modifier = Modifier
+            .fillMaxSize()
+            .height(300.dp)
     ){
 
         //display meals
         if (foundMeals != null) {
-            MealList(navController, foundMeals, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel, )
+            MealList(navController, foundMeals, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel )
         }
         //display form to add meals
         Row(
@@ -105,6 +103,7 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
             Text("Remove All Meals",
                 fontSize = 15.sp)
         }
+        AddRecipeForm(navController, recipeViewModel)
     }
 }
 

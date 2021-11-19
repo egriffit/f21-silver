@@ -3,10 +3,7 @@ package com.example.workout_companion.view
 import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +15,7 @@ import androidx.navigation.NavController
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.view.nutrition.AddMealForm
+import com.example.workout_companion.view.nutrition.RecipeButton
 import com.example.workout_companion.viewmodel.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,7 +33,8 @@ import com.example.workout_companion.viewmodel.*
 fun NutritionOverview(navController: NavController,
                       foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
                       foodInMealViewModel: FoodInMealViewModel,
-                      nutritionAPIViewModel: NutritionAPIViewModel){
+                      nutritionAPIViewModel: NutritionAPIViewModel,
+                      recipeViewModel: RecipeViewModel){
     val context = LocalContext.current
 
     Scaffold(
@@ -50,7 +49,7 @@ fun NutritionOverview(navController: NavController,
             {
                 Text("Nutrition Overview Page")
                 AddMealForm(navController, foodTypeViewModel, mealViewModel,
-                    foodInMealViewModel, nutritionAPIViewModel)
+                    foodInMealViewModel, nutritionAPIViewModel, recipeViewModel)
             }
         }
     )

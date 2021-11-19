@@ -10,8 +10,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
 import com.example.workout_companion.view.inputfields.LandingPage
+import com.example.workout_companion.view.nutrition.AddRecipeForm
 import com.example.workout_companion.view.nutrition.FoodView
 import com.example.workout_companion.view.nutrition.FoundFoods
+import com.example.workout_companion.view.nutrition.RecipeView
 import com.example.workout_companion.viewmodel.*
 
 
@@ -31,6 +33,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val nutritionAPIViewModel: NutritionAPIViewModel =  viewModel()
     val recipeViewModel by lazy { viewModelProvider.get(RecipeViewModel::class.java) }
     val foodInRecipeViewModel by lazy { viewModelProvider.get(FoodInRecipeViewModel::class.java) }
+
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
         composable (route = "splashScreen") {
@@ -47,13 +50,12 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,
-                foodInMealViewModel, nutritionAPIViewModel)
+                foodInMealViewModel, nutritionAPIViewModel, recipeViewModel)
         }
         composable (route = "searchFood/{foodName}/{meal}",
             arguments = listOf(
                 navArgument("foodName") { type = NavType.StringType } ,
                 navArgument("meal") { type = NavType.StringType }
-
             )
         ){ backStackEntry ->
             FoundFoods(navController, backStackEntry.arguments?.getString("foodName"),
@@ -81,6 +83,18 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 backStackEntry.arguments?.getString("fat")?.toDouble(),
                 backStackEntry.arguments?.getString("meal"),
                 foodTypeViewModel, mealViewModel, foodInMealViewModel
+            )
+        }
+        composable(route = "addRecipeForm"){
+            AddRecipeForm(navController, recipeViewModel)
+        }
+        composable(route = "recipe/{name}",
+                arguments = listOf(
+                    navArgument("name") { type = NavType.StringType }
+                )
+            ){ backStackEntry ->
+            RecipeView(navController,
+                backStackEntry.arguments?.getString("name")
             )
         }
         composable (route = "UpdateGoals") {
