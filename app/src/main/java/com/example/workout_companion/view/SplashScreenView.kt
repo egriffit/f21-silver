@@ -27,7 +27,6 @@ import kotlinx.coroutines.delay
         val context = LocalContext.current
         goalTypeViewModel.loadGoals()
 
-
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity? = currentUserGoalViewModel.getCurrentGoals.value
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity =
 //            CurrentNutritionPlanAndFrameworkEntity(nutritionPlanType = NutritionPlanTypeEntity(1, 1, 2500.0, .40, .35, .25),

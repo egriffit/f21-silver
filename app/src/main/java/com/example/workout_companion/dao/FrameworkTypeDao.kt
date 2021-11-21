@@ -72,6 +72,21 @@ interface FrameworkTypeDao {
     fun getFrameworksWithGoalNameWithinMaxWorkouts(goal: String, workoutsPerWeek: Int) : LiveData<List<FrameworkWithGoalEntity>>
 
     /**
+     * Get count for frameworks with the name, goal_id and workouts_per_week
+     * equal to the string, and ints provided
+     *
+     * @param name, name of framework
+     * @param goal_id, id of the goal
+     * @parma workouts_per_week, number of workouts a user can do per week
+     *
+     */
+    @Query("""
+        SELECT COUNT(*) FROM framework_type 
+        WHERE name=:name 
+        AND goal_id=:goal 
+        AND workouts_per_week=:workouts_per_week""" )
+    fun getCount(name: String, goal: Int, workouts_per_week: Int): Int
+    /**
      * Add a framework to the database
      *
      * @property framework  the framework to be added to the database.
@@ -94,6 +109,15 @@ interface FrameworkTypeDao {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFrameworks(vararg framework: FrameworkTypeEntity)
+
+    /**
+     * Update a framework with the framework provided
+     *
+     * @property framework the framework to update
+     */
+
+    @Update
+    suspend fun updateFramework(framework: FrameworkTypeEntity)
 
     /**
      * Delete the framework by its id

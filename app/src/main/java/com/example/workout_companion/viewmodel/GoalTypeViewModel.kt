@@ -58,9 +58,9 @@ class GoalTypeViewModel(application: Application): AndroidViewModel(application)
     fun loadGoals() {
         viewModelScope.launch(Dispatchers.IO){
             var goals: List<GoalTypeEntity> = listOf(
-                GoalTypeEntity(1, "Gain Sterngth", -1),
-                GoalTypeEntity(2, "Gain Mass", -1),
-                GoalTypeEntity(3, "Lose Weight", -1)
+                GoalTypeEntity(1, "Gain Sterngth", 250),
+                GoalTypeEntity(2, "Gain Mass", 500),
+                GoalTypeEntity(3, "Lose Weight", -500)
             )
             repository.addGoal(goals)
         }

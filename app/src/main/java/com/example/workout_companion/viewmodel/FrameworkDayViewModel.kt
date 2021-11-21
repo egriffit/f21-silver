@@ -2,6 +2,7 @@ package com.example.workout_companion.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.workout_companion.database.FRAMEWORK_DAYS
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.repository.FrameworkDayRepository
@@ -63,6 +64,15 @@ class FrameworkDayViewModel(application: Application) : AndroidViewModel(applica
     fun deleteFrameworkDay(day: FrameworkDayEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFrameworkDay(day)
+        }
+    }
+
+    /**
+     * Load default frameworks
+     */
+    fun loadFramworkDays(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addFrameworkDay(FRAMEWORK_DAYS)
         }
     }
 }

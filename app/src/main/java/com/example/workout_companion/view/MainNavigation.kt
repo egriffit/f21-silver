@@ -14,7 +14,6 @@ import com.example.workout_companion.database.FRAMEWORK_COMPONENTS
 import com.example.workout_companion.database.FRAMEWORK_DAYS
 import com.example.workout_companion.database.FRAMEWORK_TYPES
 import com.example.workout_companion.database.GOALS
-import com.example.workout_companion.view.inputfields.LandingPage
 import com.example.workout_companion.viewmodel.*
 
 
@@ -38,8 +37,11 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
 
-    createDefaultGoals(goalTypeViewModel)
-    createDefaultFrameworks(frameworkTypeViewModel, frameworkDayViewModel, frameworkComponentViewModel)
+    frameworkTypeViewModel.loadFrameworks()
+    frameworkDayViewModel.loadFramworkDays()
+    frameworkComponentViewModel.loadFrameworkComponents()
+//    createDefaultGoals(goalTypeViewModel)
+//    createDefaultFrameworks(frameworkTypeViewModel, frameworkDayViewModel, frameworkComponentViewModel)
 
 
     val navController = rememberNavController()

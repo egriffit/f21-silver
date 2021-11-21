@@ -2,9 +2,11 @@ package com.example.workout_companion.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.workout_companion.database.FRAMEWORK_TYPES
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
+import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.repository.FrameworkTypeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -100,6 +102,16 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
     fun deleteFramework(framework: FrameworkTypeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFramework(framework)
+        }
+    }
+
+    /**
+     * Function to load goals in the database
+     *
+     */
+    fun loadFrameworks() {
+        viewModelScope.launch(Dispatchers.IO){
+            repository.addFramework(FRAMEWORK_TYPES)
         }
     }
 }

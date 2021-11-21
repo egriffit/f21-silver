@@ -1,6 +1,7 @@
 package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import com.example.workout_companion.dao.FrameworkComponentDao
 import com.example.workout_companion.entity.FrameworkComponentEntity
 
@@ -22,8 +23,31 @@ class FrameworkComponentRepository(private val dao: FrameworkComponentDao) {
      *
      * @property component  the component to add.
      */
+    @Transaction
     suspend fun addFrameworkComponent(component: FrameworkComponentEntity) {
-        dao.addFrameworkComponent(component)
+        if(dao.count(component.framework_day_id, component.muscle_group, component.target_reps,
+            component.target_sets) > 0){
+            dao.updateFrameworkComponent(component)
+        }else{
+            dao.addFrameworkComponent(component)
+        }
+    }
+
+    /**
+     * Add a component to a day
+     *
+     * @property components  list of components to add.
+     */
+    @Transaction
+    suspend fun addFrameworkComponent(components: List<FrameworkComponentEntity>) {
+        components.forEach{ component ->
+            if(dao.count(component.framework_day_id, component.muscle_group, component.target_reps,
+                    component.target_sets) > 0){
+                dao.updateFrameworkComponent(component)
+            }else{
+                dao.addFrameworkComponent(component)
+            }
+        }
     }
 
     /**

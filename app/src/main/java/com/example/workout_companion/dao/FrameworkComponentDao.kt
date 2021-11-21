@@ -3,6 +3,7 @@ package com.example.workout_companion.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.workout_companion.entity.FrameworkComponentEntity
+import com.example.workout_companion.enumeration.MuscleGroup
 
 /**
  * A DAO for accessing the [FrameworkComponentEntity]
@@ -20,6 +21,20 @@ interface FrameworkComponentDao {
     @Query("SELECT * FROM framework_component WHERE framework_day_id=:day_id")
     fun getAllComponentsOfDay(day_id: Int) : LiveData<List<FrameworkComponentEntity>>
 
+    /**
+     * Get the number of components where the framework_day_id,
+     * muscle_group, target_sets, and target_reps are equal to the integer
+     * and muscle group enum provided
+     */
+    @Query("""
+        SELECT COUNT(*) FROM framework_component
+        WHERE framework_day_id = :framework_day_id
+        AND muscle_group = :muscle_group
+        AND target_sets = :target_sets
+        AND target_reps = :target_reps
+    """)
+    suspend fun count(framework_day_id: Int, muscle_group: MuscleGroup,
+                      target_sets: Int, target_reps: Int): Int
     /**
      * Add a component to a framework day
      *

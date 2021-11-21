@@ -17,12 +17,28 @@ interface FrameworkDayDao {
     fun getAllFrameworkDays(framework_id: Int) : LiveData<List<FrameworkDayEntity>>
 
     /**
+     * Get count for frameworks with the name and id
+     * equal to the string and integer provided
+     *
+     * @param name
+     * @param framework_id
+     * @return int, number of records found
+     */
+    @Query("""
+        SELECT COUNT(*) FROM framework_day
+        WHERE name = :name 
+        AND framework_type_id = :framework_id
+    """)
+    suspend fun count(name:String, framework_id: Int): Int
+
+    /**
      * Add a new day to a workout framework
      *
      * @property frameworkDay   the day to add to the database.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFrameworkDay(frameworkDay: FrameworkDayEntity)
+
 
     /**
      * Adds all days within the collection to a workout framework in the database

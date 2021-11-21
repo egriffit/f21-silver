@@ -1,6 +1,7 @@
 package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import com.example.workout_companion.dao.FrameworkTypeDao
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
@@ -76,8 +77,29 @@ class FrameworkTypeRepository(private val frameworkTypeDao: FrameworkTypeDao) {
      *
      * @property framework  the framework to add to the database.
      */
+    @Transaction
     suspend fun addFramework(framework: FrameworkTypeEntity) {
-        frameworkTypeDao.addFramework(framework)
+        if(frameworkTypeDao.getCount(framework.name, framework.goal_id, framework.workouts_per_week) > 0){
+            frameworkTypeDao.updateFramework(framework)
+        }else{
+            frameworkTypeDao.addFramework(framework)
+        }
+    }
+
+    /**
+     * Add a single framework to the database
+     *
+     * @property framework  the framework to add to the database.
+     */
+    suspend fun addFramework(frameworks: List<FrameworkTypeEntity>) {
+        frameworks.forEach{framework->
+            if(frameworkTypeDao.getCount(framework.name, framework.goal_id, framework.workouts_per_week) > 0){
+                frameworkTypeDao.updateFramework(framework)
+            }else{
+                frameworkTypeDao.addFramework(framework)
+            }
+            frameworkTypeDao.addFramework(framework)
+        }
     }
 
     /**
