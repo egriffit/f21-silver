@@ -29,3 +29,6 @@ gradle-app.setting
 
 /app/src/main/java/com/example/workout_companion/mock/
 /app/src/main/java/com/example/workout_companion/mock/dao/
+# ignore node packages
+/AdviceApi/api/node_modules/
+/AdviceApi/expert-advice-form/node_modules/

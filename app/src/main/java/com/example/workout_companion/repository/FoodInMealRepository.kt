@@ -74,7 +74,6 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
         return foodInMealDao.getCount(type, date)
     }
 
-
     /**
      * Insert a FoodInMealEntity object into the food_in_meal table
      *

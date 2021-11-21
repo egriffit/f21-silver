@@ -8,6 +8,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.workout_companion.dao.*
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FoodTypeEntity
+import com.example.workout_companion.sampleData.sampleFoodTypeList
+import com.example.workout_companion.sampleData.sampleFoodTypeOneFoodList
+import com.example.workout_companion.sampleData.sampleFoodUpdateExample
 import com.example.workout_companion.utility.getOrAwaitValue
 import org.junit.Assert.*
 
@@ -46,12 +49,7 @@ class FoodTypeRepositoryTest : TestCase() {
 
     @Test
     fun getAllFoods() = runBlocking{
-        val foods = listOf(
-            FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7)
-        )
+        val foods = sampleFoodTypeList
         repository.insert(foods)
         val foundFoods: List<FoodTypeEntity> = repository.getAllFoods.getOrAwaitValue()
         MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(foods))
@@ -60,68 +58,53 @@ class FoodTypeRepositoryTest : TestCase() {
 
     @Test
     fun getFoodByName() = runBlocking{
-        val food = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7))
+        val food = sampleFoodTypeOneFoodList
         repository.insert(food)
-        val byName:List<FoodTypeEntity> = repository.getFoodByName("carrot").getOrAwaitValue()
+        val byName:List<FoodTypeEntity> = repository.getFoodByName(sampleFoodTypeOneFoodList.elementAt(0).name).getOrAwaitValue()
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(food))
     }
 
     @Test
-    fun getCount() = runBlocking{
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
-        repository.insert(foods)
-        val foundFoods: Int = repository.getCount()
-        MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(2))
-    }
-
-    @Test
     fun testGetCount() = runBlocking{
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
+        val foods = sampleFoodTypeList
         repository.insert(foods)
-        val foundFoods: Int = repository.getCount("carrot")
+        val foundFoods: Int = repository.getCount(sampleFoodTypeOneFoodList.elementAt(0).name)
         MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(1))
     }
 
     @Test
-    fun update() = runBlocking{
-        val foods = FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7)
-        val newFood = FoodTypeEntity(1, "carrot", "-1",
-            80.0, 100.0, 1.3, 98.0, 0.7)
+    fun testGetId() = runBlocking{
+        val foods = sampleFoodTypeList
+        repository.insert(foods)
+        val foodId1: Int = repository.getId(foods.elementAt(0))
+        val foodId2: Int = repository.getId(foods.elementAt(1))
+        MatcherAssert.assertThat(foodId1, CoreMatchers.equalTo(1))
+        MatcherAssert.assertThat(foodId2, CoreMatchers.equalTo(2))
+    }
 
+    @Test
+    fun update() = runBlocking{
+        val newFood = sampleFoodUpdateExample
+        val foods = sampleFoodTypeOneFoodList
+        repository.insert(foods)
         repository.insert(foods)
         repository.update(newFood)
-        val found :List<FoodTypeEntity> = repository.getFoodByName("carrot").getOrAwaitValue()
+        val found :List<FoodTypeEntity> = repository.getFoodByName(foods.elementAt(0).name).getOrAwaitValue()
         MatcherAssert.assertThat(found.elementAt(0).edamam_id, CoreMatchers.equalTo(newFood.edamam_id))
     }
 
     @Test
     fun delete() = runBlocking{
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
-
+        val foods = sampleFoodTypeList
         repository.insert(foods)
         repository.delete(foods[0])
-        val foundFoods: Int = repository.getCount("carrot")
+        val foundFoods: Int = repository.getCount(foods.elementAt(0).name)
         MatcherAssert.assertThat(foundFoods, CoreMatchers.equalTo(0))
     }
 
     @Test
     fun deleteAll() = runBlocking{
-        val foods = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
-            80.0, 100.0, 1.3, 98.0, 0.7),
-            FoodTypeEntity(2, "lettuce", "-1",
-                80.0, 100.0, 1.3, 98.0, 0.7))
-
+        val foods = sampleFoodTypeList
         repository.insert(foods)
         repository.deleteAll()
         val foundFoods: Int = repository.getCount()

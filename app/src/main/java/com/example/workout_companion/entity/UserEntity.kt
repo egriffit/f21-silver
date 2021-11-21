@@ -15,14 +15,7 @@ import java.time.LocalDate
  * @property max_workouts_per_week      The number of workouts the user can do per week
  * @property activity_level             The user's reported activity level
  */
-@Entity(tableName = "user",
-        foreignKeys = [
-                ForeignKey(entity = GoalTypeEntity::class,
-                        parentColumns = ["id"],
-                        childColumns = ["goal_id"],
-                        onDelete = ForeignKey.NO_ACTION
-                )
-        ]
+@Entity(tableName = "user"
 )
 data class UserEntity(
         @PrimaryKey(autoGenerate = false)
@@ -55,6 +48,6 @@ data class UserEntity(
         @TypeConverters(ActivityLevelConverter::class)
         var activity_level: ActivityLevel,
 
-        @ColumnInfo(name = "goal_id", index = true)
+        @ColumnInfo(name = "goal_id")
         var goal_id: Int,
 )

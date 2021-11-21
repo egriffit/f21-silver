@@ -42,6 +42,29 @@ class MealRepository (private val mealDao: MealDao) {
     }
 
     /**
+     * Retrieves the id of a meal based on the name of the meal
+     * where the date is today
+     *
+     * @param type, a string equal to the type of meal
+     * @return  id, Int
+     */
+    suspend fun getMealId(type: String): Int{
+        return mealDao.getMealId(type)
+    }
+
+    /**
+     * Retrieves the id of a meal based on meal name and date
+     * which is equal to string and localDate provided
+     *
+     * @param type, a string equal to the type of meal
+     * @param date, LocalDate
+     * @return  id, Int
+     */
+    suspend fun getMealId(type: String, date: LocalDate): Int{
+        return mealDao.getMealId(type, date)
+    }
+
+    /**
      * Retrieves all meals from meal table where the name is the same as the
      * string provided
      *
@@ -76,6 +99,16 @@ class MealRepository (private val mealDao: MealDao) {
      */
     suspend fun insert(meal: MealEntity){
         return mealDao.insert(meal)
+    }
+
+    /**
+     * Add a meal to the meal table
+     *
+     *@param meal MealEntity
+     * @return void
+     */
+    suspend fun insert(meals: List<MealEntity>){
+        return mealDao.insert(meals)
     }
 
     /**
@@ -175,7 +208,7 @@ class MealRepository (private val mealDao: MealDao) {
      * @return void
      */
     suspend fun deleteAll(){
-        return mealDao.deleteAll()
+        mealDao.deleteAll()
     }
 
     /**
@@ -184,6 +217,6 @@ class MealRepository (private val mealDao: MealDao) {
      * @return void
      */
     suspend fun deleteAll(date: LocalDate){
-        return mealDao.deleteAll(date)
+        mealDao.deleteAll(date)
     }
 }

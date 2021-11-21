@@ -89,6 +89,26 @@ class MealDaoTest : TestCase(){
         MatcherAssert.assertThat(mealCount, CoreMatchers.equalTo(2))
     }
 
+    fun TestGetMealId() = runBlocking(){
+        val today = LocalDate.now()
+
+        val yesterday = LocalDate.of(2021, Month.OCTOBER, 23)
+        val meals = listOf(
+            MealEntity(1, "lunch", 500.0, 40.1, 20.1, 15.0, today),
+            MealEntity(2, "breakfast", 500.0, 40.1, 20.1, 15.0, today),
+            MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
+        )
+
+        dao.insert(meals)
+        val firstMealId: Int = dao.getMealId("lunch")
+        val secondMealID: Int = dao.getMealId("breakfast")
+        val thirdMealID: Int = dao.getMealId("breakfast", yesterday)
+
+        MatcherAssert.assertThat(firstMealId, CoreMatchers.equalTo(1))
+        MatcherAssert.assertThat(secondMealID, CoreMatchers.equalTo(2))
+        MatcherAssert.assertThat(thirdMealID, CoreMatchers.equalTo(3))
+    }
+
     @Test
     fun TestUpdate() = runBlocking(){
         val today = LocalDate.now()

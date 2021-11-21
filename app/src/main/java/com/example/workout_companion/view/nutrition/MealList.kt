@@ -11,9 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
-import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
+import com.example.workout_companion.viewmodel.FoodTypeViewModel
+import com.example.workout_companion.viewmodel.MealViewModel
 
 /***
  * Composable to display meals for the current day and a button to create a meal
@@ -21,16 +24,19 @@ import com.example.workout_companion.viewmodel.NutritionApiNinjaViewModel
  * It consists of:
  * a lazy column of meal buttons || a text label advising no foods found
  *
- * @param meal, a list of MealEntity
- * @param foundINMealViewModel, a view model to work with the the food_in_meal table
- * @param apiNinjaViewModel, a view model to work with the NutritionAPI by API Ninja
+ * @param navController, navController
+ * @param meals, a list of MealEntity objects
+ * @param mealViewModel, a view model to work with the meal table
+ * @param foodInMealViewModel, a view model to work with the the food_in_meal table
+ * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
-             apiNinjaViewModel: NutritionApiNinjaViewModel
-) {
+fun MealList(navController: NavController, meals: List<MealEntity>, foodTypeViewModel: FoodTypeViewModel,
+             mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
+             nutritionAPIViewModel: NutritionAPIViewModel
+){
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center){
         Text("Today's Meals")
@@ -45,13 +51,13 @@ fun MealList(meals: List<MealEntity>, fodInMealViewModel: FoodInMealViewModel,
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (meals != null) {
+        if (meals.isNotEmpty()) {
             for (meal in meals)
             // Name
                 item {
                     Row(horizontalArrangement =  Arrangement.Center) {
-                        mealButton(meal.type, fodInMealViewModel, apiNinjaViewModel)
-                    }
+                        MealButton(navController, meal.type, meal.calories, foodTypeViewModel, mealViewModel, foodInMealViewModel,
+                            nutritionAPIViewModel)                    }
                 }
         }else{
             item{

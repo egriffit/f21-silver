@@ -1,38 +1,39 @@
 package com.example.workout_companion.view
 
-import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.view.nutrition.AddMealForm
+import com.example.workout_companion.view.nutrition.NutritionStatus
 import com.example.workout_companion.viewmodel.*
 
 @RequiresApi(Build.VERSION_CODES.O)
+/***
+ * Composable form to display current nutrition and a form to create and update meals
+ *
+ * @param navController, a NavController to navigate to different view
+ * @param foodTypeViewModel, a  view model to work with food_type table
+ * @param mealViewModel, a view model to work with the the meal table
+ * @param foodInMealViewModel, a view model to work with the the food_in_meal table
+ * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
+ * @param recipeViewModel, a view to work with recipe table
+ * @param currentUserGoalViewModel, a view to work with the current_user_goals table
+ */
 @Composable
-fun NutritionOverview(navController: NavController){
-    val context = LocalContext.current
-
-    val mealViewModel: MealViewModel = viewModel(
-        factory = MealViewModelFactory(context.applicationContext as Application)
-    )
-    val foodInMealViewModel: FoodInMealViewModel = viewModel(
-        factory = FoodInMealViewModelFactory(context.applicationContext as Application)
-    )
-    val apiNinjaViewModel: NutritionApiNinjaViewModel = viewModel(
-        factory = NutritionApiNinjaViewModel.NutritionAPiNinjaViewModelFactory(context.applicationContext as Application)
-    )
+fun NutritionOverview(navController: NavController,
+                      foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
+                      foodInMealViewModel: FoodInMealViewModel,
+                      nutritionAPIViewModel: NutritionAPIViewModel,
+                      recipeViewModel: RecipeViewModel,
+                      currentUserGoalViewModel: CurrentUserGoalViewModel){
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
@@ -40,14 +41,18 @@ fun NutritionOverview(navController: NavController){
             Column(modifier = Modifier
                 .padding(top = 20.dp, start = 20.dp, end = 20.dp)
                 .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxHeight(),
             )
             {
-                Text("Nutrition Overview Page")
-                AddMealForm(navController, mealViewModel, foodInMealViewModel, apiNinjaViewModel )
+                Row(modifier=Modifier.padding(bottom=10.dp)
+                    .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center){
+                    Text("Nutrition Overview Page")
+                }
+                NutritionStatus(currentUserGoalViewModel, mealViewModel)
+                AddMealForm(navController, foodTypeViewModel, mealViewModel,
+                    foodInMealViewModel, nutritionAPIViewModel, recipeViewModel)
             }
-
-
         }
     )
 }
