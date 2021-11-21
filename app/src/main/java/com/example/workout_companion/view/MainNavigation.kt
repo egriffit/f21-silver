@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import com.example.workout_companion.view.inputfields.LandingPage
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
 
@@ -19,6 +18,7 @@ import com.example.workout_companion.viewmodel.*
 fun MainNavigation(viewModelProvider: ViewModelProvider) {
     // Put the view models you need here
     val goalTypeViewModel by lazy { viewModelProvider.get(GoalTypeViewModel::class.java) }
+    val nutritionPlanTypeViewModel by lazy {viewModelProvider.get(NutritionPlanTypeViewModel::class.java) }
     val frameworkTypeViewModel by lazy { viewModelProvider.get(FrameworkTypeViewModel::class.java) }
     val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
     val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java) }
@@ -36,7 +36,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
         composable (route = "splashScreen") {
-            SplashScreen(navController)
+            SplashScreen(navController, currentUserGoalViewModel, goalTypeViewModel)
         }
         composable (route = "userForm" ) {
             UserForm(navController, userViewModel, userWithGoalViewModel)
@@ -135,10 +135,18 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             )
         }
         composable (route = "UpdateGoals") {
-            UpdateGoalsView(navController)
+            UpdateGoalsView(navController,
+                nutritionPlanTypeViewModel,
+                frameworkTypeViewModel,
+                goalTypeViewModel,
+                currentUserGoalViewModel
+            )
         }
         composable (route = "Assessment") {
             AssessmentView(navController, currentUserGoalViewModel, adviceAPIViewModel)
+        }
+        composable (route = "Landing") {
+            LandingPage(navController)
         }
         // Other routes go here
     }

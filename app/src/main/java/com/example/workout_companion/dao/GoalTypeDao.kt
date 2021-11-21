@@ -1,10 +1,7 @@
 package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.workout_companion.entity.GoalTypeEntity
 
 /**
@@ -34,10 +31,38 @@ interface GoalTypeDao {
     fun getGoalById(goalId: Int): GoalTypeEntity?
 
     /**
+     * Gets a goal by its name
+     *
+     * @property goal the name of the goal.
+     *
+     * @return the goal if it exists, otherwise null.
+     */
+    @Query("SELECT * FROM goal_type WHERE id=:goal")
+    fun getGoalByName(goal: String): GoalTypeEntity?
+
+    /**
+     * Gets a goal count by name
+     *
+     * @property goal the name of the goal
+     *
+     * @return integer
+     */
+    @Query("SELECT COUNT(*) FROM goal_type where goal=:goal")
+    fun getCountByGoal(goal: String): Int
+
+    /**
      * Insert a goal into the GoalTypeEntity table, ignoring any insertions where a goal already exists
      *
      * @param goal  the goal to add to the table.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addGoal(goal: GoalTypeEntity)
+
+    /**
+     * Insert a goal into the GoalTypeEntity table, ignoring any insertions where a goal already exists
+     *
+     * @param goal  the goal to add to the table.
+     */
+    @Update
+    suspend fun updateGoal(goal: GoalTypeEntity)
 }

@@ -1,4 +1,4 @@
-package com.example.workout_companion.view.inputfields
+package com.example.workout_companion.view.goals
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import com.example.workout_companion.sampleData.FrameWorkList
 @Composable
 fun RecommendFrameworkView(
     RecommendedFrameworks: List<FrameworkWithGoalEntity>,
-    currentRecommendedFramework: MutableState<String>)
+    currentRecommendedFramework: MutableState<Int>)
 {
     Column(
         modifier = Modifier
@@ -40,7 +40,7 @@ fun RecommendFrameworkView(
 
 @Composable
 fun FrameworkViewDropdown(RecommendedFrameworks: List<FrameworkWithGoalEntity>,
-                          currentRecommendedFramework: MutableState<String>){
+                          currentRecommendedFramework: MutableState<Int>){
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
     Box(modifier = Modifier
@@ -65,6 +65,7 @@ fun FrameworkViewDropdown(RecommendedFrameworks: List<FrameworkWithGoalEntity>,
                 DropdownMenuItem(onClick = {
                     selectedIndex = index
                     expanded = false
+                    currentRecommendedFramework.value = s.id
                 }) {
                     Text(text = "${s.name} (${s.workouts_per_week} workouts per week)")
                 }
@@ -77,7 +78,7 @@ fun FrameworkViewDropdown(RecommendedFrameworks: List<FrameworkWithGoalEntity>,
 @Composable
 fun PreviewRecommendFrameworkView(){
     val maxWorkouts = 3
-    var currentRecommendedFramework = remember{ mutableStateOf("")}
+    val currentRecommendedFramework = remember{ mutableStateOf(0)}
     val frameworkWithGoals= listOf(
         FrameworkWithGoalEntity(1, "Framework 0", 2, 0, "Goal 0"),
         FrameworkWithGoalEntity(2, "Framework 0", 1, 0, "Goal 0")
@@ -88,7 +89,7 @@ fun PreviewRecommendFrameworkView(){
 @Preview
 @Composable
 fun PreviewFrameworkViewDropDown(){
-    var currentRecommendedFramework = remember{ mutableStateOf("")}
+    val currentRecommendedFramework = remember{ mutableStateOf(0)}
     val frameworkWithGoals= listOf(
         FrameworkWithGoalEntity(1, "Framework 0", 2, 0, "Goal 0"),
         FrameworkWithGoalEntity(2, "Framework 0", 1, 0, "Goal 0")
