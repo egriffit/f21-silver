@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.sampleData.sampleFoodTypeList
-import com.example.workout_companion.viewmodel.FoodInMealViewModel
 
 /***
  * Composable to show a lazy column of FoodListItems.
@@ -29,7 +27,7 @@ import com.example.workout_companion.viewmodel.FoodInMealViewModel
  */
 @Composable
 fun FoodList(foods: List<FoodTypeEntity>, servings: List<MutableState<Double>>){
-  LazyColumn(){
+  LazyColumn{
       for((index, food) in foods.withIndex())
       {
           item{
@@ -48,25 +46,25 @@ fun FoodList(foods: List<FoodTypeEntity>, servings: List<MutableState<Double>>){
  * macronutrient and calorie composition,
  * a text field to specify the number of servings,
  *
- * @param foods, a FoodTypeEntity
- * @param servings, a  MutableStates to track te serving quantity
+ * @param food, a FoodTypeEntity
+ * @param serving, a  MutableStates to track te serving quantity
  */
 @Composable
 fun FoodListItem(food: FoodTypeEntity, serving: MutableState<Double>) {
-    Row() {
+    Row {
         Column(
             modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Text("${food.name}")
+            Text(food.name)
         }
-        Column() {
+        Column {
             Text("Serving Size: ${food.serving_size}g")
             Text("Carbohydrate: ${food.carbohydrates}g")
             Text("Protein: ${food.protein}g")
             Text("Fat: ${food.fat}g")
         }
-        Column(){
+        Column{
             OutlinedTextField(
                 value = serving.value.toString(),
                 onValueChange = { serving.value = it.toDouble() },
@@ -83,8 +81,8 @@ fun FoodListItem(food: FoodTypeEntity, serving: MutableState<Double>) {
 
 @Preview
 @Composable
-fun previewFoodItem() {
-    var servings: MutableList<MutableState<Double>> = arrayListOf()
+fun PreviewFoodItem() {
+    val servings: MutableList<MutableState<Double>> = arrayListOf()
     var i = 0
     while(i < sampleFoodTypeList.size){
         servings.add( remember{ mutableStateOf(0.0) })
@@ -95,8 +93,8 @@ fun previewFoodItem() {
 
 @Preview
 @Composable
-fun previewFoodList() {
-    var servings: MutableList<MutableState<Double>> = arrayListOf()
+fun PreviewFoodList() {
+    val servings: MutableList<MutableState<Double>> = arrayListOf()
     var i = 0
     while(i < sampleFoodTypeList.size){
         servings.add( remember{ mutableStateOf(0.0) })

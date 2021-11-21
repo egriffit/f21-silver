@@ -1,11 +1,10 @@
-package com.example.workout_companion.viewmodel
+package com.example.workout_companion.view.inputfields
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.ChevronRight
 import androidx.compose.material.icons.sharp.Lock
 import androidx.compose.material.icons.sharp.LockOpen
 import androidx.compose.runtime.Composable
@@ -17,26 +16,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.workout_companion.viewmodel.Incrementer
 
 @Composable
 fun IncrementerGroup(labels: List<String>, startingValues: List<Int>,
                      fieldStates: List<MutableState<Int>>,
-                     canSubmit: MutableState<Boolean>){
+                     canSubmit: MutableState<Boolean>,
+                    disabled: Boolean){
     var total = 0
     for(i in labels.indices){
         total += startingValues[i]
     }
-    var currentTotal = remember{ mutableStateOf(total)}
-    var maxStates: List<MutableState<Int>> = listOf()
-    var minStates: List<MutableState<Int>> = listOf()
-    var locked = remember{mutableStateOf(false)}
-    var canIncrease = remember { mutableStateOf(false)}
-    var icon: ImageVector = Icons.Sharp.LockOpen
-    if(locked.value){
-        icon = Icons.Sharp.Lock
+    val currentTotal = remember{ mutableStateOf(total)}
+    val maxStates: MutableList<MutableState<Int>> = mutableListOf()
+    val minStates: MutableList<MutableState<Int>> = mutableListOf()
+    val locked = remember{mutableStateOf(disabled)}
+    val canIncrease = remember { mutableStateOf(false)}
+    val icon: ImageVector = if(locked.value){
+        Icons.Sharp.Lock
     }
     else{
-        icon = Icons.Sharp.LockOpen
+        Icons.Sharp.LockOpen
     }
     Column(modifier = Modifier.fillMaxWidth()){
         for (i in labels.indices) {
@@ -63,27 +63,30 @@ fun IncrementerGroup(labels: List<String>, startingValues: List<Int>,
                 }
             )
         }
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center){
-            Button(
-                onClick = {
-                    locked.value = !locked.value
-                },
-                modifier = Modifier.background(
-                    Color.LightGray
-                ),
-                border= BorderStroke(1.dp, Color.Black),
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray
-                )
-            ) {
+        if(!disabled){
+            locked.value = true
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center){
+                Button(
+                    onClick = {
+                        locked.value = !locked.value
+                    },
+                    modifier = Modifier.background(
+                        Color.LightGray
+                    ),
+                    border= BorderStroke(1.dp, Color.Black),
+                    colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray
+                    )
+                ) {
 
-                Icon(
-                    icon,
-                    contentDescription = "",
-                    modifier = Modifier.background(color = Color.LightGray)
-                        .size(38.dp),
-                    tint = Color.Black
-                )
+                    Icon(
+                        icon,
+                        contentDescription = "",
+                        modifier = Modifier.background(color = Color.LightGray)
+                            .size(38.dp),
+                        tint = Color.Black
+                    )
+                }
             }
         }
     }
@@ -94,11 +97,12 @@ fun IncrementerGroup(labels: List<String>, startingValues: List<Int>,
 fun PreviewIncrementerGroup(){
     val labels = listOf("Carbohydrate", "Protein", "Fat")
     val startingValues = listOf(40, 35, 25)
-    var fieldStates = listOf(
+    val fieldStates = listOf(
         remember { mutableStateOf(startingValues[0]) },
         remember { mutableStateOf(startingValues[1]) },
         remember { mutableStateOf(startingValues[2]) }
     )
-    var canSubmit =  remember { mutableStateOf(true) }
-    IncrementerGroup(labels, startingValues, fieldStates, canSubmit)
+    val canSubmit =  remember { mutableStateOf(true) }
+    val disabled = true
+    IncrementerGroup(labels, startingValues, fieldStates, canSubmit, disabled)
 }

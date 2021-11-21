@@ -2,55 +2,29 @@ package com.example.workout_companion.view.nutrition
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutritionItem
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.RecipeEntity
-import com.example.workout_companion.entity.RecipeWithFoodsEntity
 
-@Composable
-fun FoodRadioButtons(navController: NavController, meal: String, found: ApiNinjaNutrition,
-                     foundRecipes: List<RecipeEntity>, selectedFoodIndex: MutableState<Int>,
-                     selectedRecipeIndex: MutableState<Int>
-) {
-
-    Row(
-        Modifier
-        .fillMaxWidth()) {
-
-        foundRecipes.forEachIndexed { index, recipe ->
-            RadioButton(
-                selected = selectedFoodIndex.value ==  index,
-                onClick = { selectedFoodIndex.value = index },
-                enabled = true,
-                colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-            )
-        }
-        found.forEachIndexed  { index, food ->
-            RadioButton(
-                selected = selectedFoodIndex.value ==  index,
-                onClick = { selectedFoodIndex.value = index },
-                enabled = true,
-                colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-            )
-            FoodRadioButton(navController, meal, "food", food)
-        }
-
-    }
-}
-
+/**
+ * FoodRadioButton composable to display food information to the left of the radio button
+ * Consists of:
+ * Button to navigate to FoodView
+ * Text label for food nameFoodRadioButton,.kt
+ * Text label for the type of food (recipe or food)
+ * @param navController, navController,
+ * @param meal, name of meal
+ * @param type, type of food, food or recipe,
+ * @param food, APINinjaNutritionItem
+ */
 @Composable
 fun FoodRadioButton(navController: NavController, meal: String, type: String, food: ApiNinjaNutritionItem){
-    Row(){
+    Row{
         Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center){
             Button(onClick = {
@@ -60,7 +34,7 @@ fun FoodRadioButton(navController: NavController, meal: String, type: String, fo
                 Text(text = food.name)
             }
         }
-        Column(){
+        Column(modifier = Modifier.padding(start = 30.dp)){
 //            Text("Serving Size: ${food.serving_size_g}g")
 //            Text("Carbohydrate: ${food.carbohydrates_total_g}g")
 //            Text("Protein: ${food.protein_g}g")
@@ -70,9 +44,20 @@ fun FoodRadioButton(navController: NavController, meal: String, type: String, fo
     }
 }
 
+/**
+* FoodRadioButton composable to display food information to the left of the radio button
+* Consists of:
+* Button to navigate to FoodView
+* Text label for food name
+* Text label for the type of food (recipe or food)
+* @param navController, navController,
+* @param meal, name of meal
+* @param type, type of food, food or recipe,
+* @param food, FoodTypeEntity
+*/
 @Composable
 fun FoodRadioButton(navController: NavController, meal: String, type: String, food: FoodTypeEntity){
-    Row(){
+    Row{
         Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center){
             Button(onClick = {
@@ -82,7 +67,7 @@ fun FoodRadioButton(navController: NavController, meal: String, type: String, fo
                 Text(text = food.name)
             }
         }
-        Column(){
+        Column{
 //            Text("Serving Size: ${food.serving_size_g}g")
 //            Text("Carbohydrate: ${food.carbohydrates_total_g}g")
 //            Text("Protein: ${food.protein_g}g")
@@ -92,19 +77,30 @@ fun FoodRadioButton(navController: NavController, meal: String, type: String, fo
     }
 }
 
+/**
+ * FoodRadioButton composable to display food information to the left of the radio button
+ * Consists of:
+ * Button to navigate to FoodView
+ * Text label for food name
+ * Text label for the type of food (recipe or food)
+ * @param navController, navController,
+ * @param meal, name of meal
+ * @param type, type of food, food or recipe,
+ * @param recipe, RecipeWithFoodsEntity
+ */
 @Composable
-fun FoodRadioButton(navController: NavController, meal: String, type: String, recipe: RecipeWithFoodsEntity){
-    Row(){
+fun FoodRadioButton(navController: NavController, meal: String, type: String, recipe: RecipeEntity){
+    Row{
         Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center){
             Button(onClick = {
-                navController.navigate("recipeView/${recipe.recipe.name}")
+                navController.navigate("recipeView/${recipe.name}/${meal}")
             })
             {
-                Text(text = recipe.recipe.name)
+                Text(text = recipe.name)
             }
         }
-        Column(){
+        Column{
 //            Text("Serving Size: ${food.serving_size_g}g")
 //            Text("Carbohydrate: ${food.carbohydrates_total_g}g")
 //            Text("Protein: ${food.protein_g}g")

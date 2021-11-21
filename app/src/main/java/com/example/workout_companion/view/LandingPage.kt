@@ -1,13 +1,10 @@
-package com.example.workout_companion.view.inputfields
+package com.example.workout_companion.view
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,27 +16,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.workout_companion.view.inputfields.TopNavigation
 
 @Composable
 fun LandingPage(navController: NavController){
-    Column(modifier = Modifier.fillMaxHeight()){
-        MyButton()
-        MyButton2()
-        MyButton3()
-    }
+    Scaffold(
+        topBar = { TopNavigation(navController) },
+        bottomBar = {},
+        content = {
+            Column(modifier = Modifier.fillMaxHeight()){
+            MyButton(navController)
+            MyButton2(navController)
+            MyButton3(navController)
+        } }
+    )
+
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MaterialTheme {
-        // function to display its preview.
-        MyButton(); MyButton2(); MyButton3();
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    MaterialTheme {
+//        // function to display its preview.
+//        MyButton(); MyButton2(); MyButton3();
+//    }
+//}
 
 @Composable
-fun MyButton() {
+fun MyButton(navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -54,7 +58,7 @@ fun MyButton() {
 
         Button(
 
-            onClick = {},
+            onClick = { navController.navigate("UpdateGoals") },
             modifier = Modifier.padding(all = Dp(10F)),
             enabled = true,
             border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
@@ -69,7 +73,7 @@ fun MyButton() {
 }
 
 @Composable
-fun MyButton2() {
+fun MyButton2(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -83,10 +87,7 @@ fun MyButton2() {
         // below line is use to create a button.
         Button(
 
-            onClick = {
-
-            },
-
+            onClick = { navController.navigate("ExerciseOverview") },
             modifier = Modifier.padding(all = Dp(10F)),
             enabled = true,
             border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
@@ -100,7 +101,7 @@ fun MyButton2() {
 }
 
 @Composable
-fun MyButton3() {
+fun MyButton3(navController: NavController) {
     Column(
 
         modifier = Modifier
@@ -111,8 +112,7 @@ fun MyButton3() {
         val context = LocalContext.current
 
         Button(
-            onClick = {
-            },
+            onClick = { navController.navigate("NutritionOverview") },
 
             modifier = Modifier.padding(all = Dp(10F)),
             enabled = true,

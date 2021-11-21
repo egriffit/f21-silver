@@ -32,6 +32,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
         repository = FoodInMealRepository(foodInMealDao)
     }
 
+
     /**
      * Retrieves a List of Foods for a meal with the meal_id
      * equal to the integer provided

@@ -37,13 +37,13 @@ import com.example.workout_companion.viewmodel.MealViewModel
  * @param calories, double, total calories for meal
  * @param foodTypeViewModel, a  view model to work with food_type table
  * @param mealViewModel, a view model to work with the the meal table
- * @param foundInMealViewModel, a view model to work with the the food_in_meal table
+ * @param foodInMealViewModel, a view model to work with the the food_in_meal table
  * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun mealButton(navController: NavController, meal: String, calories: Double,
+fun MealButton(navController: NavController, meal: String, calories: Double,
                foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
 ) {
