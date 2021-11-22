@@ -2,6 +2,7 @@ package com.example.workout_companion.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.workout_companion.database.FRAMEWORK_TYPES
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
@@ -23,6 +24,10 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
     val readAll: LiveData<List<FrameworkTypeEntity>>
 
     /**
+     * Framework id
+     */
+    val id =  MutableLiveData<Int>()
+    /**
      * A repository for accessing the framework_type database
      */
     private val repository: FrameworkTypeRepository
@@ -42,6 +47,12 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
      */
     fun getFrameworksWithinMaxWorkouts(maxWorkouts: Int) : LiveData<List<FrameworkTypeEntity>> {
         return repository.getFrameworksWithinMaxWorkouts(maxWorkouts)
+    }
+
+    fun getFrameworkIdByName(name: String, goal: String){
+        viewModelScope.launch(Dispatchers.IO){
+            id.postValue(repository.getFrameworkIdByName(name, goal))
+        }
     }
 
     /**
@@ -100,6 +111,16 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
     fun deleteFramework(framework: FrameworkTypeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFramework(framework)
+        }
+    }
+
+    /**
+     * Function to load goals in the database
+     *
+     */
+    fun loadFrameworks() {
+        viewModelScope.launch(Dispatchers.IO){
+            repository.addFramework(FRAMEWORK_TYPES)
         }
     }
 }

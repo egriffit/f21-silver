@@ -33,10 +33,14 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
 
+    goalTypeViewModel.loadGoals()
+    frameworkTypeViewModel.loadFrameworks()
+    frameworkDayViewModel.loadFrameworkDays()
+    frameworkComponentViewModel.loadFrameworkComponents()
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
         composable (route = "splashScreen") {
-            SplashScreen(navController, currentUserGoalViewModel, goalTypeViewModel)
+            SplashScreen(navController, currentUserGoalViewModel)
         }
         composable (route = "userForm" ) {
             UserForm(navController, userViewModel, userWithGoalViewModel)
@@ -136,10 +140,11 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable (route = "UpdateGoals") {
             UpdateGoalsView(navController,
-                nutritionPlanTypeViewModel,
                 frameworkTypeViewModel,
                 goalTypeViewModel,
-                currentUserGoalViewModel
+                currentUserGoalViewModel,
+                userViewModel,
+                nutritionPlanTypeViewModel
             )
         }
         composable (route = "Assessment") {

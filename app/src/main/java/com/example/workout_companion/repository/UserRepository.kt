@@ -24,7 +24,7 @@ class UserRepository (private val userDao: UserDao) {
     /**
      * Retrieves a UserEntity from the users table where the name is equal to the string provided
      *
-     * @param String name
+     * @param name string
      * @return UserEntity
      */
     suspend fun getByName(name: String): UserEntity{
@@ -34,10 +34,9 @@ class UserRepository (private val userDao: UserDao) {
     /**
      * Retrieves the total number of rows in the user table
      *
-     * @param String nam
-     * @return UserEntity
+     * @return total number of rows
      */
-    suspend fun getCount(): Int{
+     fun getCount(): Int{
         return userDao.getCount()
     }
 
@@ -45,7 +44,7 @@ class UserRepository (private val userDao: UserDao) {
      * Retrieves the total number of rows in the user table
      * where the name is equal to the string provided
      *
-     * @param String nam
+     * @param name string
      * @return UserEntity
      */
     suspend fun getCountWithName(name: String): Int{
@@ -56,11 +55,10 @@ class UserRepository (private val userDao: UserDao) {
      * Checks if a record with the name equal to the string provided
      * exists in the table
      *
-     * @param String name
      * @return Boolean
      */
-    suspend fun checkIfUserExists(name: String): Boolean{
-        val count: Int = userDao.getCountWithName(name)
+     fun checkIfUserExists(): Boolean{
+        val count: Int = userDao.getCount()
         if(count > 0 ) {
             return true
         }
@@ -74,7 +72,11 @@ class UserRepository (private val userDao: UserDao) {
      * @return void
      */
     suspend fun addUser(item: UserEntity){
-        userDao.insert(item)
+        if(userDao.getCount() > 0){
+            userDao.update(item)
+        }else{
+            userDao.insert(item)
+        }
     }
 
     /**

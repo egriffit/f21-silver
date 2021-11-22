@@ -21,11 +21,23 @@ class NutritionPlanTypeRepository (private val nutritionPlanTypeDao: NutritionPl
      * Retrieves a NutritionPlanTypeEntity from the nutrition_plan_type table where
      * the id is equal to the Integer provided
      *
-     * @param Integer Id
+     * @param  Id, nutrition plan id
      * @return NutritionPlanTypeEntity
      */
     suspend fun getById(Id: Int): NutritionPlanTypeEntity{
         return nutritionPlanTypeDao.getById(Id)
+    }
+
+    /**
+     * Finds the nutrition plan id given the calorie, carbohydrate, protein and fat
+     *
+     * @param calorie, calorie goal
+     * @param carbohydrate, ccrbohydrate target percentage,
+     * @param protein, preotein target percentage
+     * @param fat, fat target percentage
+     */
+    suspend fun findPlanId(calorie: Double, carbohydrate: Double, protein: Double, fat: Double): Int{
+        return nutritionPlanTypeDao.findPlanId(calorie, carbohydrate, protein, fat)
     }
 
     /**

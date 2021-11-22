@@ -22,11 +22,8 @@ import kotlinx.coroutines.delay
 
 
     @Composable
-    fun SplashScreen(navController: NavController, currentUserGoalViewModel: CurrentUserGoalViewModel,
-    goalTypeViewModel: GoalTypeViewModel) {
+    fun SplashScreen(navController: NavController, currentUserGoalViewModel: CurrentUserGoalViewModel) {
         val context = LocalContext.current
-        goalTypeViewModel.loadGoals()
-
 
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity? = currentUserGoalViewModel.getCurrentGoals.value
 //        var currentGoals: CurrentNutritionPlanAndFrameworkEntity =

@@ -156,6 +156,13 @@ interface CurrentUserGoalDao {
     suspend fun updateNutritionPlanAndFrameworkID(framework_type_id: Int, nutrition_plan_type_id: Int)
 
     /**
+     * A basic update function
+     * @param item, a CurrentUserGoalEntity
+     */
+    @Update
+    suspend fun update(item: CurrentUserGoalEntity)
+
+    /**
      * Delete current_user_goals record to clear user goals
      *
      * @return void

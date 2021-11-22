@@ -1,8 +1,10 @@
 package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import com.example.workout_companion.dao.FrameworkDayDao
 import com.example.workout_companion.entity.FrameworkDayEntity
+import com.example.workout_companion.entity.FrameworkTypeEntity
 
 class FrameworkDayRepository(private val frameworkDayDao: FrameworkDayDao) {
 
@@ -22,8 +24,29 @@ class FrameworkDayRepository(private val frameworkDayDao: FrameworkDayDao) {
      *
      * @property day    the day to add.
      */
+    @Transaction
     suspend fun addFrameworkDay(day: FrameworkDayEntity) {
-        frameworkDayDao.addFrameworkDay(day)
+        if(frameworkDayDao.count(day.name, day.framework_type_id) > 0) {
+            frameworkDayDao.updateFrameworkDay(day)
+        }else{
+            frameworkDayDao.addFrameworkDay(day)
+        }
+    }
+
+    /**
+     * Add a day to a framework
+     *
+     * @property days, list of days to add
+     */
+    @Transaction
+    suspend fun addFrameworkDay(days: List<FrameworkDayEntity>) {
+        days.forEach{ day ->
+            if(frameworkDayDao.count(day.name, day.framework_type_id) > 0) {
+                frameworkDayDao.updateFrameworkDay(day)
+            }else{
+                frameworkDayDao.addFrameworkDay(day)
+            }
+        }
     }
 
     /**

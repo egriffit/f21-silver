@@ -3,6 +3,7 @@ package com.example.workout_companion.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.workout_companion.dao.FrameworkComponentDao
+import com.example.workout_companion.database.FRAMEWORK_COMPONENTS
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkComponentEntity
 import com.example.workout_companion.repository.FrameworkComponentRepository
@@ -63,6 +64,15 @@ class FrameworkComponentViewModel(application: Application) : AndroidViewModel(a
     fun deleteFrameworkComponent(component: FrameworkComponentEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteFrameworkComponent(component)
+        }
+    }
+
+    /**
+     * Loads default framework components into database
+     */
+    fun loadFrameworkComponents(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addFrameworkComponent(FRAMEWORK_COMPONENTS)
         }
     }
 }

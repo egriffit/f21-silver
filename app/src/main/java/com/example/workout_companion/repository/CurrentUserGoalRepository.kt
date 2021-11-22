@@ -43,7 +43,7 @@ class CurrentUserGoalRepository (private val currentUserGoalDao: CurrentUserGoal
         if(!exists){
             currentUserGoalDao.addCurrentUserGoal(item)
         }else{
-            currentUserGoalDao.updateNutritionPlanAndFrameworkID(item.framework_type_id, item.nutrition_plan_type_id)
+            currentUserGoalDao.update(item)
         }
     }
 

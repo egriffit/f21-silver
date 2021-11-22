@@ -64,12 +64,38 @@ interface FrameworkTypeDao {
     /**
      * Get all frameworks that link to the given goal by the name
      *
+     * @property goal    the primary key for the selected goal.
+     *
+     * @return a LiveData List of all frameworks that have the given goal
+     */
+    @Query("SELECT id FROM frameworkwithgoalentity WHERE name = :name AND goal=:goal")
+    fun getFrameworkIdByName(name: String, goal: String) : Int
+
+    /**
+     * Get all frameworks that link to the given goal by the name
+     *
      * @property goal    the name of the selected goal.
      * @property workoutsPerWeek    the number of workouts_per_week
      * @return a LiveData List of all frameworks that have the given goal and number of workouts
      */
     @Query("SELECT * FROM frameworkwithgoalentity WHERE goal=:goal AND workouts_per_week<=:workoutsPerWeek")
     fun getFrameworksWithGoalNameWithinMaxWorkouts(goal: String, workoutsPerWeek: Int) : LiveData<List<FrameworkWithGoalEntity>>
+
+    /**
+     * Get count for frameworks with the name, goal_id and workouts_per_week
+     * equal to the string, and ints provided
+     *
+     * @param name, name of framework
+     * @param goal, id of the goal
+     * @parma workouts_per_week, number of workouts a user can do per week
+     *
+     */
+    @Query("""
+        SELECT COUNT(*) FROM framework_type 
+        WHERE name=:name 
+        AND goal_id=:goal 
+        AND workouts_per_week=:workouts_per_week""" )
+    fun getCount(name: String, goal: Int, workouts_per_week: Int): Int
 
     /**
      * Add a framework to the database
@@ -94,6 +120,14 @@ interface FrameworkTypeDao {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFrameworks(vararg framework: FrameworkTypeEntity)
+
+    /**
+     * Update a framework with the framework provided
+     *
+     * @property framework the framework to update
+     */
+    @Update
+    suspend fun updateFramework(framework: FrameworkTypeEntity)
 
     /**
      * Delete the framework by its id

@@ -19,10 +19,15 @@ class NutritionPlanTypeViewModel(application: Application): AndroidViewModel(app
     /**
      * Retrieves a list of all NutritionPlanTypeEntities in the nutrition_plan_type table
      */
-    val readAll: LiveData<List<NutritionPlanTypeEntity>>
+    private val readAll: LiveData<List<NutritionPlanTypeEntity>>
 
     /**
-     * UserRepository Object
+     * Found nutrition plan id
+     */
+    var id =  MutableLiveData<Int>()
+
+    /**
+     * NutritionPlanTypeRepository Object
      */
     private val repository: NutritionPlanTypeRepository
 
@@ -36,6 +41,11 @@ class NutritionPlanTypeViewModel(application: Application): AndroidViewModel(app
         readAll = repository.getAll
     }
 
+    fun getPlanId(item: NutritionPlanTypeEntity){
+        viewModelScope.launch(Dispatchers.IO){
+            id.postValue(repository.findPlanId(item.calorie, item.carbohydrate, item.protein, item.fat))
+        }
+    }
     /**
      * Function to initialize a coroutine to add a nutrition plan to the database
      * @param item, a NutritionPlanTypeEntity

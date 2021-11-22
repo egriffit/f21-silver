@@ -13,10 +13,10 @@ import androidx.room.PrimaryKey
  * @property workouts_per_week  the number of workouts this framework prescribes per week.
  */
 @Entity(tableName = "framework_type",
-        foreignKeys = [ForeignKey(entity = GoalTypeEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["goal_id"],
-            onDelete = ForeignKey.RESTRICT)]
+//        foreignKeys = [ForeignKey(entity = GoalTypeEntity::class,
+//            parentColumns = ["id"],
+//            childColumns = ["goal_id"],
+//            onDelete = ForeignKey.CASCADE)]
 )
 data class FrameworkTypeEntity(
     @PrimaryKey(autoGenerate = false)
