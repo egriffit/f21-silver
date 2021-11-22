@@ -4,6 +4,16 @@ import androidx.room.*
 import com.example.workout_companion.enumeration.Progress
 import com.example.workout_companion.enumeration.ProgressConverter
 
+/**
+ * Entity representing the sets performed during a workout stored in the database
+ *
+ * @param id The primary key id
+ * @param framework_component_set_id The foreign key id of the framework component this set comes from
+ * @param reps The repetitions performed during this set
+ * @param weight The weight used during this set
+ * @param status The state of the set
+ * @param wger_id The foreign key id of the wger exercise
+ */
 @Entity(tableName = "set",
         foreignKeys = [
             ForeignKey(
