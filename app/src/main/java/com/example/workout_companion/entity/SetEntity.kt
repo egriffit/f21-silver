@@ -30,5 +30,8 @@ data class SetEntity(
 
     @TypeConverters(ProgressConverter::class)
     @ColumnInfo(name = "status")
-    var status: Progress
+    var status: Progress,
+
+    @ColumnInfo(name = "wger_id")
+    var wger_id: Int,
 )
