@@ -33,10 +33,11 @@ class WorkoutRepositoryTest : TestCase() {
         val dao = db.workoutDao()
         repository = WorkoutRepository(dao)
 
-        // The workouts need framework days
+        // The workouts need framework days and components
         TestDataGenerator.addGoalsToDB(db)
         TestDataGenerator.addFrameworksToDB(db)
         TestDataGenerator.addFrameworkDaysToDB(db)
+        TestDataGenerator.addFrameworkComponentsToDB(db)
     }
 
     @After
@@ -89,5 +90,15 @@ class WorkoutRepositoryTest : TestCase() {
         assertTrue(workoutsInDb.contains(TestDataGenerator.WORKOUTS[0]))
         assertTrue(workoutsInDb.contains(TestDataGenerator.WORKOUTS[1]))
         assertTrue(workoutsInDb.contains(TestDataGenerator.WORKOUTS[3]))
+    }
+
+    @Test
+    fun getWorkoutWithComponentsTest() = runBlocking {
+        TestDataGenerator.addWorkoutsToDB(db)
+        TestDataGenerator.addWorkoutComponentsToDB(db)
+
+        val workout0WithSets = repository.getWorkoutWithComponents(TestDataGenerator.WORKOUTS[0].date).getOrAwaitValue()
+        assertEquals(TestDataGenerator.WORKOUTS[0], workout0WithSets.workout)
+        assertEquals(TestDataGenerator.WORKOUT_0_COMPONENTS, workout0WithSets.components)
     }
 }

@@ -66,7 +66,7 @@ class WorkoutComponentRepositoryTest : TestCase() {
 
     @Test
     fun deleteComponentTest() = runBlocking {
-        TestDataGenerator.addFrameworkComponentSetsToDB(db)
+        TestDataGenerator.addWorkoutComponentsToDB(db)
         repository.deleteWorkoutComponent(TestDataGenerator.WORKOUT_0_COMPONENTS[0])
 
         val setsInDbAfterDelete = repository.getWorkoutComponentsForDate(TestDataGenerator.WORKOUTS[0].date)

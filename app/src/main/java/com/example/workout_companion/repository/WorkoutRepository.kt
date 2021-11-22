@@ -2,6 +2,7 @@ package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
 import com.example.workout_companion.dao.WorkoutDao
+import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.entity.WorkoutEntity
 import java.time.LocalDate
 
@@ -26,6 +27,17 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
      */
     fun getWorkoutOnDate(date: LocalDate): LiveData<WorkoutEntity> {
         return workoutDao.getWorkoutOnDate(date)
+    }
+
+    /**
+     * Gets the workout on the specific date with all of its workout components
+     *
+     * @param date The date of the workout
+     *
+     * @return The workout along with its components
+     */
+    fun getWorkoutWithComponents(date: LocalDate): LiveData<WorkoutWithComponents> {
+        return workoutDao.getWorkoutWithComponents(date)
     }
 
     /**

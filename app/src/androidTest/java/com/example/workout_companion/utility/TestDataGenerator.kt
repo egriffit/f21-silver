@@ -190,37 +190,51 @@ class TestDataGenerator {
             }
         }
 
-        private var nextFrameworkComponentSetId = 0
+        private var nextWorkoutComponentId = 0
         val WORKOUT_0_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[0].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[1].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[2].id),
         )
 
         val WORKOUT_1_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[2].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[3].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[4].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[0].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[1].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[3].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[4].id),
         )
 
         val WORKOUT_2_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[0].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[1].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[2].id),
         )
 
         val WORKOUT_3_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextFrameworkComponentSetId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[0].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[1].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[2].id),
         )
 
         @JvmStatic
-        fun addFrameworkComponentSetsToDB(db: WCDatabase) = runBlocking {
-            for (set in WORKOUT_0_COMPONENTS + WORKOUT_1_COMPONENTS + WORKOUT_2_COMPONENTS + WORKOUT_3_COMPONENTS) {
-                db.frameworkComponentSetDao().addWorkoutComponent(set)
+        fun addWorkoutComponentsToDB(db: WCDatabase) = runBlocking {
+            for (component in WORKOUT_0_COMPONENTS + WORKOUT_1_COMPONENTS + WORKOUT_2_COMPONENTS + WORKOUT_3_COMPONENTS) {
+                db.frameworkComponentSetDao().addWorkoutComponent(component)
+            }
+        }
+
+        var nextComponentSetId = 0
+        val WORKOUT_0_COMPONENT_0_SETS = listOf(
+            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 100.0, Progress.NOT_STARTED, 0),
+            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 110.0, Progress.NOT_STARTED, 0),
+            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 120.0, Progress.NOT_STARTED, 0),
+        )
+
+        @JvmStatic
+        fun addWorkoutComponentSetsToDB(db: WCDatabase) = runBlocking {
+            for (set in WORKOUT_0_COMPONENT_0_SETS) {
+                // TODO: use dao to add here
             }
         }
     }
