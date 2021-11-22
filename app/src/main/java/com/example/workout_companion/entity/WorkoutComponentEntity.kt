@@ -5,13 +5,13 @@ import com.example.workout_companion.utility.DateTimeConverter
 import java.time.LocalDate
 
 /**
- * An entity representing the framework_component_set table in the database
+ * An entity representing the workout_component table in the database
  *
  * @property id The primary key of each entry.
  * @property workout_date The date of the workout as a foreign key.
  * @property component_id The id of the framework component as a foreign key.
  */
-@Entity(tableName = "framework_component_set",
+@Entity(tableName = "workout_component",
     foreignKeys = [
         ForeignKey(
             entity = WorkoutEntity::class,
@@ -27,7 +27,7 @@ import java.time.LocalDate
         )
     ]
 )
-data class FrameworkComponentSetEntity(
+data class WorkoutComponentEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     var id: Int,

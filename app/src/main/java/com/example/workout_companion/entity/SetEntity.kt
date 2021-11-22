@@ -17,7 +17,7 @@ import com.example.workout_companion.enumeration.ProgressConverter
 @Entity(tableName = "set",
         foreignKeys = [
             ForeignKey(
-                entity = FrameworkComponentSetEntity::class,
+                entity = WorkoutComponentEntity::class,
                 parentColumns = ["id"],
                 childColumns = ["framework_component_set_id"],
                 onDelete = ForeignKey.CASCADE

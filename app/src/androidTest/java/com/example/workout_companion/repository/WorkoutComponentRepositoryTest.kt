@@ -16,20 +16,20 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class FrameworkComponentSetRepositoryTest : TestCase() {
+class WorkoutComponentRepositoryTest : TestCase() {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var db: WCDatabase
 
-    private lateinit var repository: FrameworkComponentSetRepository
+    private lateinit var repository: WorkoutComponentRepository
 
     @Before
     public override fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
-        repository = FrameworkComponentSetRepository(db.frameworkComponentSetDao())
+        repository = WorkoutComponentRepository(db.frameworkComponentSetDao())
 
         TestDataGenerator.addGoalsToDB(db)
         TestDataGenerator.addFrameworksToDB(db)
@@ -44,34 +44,34 @@ class FrameworkComponentSetRepositoryTest : TestCase() {
     }
 
     @Test
-    fun createSetTest() = runBlocking {
-        repository.addFrameworkComponentSet(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[0])
+    fun createComponentTest() = runBlocking {
+        repository.addWorkoutComponent(TestDataGenerator.WORKOUT_0_COMPONENTS[0])
 
-        val setsInDb = repository.getFrameworkComponentSetsForDate(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[0].workout_date)
-        assertEquals(listOf(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[0]), setsInDb)
+        val setsInDb = repository.getWorkoutComponentsForDate(TestDataGenerator.WORKOUT_0_COMPONENTS[0].workout_date)
+        assertEquals(listOf(TestDataGenerator.WORKOUT_0_COMPONENTS[0]), setsInDb)
     }
 
     @Test
-    fun updateSetTest() = runBlocking {
-        repository.addFrameworkComponentSet(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[1])
+    fun updateComponentTest() = runBlocking {
+        repository.addWorkoutComponent(TestDataGenerator.WORKOUT_0_COMPONENTS[1])
 
-        val updatedSet = TestDataGenerator.WORKOUT_0_COMPONENT_SETS[1]
+        val updatedSet = TestDataGenerator.WORKOUT_0_COMPONENTS[1]
         updatedSet.component_id = TestDataGenerator.FRAMEWORK_2_DAY_0_COMPONENTS[0].id
 
-        repository.updateFrameworkComponentSet(updatedSet)
+        repository.updateWorkoutComponent(updatedSet)
 
-        val setsInDb = repository.getFrameworkComponentSetsForDate(updatedSet.workout_date)
+        val setsInDb = repository.getWorkoutComponentsForDate(updatedSet.workout_date)
         assertEquals(listOf(updatedSet), setsInDb)
     }
 
     @Test
-    fun deleteSetTest() = runBlocking {
+    fun deleteComponentTest() = runBlocking {
         TestDataGenerator.addFrameworkComponentSetsToDB(db)
-        repository.deleteFrameworkComponentSet(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[0])
+        repository.deleteWorkoutComponent(TestDataGenerator.WORKOUT_0_COMPONENTS[0])
 
-        val setsInDbAfterDelete = repository.getFrameworkComponentSetsForDate(TestDataGenerator.WORKOUTS[0].date)
-        assertFalse(setsInDbAfterDelete.contains(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[0]))
-        assertTrue(setsInDbAfterDelete.contains(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[1]))
-        assertTrue(setsInDbAfterDelete.contains(TestDataGenerator.WORKOUT_0_COMPONENT_SETS[2]))
+        val setsInDbAfterDelete = repository.getWorkoutComponentsForDate(TestDataGenerator.WORKOUTS[0].date)
+        assertFalse(setsInDbAfterDelete.contains(TestDataGenerator.WORKOUT_0_COMPONENTS[0]))
+        assertTrue(setsInDbAfterDelete.contains(TestDataGenerator.WORKOUT_0_COMPONENTS[1]))
+        assertTrue(setsInDbAfterDelete.contains(TestDataGenerator.WORKOUT_0_COMPONENTS[2]))
     }
 }
