@@ -21,7 +21,7 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      */
     val getCurrentGoals: LiveData<CurrentNutritionPlanAndFrameworkEntity>
     val getCurrentGoalIds: LiveData<CurrentUserGoalEntity>
-    val currentGoalExists: LiveData<Boolean>
+    var currentGoalExists = MutableLiveData<Boolean>()
 
     /**
      * UserRepository Object
@@ -37,9 +37,12 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
         repository = CurrentUserGoalRepository(currentUserGoalDao)
         getCurrentGoals = repository.getCurrentUserGoals
         getCurrentGoalIds = repository.getCurrentGoalIds
-        currentGoalExists = repository.currentGoalExists
     }
-
+    fun checkIfExists(){
+        viewModelScope.launch(Dispatchers.IO){
+            currentGoalExists.postValue(repository.currentGoalExists())
+        }
+    }
     /**
      * Function to initialize a coroutine to add a CurrentUserGoalEntity to the database
      * @param item, a CurrentUserGoalEntity

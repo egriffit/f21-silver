@@ -171,7 +171,7 @@ fun UpdateGoalsView(navController: NavController,
                                     nutritionPlanTypeViewModel.id.value
                                 }
                             if(nutritionPlanTypeId != null){
-                                val userGoal = CurrentUserGoalEntity(9,
+                                val userGoal = CurrentUserGoalEntity(1,
                                     nutritionPlanTypeId,
                                     recommendedFrameworkId.value )
                                 currentUserGoalViewModel.addCurrentUserGoal(userGoal)

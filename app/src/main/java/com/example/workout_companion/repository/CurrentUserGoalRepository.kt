@@ -29,8 +29,10 @@ class CurrentUserGoalRepository (private val currentUserGoalDao: CurrentUserGoal
      *
      * @return Boolean
      */
-    val currentGoalExists: LiveData<Boolean> = currentUserGoalDao.currentGoalExists()
-
+    suspend fun currentGoalExists(): Boolean
+    {
+        return currentUserGoalDao.currentGoalExists()
+    }
     /**
      * Adds a CurrentUserGoalEntity to the current_user_goal table
      * if one does not exist
@@ -39,11 +41,11 @@ class CurrentUserGoalRepository (private val currentUserGoalDao: CurrentUserGoal
      * @return void
      */
     suspend fun addCurrentUserGoals(item: CurrentUserGoalEntity){
-        val exists: Boolean = currentUserGoalDao.currentGoalExists().value == true
+        val exists: Boolean = currentUserGoalDao.currentGoalExists()
         if(!exists){
             currentUserGoalDao.addCurrentUserGoal(item)
         }else{
-            currentUserGoalDao.update(item)
+            currentUserGoalDao.updateNutritionPlanAndFrameworkID(item.framework_type_id, item.nutrition_plan_type_id, )
         }
     }
 

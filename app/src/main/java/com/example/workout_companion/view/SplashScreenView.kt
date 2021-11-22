@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,10 +19,10 @@ import androidx.navigation.NavController
 import com.example.workout_companion.R
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
 import com.example.workout_companion.viewmodel.GoalTypeViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 
-    @Composable
+@Composable
     fun SplashScreen(navController: NavController, currentUserGoalViewModel: CurrentUserGoalViewModel) {
         val context = LocalContext.current
 
@@ -31,7 +32,10 @@ import kotlinx.coroutines.delay
 //                                                   currentUserGoalEntity = CurrentUserGoalEntity(1, 1),
 //                                                   FrameWorkWIthGoalEntity = FrameworkWithGoalEntity(1, "Framework_1", 1, 1, "Gain Strength")
 //            )
-        val goalsExist: Boolean? = currentUserGoalViewModel.currentGoalExists.value
+
+
+
+//        val goalsExist: Boolean? = currentUserGoalViewModel.currentGoalExists.observeAsState().value
         //var testGoalsExist: Boolean = true
 
         val scale = remember {
@@ -48,12 +52,15 @@ import kotlinx.coroutines.delay
                         OvershootInterpolator(4f).getInterpolation(it)
                     })
             )
-            delay(3000L)
-            if(goalsExist == true){
-               navController.navigate("mainView")
-            }
-            else
-            {
+            val goalsExist: Boolean? =
+                withContext(Dispatchers.IO) {
+                    currentUserGoalViewModel.checkIfExists()
+                    delay(3000L)
+                    currentUserGoalViewModel.currentGoalExists.value
+                }
+            if (goalsExist == true) {
+                navController.navigate("mainView")
+            } else {
                 navController.navigate("userForm")
             }
         }

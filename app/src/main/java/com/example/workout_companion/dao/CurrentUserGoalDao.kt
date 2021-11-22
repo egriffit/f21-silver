@@ -18,7 +18,7 @@ interface CurrentUserGoalDao {
      *
      * @return LiveData<List<UserEntity> a list of UserEntity objects
      */
-    @Query("SELECT * FROM current_user_goal WHERE current_user_goal.id")
+    @Query("SELECT * FROM current_user_goal")
     fun getCurrentGoalIds(): LiveData<CurrentUserGoalEntity>
 
 
@@ -28,7 +28,7 @@ interface CurrentUserGoalDao {
      * @return Boolean
      */
     @Query("""SELECT EXISTS(SELECT 1 FROM current_user_goal WHERE id = 1) """)
-    fun currentGoalExists(): LiveData<Boolean>
+    suspend fun currentGoalExists(): Boolean
 
     /**
      * Retrieves a CurrentNutritionPlanAndFrameworkEntity object joining all fields in the goal_type,
