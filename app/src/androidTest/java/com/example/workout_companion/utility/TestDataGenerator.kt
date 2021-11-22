@@ -220,7 +220,7 @@ class TestDataGenerator {
         @JvmStatic
         fun addWorkoutComponentsToDB(db: WCDatabase) = runBlocking {
             for (component in WORKOUT_0_COMPONENTS + WORKOUT_1_COMPONENTS + WORKOUT_2_COMPONENTS + WORKOUT_3_COMPONENTS) {
-                db.frameworkComponentSetDao().addWorkoutComponent(component)
+                db.workoutComponentDao().addWorkoutComponent(component)
             }
         }
 
@@ -234,7 +234,7 @@ class TestDataGenerator {
         @JvmStatic
         fun addWorkoutComponentSetsToDB(db: WCDatabase) = runBlocking {
             for (set in WORKOUT_0_COMPONENT_0_SETS) {
-                // TODO: use dao to add here
+                db.workoutComponentSetDao().addSet(set)
             }
         }
     }

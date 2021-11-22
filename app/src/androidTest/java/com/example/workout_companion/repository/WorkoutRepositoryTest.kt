@@ -96,9 +96,13 @@ class WorkoutRepositoryTest : TestCase() {
     fun getWorkoutWithComponentsTest() = runBlocking {
         TestDataGenerator.addWorkoutsToDB(db)
         TestDataGenerator.addWorkoutComponentsToDB(db)
+        TestDataGenerator.addWorkoutComponentSetsToDB(db)
 
-        val workout0WithSets = repository.getWorkoutWithComponents(TestDataGenerator.WORKOUTS[0].date).getOrAwaitValue()
-        assertEquals(TestDataGenerator.WORKOUTS[0], workout0WithSets.workout)
-        assertEquals(TestDataGenerator.WORKOUT_0_COMPONENTS, workout0WithSets.components)
+        val workout0WithComponents = repository.getWorkoutWithComponents(TestDataGenerator.WORKOUTS[0].date).getOrAwaitValue()
+        assertEquals(TestDataGenerator.WORKOUTS[0], workout0WithComponents.workout)
+        for (componentWithSets in workout0WithComponents.components) {
+            assertTrue(TestDataGenerator.WORKOUT_0_COMPONENTS.contains(componentWithSets.component))
+        }
+        assertEquals(workout0WithComponents.components[0].sets, TestDataGenerator.WORKOUT_0_COMPONENT_0_SETS)
     }
 }

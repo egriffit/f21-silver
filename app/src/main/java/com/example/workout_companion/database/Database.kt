@@ -22,6 +22,7 @@ import com.example.workout_companion.utility.DateTimeConverter
     FoodInMealEntity::class,
     WorkoutEntity::class,
     WorkoutComponentEntity::class,
+    WorkoutComponentSetEntity::class,
     RecipeEntity::class,
     FoodInRecipeEntity::class,
     //Add all entities to this list
@@ -45,10 +46,12 @@ abstract class WCDatabase: RoomDatabase() {
     abstract fun mealDao(): MealDao
     abstract fun foodInMealDao(): FoodInMealDao
     abstract fun userWithGoalDao(): UserWithGoalDao
-    abstract fun workoutDao(): WorkoutDao
-    abstract fun frameworkComponentSetDao(): WorkoutComponentDao
     abstract fun recipeDao(): RecipeDao
     abstract fun foodInRecipeDao(): FoodInRecipeDao
+    abstract fun workoutDao(): WorkoutDao
+    abstract fun workoutComponentDao(): WorkoutComponentDao
+    abstract fun workoutComponentSetDao(): WorkoutComponentSetDao
+
 
     companion object{
         @Volatile

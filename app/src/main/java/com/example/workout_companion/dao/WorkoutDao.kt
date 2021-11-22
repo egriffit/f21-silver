@@ -27,7 +27,7 @@ data class WorkoutWithComponents(
         entityColumn = "workout_date",
         entity = WorkoutComponentEntity::class
     )
-    val components: List<WorkoutComponentEntity>,
+    val components: List<ComponentWithSets>,
 )
 /**
  * The Database Access Object of the workout table.

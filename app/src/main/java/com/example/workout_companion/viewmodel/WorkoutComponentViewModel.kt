@@ -20,7 +20,7 @@ class WorkoutComponentViewModel(application: Application) : AndroidViewModel(app
     private val repository: WorkoutComponentRepository
 
     init {
-        val dao = WCDatabase.getInstance(application.applicationContext).frameworkComponentSetDao()
+        val dao = WCDatabase.getInstance(application.applicationContext).workoutComponentDao()
         repository = WorkoutComponentRepository(dao)
     }
 

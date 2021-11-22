@@ -29,7 +29,7 @@ class WorkoutComponentRepositoryTest : TestCase() {
     public override fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
-        repository = WorkoutComponentRepository(db.frameworkComponentSetDao())
+        repository = WorkoutComponentRepository(db.workoutComponentDao())
 
         TestDataGenerator.addGoalsToDB(db)
         TestDataGenerator.addFrameworksToDB(db)
