@@ -7,6 +7,12 @@ import com.example.workout_companion.entity.WorkoutComponentSetEntity
 import com.example.workout_companion.entity.WorkoutEntity
 import java.time.LocalDate
 
+/**
+ * A class containing a workout component and its sets
+ *
+ * @property component The workout component
+ * @property sets The sets belonging to the workout component
+ */
 data class ComponentWithSets(
     @Embedded
     val component: WorkoutComponentEntity,
@@ -18,6 +24,13 @@ data class ComponentWithSets(
     )
     val sets: List<WorkoutComponentSetEntity>
 )
+
+/**
+ * A class containing a workout and all of its components
+ *
+ * @property workout The workout
+ * @property components The components and their sets
+ */
 data class WorkoutWithComponents(
     @Embedded
     val workout: WorkoutEntity,
@@ -29,6 +42,7 @@ data class WorkoutWithComponents(
     )
     val components: List<ComponentWithSets>,
 )
+
 /**
  * The Database Access Object of the workout table.
  */

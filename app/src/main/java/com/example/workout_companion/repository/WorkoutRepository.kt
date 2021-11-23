@@ -1,6 +1,8 @@
 package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
+import com.example.workout_companion.dao.WorkoutComponentDao
+import com.example.workout_companion.dao.WorkoutComponentSetDao
 import com.example.workout_companion.dao.WorkoutDao
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.entity.WorkoutEntity
@@ -21,7 +23,7 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     /**
      * Gets the workout on a specific date
      *
-     * @property date The date for the workout
+     * @param date The date for the workout
      *
      * @return The workout
      */
@@ -43,7 +45,7 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     /**
      * Adds a workout to the database
      *
-     * @property workout The workout to add
+     * @param workout The workout to add
      */
     suspend fun addWorkout(workout: WorkoutEntity) {
         workoutDao.addWorkout(workout)
@@ -52,7 +54,7 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     /**
      * Updates a workout in the database
      *
-     * @property workout The workout to update
+     * @param workout The workout to update
      */
     suspend fun updateWorkout(workout: WorkoutEntity) {
         workoutDao.updateWorkout(workout)
@@ -61,7 +63,7 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     /**
      * Deletes a workout from the database
      *
-     * @property workout The workout to delete
+     * @param workout The workout to delete
      */
     suspend fun deleteWorkout(workout: WorkoutEntity) {
         workoutDao.deleteWorkout(workout)
