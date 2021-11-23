@@ -58,18 +58,19 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
             val newWorkout = WorkoutEntity(LocalDate.now(), Progress.IN_PROGRESS, frameworkDayWithComponents.day.id)
             workoutDao.addWorkout(newWorkout)
 
-            for (component in frameworkDayWithComponents.components) {
-                val newComponent = WorkoutComponentEntity(newWorkout.date, component.id)
-                componentDao.addWorkoutComponent(newComponent)
 
-                var leftoverReps: Int = component.target_reps % component.target_sets
-                val repsPerSet = floor((component.target_reps / component.target_sets).toDouble()).toInt()
+            for (frameworkComponent in frameworkDayWithComponents.components) {
+                val newWorkoutComponent = WorkoutComponentEntity(newWorkout.date, frameworkComponent.id)
+                val newWorkoutComponentId = componentDao.addWorkoutComponent(newWorkoutComponent)
 
-                for (i in 1..component.target_sets) {
+                var leftoverReps: Int = frameworkComponent.target_reps % frameworkComponent.target_sets
+                val repsPerSet = floor((frameworkComponent.target_reps / frameworkComponent.target_sets).toDouble()).toInt()
+
+                for (i in 1..frameworkComponent.target_sets) {
                     val reps = repsPerSet + if (leftoverReps > 0) leftoverReps-- else 0
 
                     // We are leaving all other inputs as defaults
-                    val newSet = WorkoutComponentSetEntity(workout_component_id = component.id, reps = reps)
+                    val newSet = WorkoutComponentSetEntity(workout_component_id = newWorkoutComponentId.toInt(), reps = reps)
                     setDao.addSet(newSet)
                 }
             }

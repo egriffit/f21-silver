@@ -26,8 +26,8 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     private val repository: WorkoutRepository
 
     init {
-        val dao = WCDatabase.getInstance(application).workoutDao()
-        repository = WorkoutRepository(dao)
+        val db = WCDatabase.getInstance(application)
+        repository = WorkoutRepository(db.workoutDao(), db.workoutComponentDao(), db.workoutComponentSetDao())
         workouts = repository.workouts
     }
 
@@ -47,9 +47,9 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      *
      * @property workout The workout to add
      */
-    suspend fun addWorkout(workout: WorkoutEntity) {
+    /*suspend fun addWorkout(workout: WorkoutEntity) {
         repository.createWorkout(workout)
-    }
+    }*/
 
     /**
      * Update a workout in the database

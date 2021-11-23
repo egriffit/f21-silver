@@ -26,7 +26,7 @@ interface WorkoutComponentDao {
      * @param workoutComponent The set to add.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addWorkoutComponent(workoutComponent: WorkoutComponentEntity)
+    suspend fun addWorkoutComponent(workoutComponent: WorkoutComponentEntity): Long
 
     /**
      * Updates a workout component in the database

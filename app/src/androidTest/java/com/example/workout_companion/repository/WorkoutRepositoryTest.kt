@@ -54,7 +54,7 @@ class WorkoutRepositoryTest : TestCase() {
         db.close()
     }
 
-    fun validateWorkoutMatchesFramework(workoutWithComponents: WorkoutWithComponents, frameworkDayWithComponents: FrameworkDayWithComponents) {
+    private fun validateWorkoutMatchesFramework(workoutWithComponents: WorkoutWithComponents, frameworkDayWithComponents: FrameworkDayWithComponents) {
         assertEquals(frameworkDayWithComponents.day.id, workoutWithComponents.workout.framework_day_id)
 
         assertEquals(workoutWithComponents.components.size, frameworkDayWithComponents.components.size)
@@ -73,6 +73,21 @@ class WorkoutRepositoryTest : TestCase() {
         }
     }
 
+    private fun validateWorkoutIsRemoved(workoutWithComponents: WorkoutWithComponents) = runBlocking {
+        val workoutsInDb = repository.workouts.getOrAwaitValue()
+        assertFalse(workoutsInDb.contains(workoutWithComponents.workout))
+
+        val componentsInDb = db.workoutComponentDao().getWorkoutComponentsForDate(LocalDate.now())
+        val setsInDb = db.workoutComponentSetDao().getAllSets()
+        for (component in workoutWithComponents.components) {
+            assertFalse(componentsInDb.contains(component.component))
+
+            for (set in component.sets) {
+                assertFalse(setsInDb.containsAll(component.sets))
+            }
+        }
+    }
+
     @Test
     fun createWorkoutTest() = runBlocking {
         val frameworkDay0 = framework0DaysWithComponents.getOrAwaitValue()[0]
@@ -82,11 +97,12 @@ class WorkoutRepositoryTest : TestCase() {
         validateWorkoutMatchesFramework(workoutWithComponents, frameworkDay0)
     }
 
-    /*@Test
+    @Test
     fun updateWorkoutTest() = runBlocking {
-        repository.createWorkout(TestDataGenerator.WORKOUTS[1])
+        val frameworkDay1 = framework0DaysWithComponents.getOrAwaitValue()[1]
+        repository.createWorkout(frameworkDay1)
 
-        val updatedWorkout = TestDataGenerator.WORKOUTS[1]
+        val updatedWorkout = repository.getWorkoutOnDate(LocalDate.now()).getOrAwaitValue()
         updatedWorkout.status = Progress.COMPLETE
         repository.updateWorkout(updatedWorkout)
 
@@ -96,41 +112,13 @@ class WorkoutRepositoryTest : TestCase() {
     }
 
     @Test
-    fun getWorkoutOnDate() = runBlocking {
-        TestDataGenerator.WORKOUTS.forEach {
-            repository.createWorkout(it)
-        }
-
-        val workout = repository.getWorkoutOnDate(TestDataGenerator.WORKOUTS[0].date).getOrAwaitValue()
-        assertEquals(TestDataGenerator.WORKOUTS[0], workout)
-    }
-
-    @Test
     fun deleteWorkoutTest() = runBlocking {
-        TestDataGenerator.WORKOUTS.forEach {
-            repository.createWorkout(it)
-        }
+        val frameworkDay1 = framework0DaysWithComponents.getOrAwaitValue()[1]
+        repository.createWorkout(frameworkDay1)
 
-        repository.deleteWorkout(TestDataGenerator.WORKOUTS[2])
+        val workoutWithComponents = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+        repository.deleteWorkout(workoutWithComponents.workout)
 
-        val workoutsInDb = repository.workouts.getOrAwaitValue()
-        assertFalse(workoutsInDb.contains(TestDataGenerator.WORKOUTS[2]))
-        assertTrue(workoutsInDb.contains(TestDataGenerator.WORKOUTS[0]))
-        assertTrue(workoutsInDb.contains(TestDataGenerator.WORKOUTS[1]))
-        assertTrue(workoutsInDb.contains(TestDataGenerator.WORKOUTS[3]))
+        validateWorkoutIsRemoved(workoutWithComponents)
     }
-
-    @Test
-    fun getWorkoutWithComponentsTest() = runBlocking {
-        TestDataGenerator.addWorkoutsToDB(db)
-        TestDataGenerator.addWorkoutComponentsToDB(db)
-        TestDataGenerator.addWorkoutComponentSetsToDB(db)
-
-        val workout0WithComponents = repository.getWorkoutWithComponents(TestDataGenerator.WORKOUTS[0].date).getOrAwaitValue()
-        assertEquals(TestDataGenerator.WORKOUTS[0], workout0WithComponents.workout)
-        for (componentWithSets in workout0WithComponents.components) {
-            assertTrue(TestDataGenerator.WORKOUT_0_COMPONENTS.contains(componentWithSets.component))
-        }
-        assertEquals(workout0WithComponents.components[0].sets, TestDataGenerator.WORKOUT_0_COMPONENT_0_SETS)
-    }*/
 }
