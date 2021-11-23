@@ -1,4 +1,4 @@
-package com.example.workout_companion.view
+package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
