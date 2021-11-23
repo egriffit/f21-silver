@@ -1,11 +1,8 @@
 package com.example.workout_companion.view
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -13,15 +10,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
+import androidx.test.core.app.ActivityScenario.launch
 import com.example.workout_companion.view.exercise.WorkoutView
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
 @SuppressLint("NewApi")
 @Composable
 fun MainNavigation(viewModelProvider: ViewModelProvider) {
+    val coroutineScope = rememberCoroutineScope()
+
     // Put the view models you need here
     val goalTypeViewModel by lazy { viewModelProvider.get(GoalTypeViewModel::class.java) }
     val nutritionPlanTypeViewModel by lazy {viewModelProvider.get(NutritionPlanTypeViewModel::class.java) }
@@ -40,10 +43,11 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
 
-    goalTypeViewModel.loadGoals()
-    frameworkTypeViewModel.loadFrameworks()
-    frameworkDayViewModel.loadFrameworkDays()
-    frameworkComponentViewModel.loadFrameworkComponents()
+    LaunchedEffect(coroutineScope) {
+        val job = goalTypeViewModel.loadGoals()
+        job.join() // Wait for the goals to be made before making the frameworks
+        frameworkTypeViewModel.loadFrameworks()
+    }
 
     val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
 

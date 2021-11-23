@@ -1,9 +1,6 @@
 package com.example.workout_companion.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 /**
  * An entity representing a workout framework table in the database

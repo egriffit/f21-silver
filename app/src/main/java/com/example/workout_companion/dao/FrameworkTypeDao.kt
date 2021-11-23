@@ -2,8 +2,17 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
+
+data class FrameworkWithDays(
+    @Embedded
+    val framework: FrameworkTypeEntity,
+
+    @Relation(parentColumn = "id", entityColumn = "framework_type_id", entity = FrameworkDayEntity::class)
+    val days: List<FrameworkDayWithComponents>
+)
 
 /**
  * A Database Access Object for the FrameworkTypeEntity
@@ -20,6 +29,9 @@ interface FrameworkTypeDao {
      */
     @Query("SELECT * FROM framework_type")
     fun getAllFrameworks(): LiveData<List<FrameworkTypeEntity>>
+
+    @Query("SELECT * FROM framework_type")
+    fun getAllFrameworksWithDays(): LiveData<List<FrameworkWithDays>>
 
     /**
      * Get a framework by its primary key, id

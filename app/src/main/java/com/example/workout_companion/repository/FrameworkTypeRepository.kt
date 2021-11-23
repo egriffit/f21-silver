@@ -2,7 +2,9 @@ package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
 import androidx.room.Transaction
+import com.example.workout_companion.dao.FrameworkComponentDao
 import com.example.workout_companion.dao.FrameworkTypeDao
+import com.example.workout_companion.dao.FrameworkWithDays
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
 
@@ -12,7 +14,6 @@ class FrameworkTypeRepository(private val frameworkTypeDao: FrameworkTypeDao) {
      * A LiveData List of all frameworks within the database
      */
     val allFrameworks: LiveData<List<FrameworkTypeEntity>> = frameworkTypeDao.getAllFrameworks()
-
 
     /**
      * Get a framework by its primary key, [id]

@@ -2,12 +2,18 @@ package com.example.workout_companion.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.workout_companion.dao.FrameworkComponentDao
+import com.example.workout_companion.dao.FrameworkDayDao
+import com.example.workout_companion.dao.FrameworkTypeDao
+import com.example.workout_companion.dao.FrameworkWithDays
+import com.example.workout_companion.database.DEFAULT_FRAMEWORKS_WITH_DAYS
 import com.example.workout_companion.database.FRAMEWORK_TYPES
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.repository.FrameworkTypeRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -18,10 +24,6 @@ import java.lang.IllegalArgumentException
  */
 class FrameworkTypeViewModel(application: Application) : AndroidViewModel(application) {
 
-    /**
-     * A list of all frameworks within the database
-     */
-    val readAll: LiveData<List<FrameworkTypeEntity>>
 
     /**
      * Framework id
@@ -30,12 +32,28 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
     /**
      * A repository for accessing the framework_type database
      */
-    private val repository: FrameworkTypeRepository
+    private val db = WCDatabase.getInstance(application)
+    private val typeDao: FrameworkTypeDao = db.frameworkTypeDao()
+    private val dayDao: FrameworkDayDao = db.frameworkDayDao()
+    private val componentDao: FrameworkComponentDao = db.frameworkComponentDao()
 
-    init {
-        val dao = WCDatabase.getInstance(application).frameworkTypeDao()
-        repository = FrameworkTypeRepository(dao)
-        readAll = repository.allFrameworks
+    private val repository: FrameworkTypeRepository = FrameworkTypeRepository(typeDao)
+    /**
+     * A list of all frameworks within the database
+     */
+    val readAll: LiveData<List<FrameworkTypeEntity>> = repository.allFrameworks
+
+    /**
+     * Create a framework, its days, and its components
+     */
+    fun createFramework(frameworkWithDays: FrameworkWithDays) = viewModelScope.launch(Dispatchers.IO) {
+        typeDao.addFramework(frameworkWithDays.framework)
+        for (dayWithComponents in frameworkWithDays.days) {
+            dayDao.addFrameworkDay(dayWithComponents.day)
+            for (component in dayWithComponents.components) {
+                componentDao.addFrameworkComponent(component)
+            }
+        }
     }
 
     /**
@@ -118,9 +136,9 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
      * Function to load goals in the database
      *
      */
-    fun loadFrameworks() {
-        viewModelScope.launch(Dispatchers.IO){
-            repository.addFramework(FRAMEWORK_TYPES)
+    fun loadFrameworks() = viewModelScope.launch(Dispatchers.IO) {
+        for (frameworkWithDays in DEFAULT_FRAMEWORKS_WITH_DAYS) {
+            createFramework(frameworkWithDays)
         }
     }
 }
