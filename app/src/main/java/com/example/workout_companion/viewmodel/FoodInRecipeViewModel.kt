@@ -18,6 +18,7 @@ class FoodInRecipeViewModel(application: Application) : AndroidViewModel(applica
      */
     private val repository: FoodInRecipeRepository
 
+    val foodsInRecipe = MutableLiveData<List<RecipeWithFoodsEntity>>()
     /**
      * Function to initialize the view.
      * Initializes the WCDatabase, repository and the list of all FoodType entities
@@ -96,12 +97,10 @@ class FoodInRecipeViewModel(application: Application) : AndroidViewModel(applica
      * @param name, string
      * @return LiveData<List<RecipeWithFoodsEntity> a list of RecipeWithFoodsEntity objects
      */
-    fun getFoodInRecipe(name: String): List<RecipeWithFoodsEntity>?{
-        var mealFoods: List<RecipeWithFoodsEntity>? = listOf<RecipeWithFoodsEntity>()
+    fun getFoodInRecipe(name: String){
         viewModelScope.launch(Dispatchers.IO){
-            mealFoods = repository.getFoodInRecipe(name).value
+            foodsInRecipe.postValue(repository.getFoodInRecipe(name).value)
         }
-        return mealFoods
     }
 
     /**

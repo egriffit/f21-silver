@@ -24,7 +24,7 @@ class FoodTypeRepository (private val foodTypeDao: FoodTypeDao) {
      *
      * @return LiveData<List<FoodTypeEntity>>
      */
-    fun getFoodByName(name: String): LiveData<List<FoodTypeEntity>>{
+    fun getFoodByName(name: String): List<FoodTypeEntity>{
         return foodTypeDao.getByName(name)
     }
 

@@ -44,6 +44,9 @@ fun FoundRecipeFoods(
 ) {
     val foodState = remember { mutableStateOf("") }
     var dbFoods: List<FoodTypeEntity>? = listOf()
+    val foodId = foodTypeViewModel.foodID.observeAsState().value
+    val recipeId = recipeViewModel.recipeID.observeAsState().value
+
     //get foods
     if (food != null) {
         foodState.value = food
@@ -113,14 +116,14 @@ fun FoundRecipeFoods(
                                 recipeViewModel.getRecipeID(recipe)
                             }
                             val foodId = selectedFoundFood.value.id
-                            val recipeId = recipeViewModel.recipeID
 
                             //create a food_inMeal_object and add to database
-                            if ((recipeId != 0) && (foodId != 0)) {
-                                val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
-                                foodInRecipeViewModel.insert(foodInRecipe)
+                            if(recipeId != null) {
+                                if ((recipeId != 0) && (foodId != 0)) {
+                                    val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
+                                    foodInRecipeViewModel.insert(foodInRecipe)
+                                }
                             }
-
                             //add found api food to recipe
                             if (selectedFoundAPIFood.value.name != "") {
                                 //store the food in the food table
@@ -147,13 +150,13 @@ fun FoundRecipeFoods(
                                         recipeViewModel.getRecipeID(recipe)
                                         delay(1000L)
                                     }
-                                    val foodId = foodTypeViewModel.foodID
-                                    val recipeId = recipeViewModel.recipeID
-
-                                    //create a Food_in_recipe object and add to database
-                                    if ((recipeId != 0) && (foodId != 0)) {
-                                        val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
-                                        foodInRecipeViewModel.insert(foodInRecipe)
+                                    if(recipeId != null) {
+                                        //create a Food_in_recipe object and add to database
+                                        if ((recipeId != 0) && (foodId != 0)) {
+                                            val foodInRecipe =
+                                                FoodInRecipeEntity(recipeId, foodId, 1.0)
+                                            foodInRecipeViewModel.insert(foodInRecipe)
+                                        }
                                     }
                                 }
 

@@ -27,7 +27,7 @@ interface FoodTypeDao {
      * @return  FoodTypeEntity object
      */
     @Query("SELECT * FROM food_type WHERE name = :name")
-    fun getByName(name: String): LiveData<List<FoodTypeEntity>>
+    fun getByName(name: String): List<FoodTypeEntity>
 
 
     /**

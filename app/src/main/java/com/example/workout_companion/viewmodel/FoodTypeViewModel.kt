@@ -17,8 +17,8 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * Retrieves a list of all foods in the food_type table
      */
     val getAllFoods: LiveData<List<FoodTypeEntity>>
-    var foodID: Int = 0
-    val foodResults = mutableStateListOf<FoodTypeEntity>()
+    var foodID = MutableLiveData<Int>()
+    val foodResults = MutableLiveData<List<FoodTypeEntity>>()
     /**
      * FoodType Repository Object
      */
@@ -32,7 +32,6 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
         val foodTypeDao = WCDatabase.getInstance(application).foodTypeDao()
         repository = FoodTypeRepository(foodTypeDao)
         getAllFoods = repository.getAllFoods
-        foodID = 0
     }
 
     /**
@@ -43,19 +42,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      */
      fun getFood(name: String){
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                var foods = repository.getFoodByName(name).value
-                if (foods?.size!! > 0) {
-                    foodResults.clear()
-                    foods?.forEach { food ->
-                        foodResults.add(food)
-                    }
-                } else {
-                    foodResults.clear()
-                }
-            } catch (e: Exception) {
-                foodResults.clear()
-            }
+            foodResults.postValue(repository.getFoodByName(name))
         }
     }
 
@@ -64,11 +51,12 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @param  item, FoodTypeEntity
      * @return  Int total number of rows found
      */
-     fun getId(item: FoodTypeEntity) = runBlocking{
-        viewModelScope.launch(Dispatchers.IO){
-                foodID = repository.getId(item)
+     fun getId(item: FoodTypeEntity) = runBlocking {
+        viewModelScope.launch(Dispatchers.IO) {
+            foodID.postValue(repository.getId(item))
         }
     }
+
 
     /**
      * Function to initialize a coroutine to retrieve a total number of foods with the name

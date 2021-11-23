@@ -5,6 +5,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,6 +19,7 @@ import com.example.workout_companion.viewmodel.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun FoodView(
@@ -33,15 +36,30 @@ fun FoodView(
     foodInMealViewModel: FoodInMealViewModel,
 ){
     val coroutineScope = rememberCoroutineScope()
+    val foodId = foodTypeViewModel.foodID.observeAsState().value
+
+    val mealId = mealViewModel.mealId.observeAsState().value
+    LaunchedEffect(key1 = Unit, block = {
+            withContext(Dispatchers.IO) {
+                if (meal != null) {
+                    mealViewModel.getMealId(meal)
+                }
+            }
+    })
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(50.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
+                Text("Meal: $meal ")
+                Text("ID: $mealId ")
+                Text("Food: ${food} ")
+                Text("ID: $foodId ")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -119,17 +137,17 @@ fun FoodView(
                                     mealViewModel.getMealId(meal)
                                     delay(1000L)
                                 }
-                                val foodId = foodTypeViewModel.foodID
-                                val mealId = mealViewModel.mealId
 
                                 //create a food_inMeal_object and add to database
-                                if ((mealId != 0) && (foodId != 0)) {
-                                    val foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
-                                    foodInMealViewModel.insert(foodInMeal)
-                                    mealViewModel.addToMeal(
-                                        foodType.name, foodType.calories, foodType.carbohydrates,
-                                        foodType.protein, foodType.fat,
-                                    )
+                                if(mealId != null && foodId != null){
+                                    if ((mealId != 0) && (foodId != 0)) {
+                                        val foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
+                                        foodInMealViewModel.insert(foodInMeal)
+                                        mealViewModel.addToMeal(
+                                            foodType.name, foodType.calories, foodType.carbohydrates,
+                                            foodType.protein, foodType.fat,
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -157,16 +175,19 @@ fun FoodView(
     fat: Double?,
     recipe: String?,
     foodTypeViewModel: FoodTypeViewModel,
-    recipeView: RecipeViewModel,
+    recipeViewModel: RecipeViewModel,
     foodInRecipeViewModel: FoodInRecipeViewModel
 ){
-    val coroutineScope = rememberCoroutineScope()
+    val foodId = foodTypeViewModel.foodID.observeAsState().value
+    val recipeId = recipeViewModel.recipeID.observeAsState().value
+
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(50.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
@@ -226,6 +247,7 @@ fun FoodView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(onClick = {
+                        //!. add the food to the database
                         if(food != null && servingSize != null && calories != null &&
                             carbohydrates != null && protein != null && fat != null) {
                             val foodType = FoodTypeEntity(
@@ -233,29 +255,23 @@ fun FoodView(
                                 servingSize, calories, carbohydrates,
                                 protein, fat
                             )
-                            coroutineScope.launch(Dispatchers.IO) {
-
                                 foodTypeViewModel.addFoodType(foodType)
                                 //retrieve the food id and meal id
-                                delay(1000L)
 
 
                                 foodTypeViewModel.getId(foodType)
-                                delay(1000L)
 
                                 if (recipe != null) {
-                                    recipeView.getRecipeID(recipe)
-                                    delay(1000L)
+                                    recipeViewModel.getRecipeID(recipe)
                                 }
-                                val foodId = foodTypeViewModel.foodID
-                                val recipeId = recipeView.recipeID
 
                                 //create a food_inMeal_object and add to database
-                                if ((recipeId != 0) && (foodId != 0)) {
-                                    val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
-                                    foodInRecipeViewModel.insert(foodInRecipe)
+                                if(foodId != null && recipeId != null) {
+                                    if ((recipeId != 0) && (foodId != 0)) {
+                                        val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
+                                        foodInRecipeViewModel.insert(foodInRecipe)
+                                    }
                                 }
-                            }
                         }
                         if(recipe != null){
                             navController.navigate("recipe/$recipe")

@@ -14,7 +14,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      * Retrieves a list of all meals in the meal table for the current date
      */
     val getAllRecipes: LiveData<List<RecipeEntity>>
-    var recipeID: Int
+    var recipeID = MutableLiveData<Int>()
+    var foundRecipes = MutableLiveData<List<RecipeEntity>>()
     /**
      * Meal repository Object
      */
@@ -28,7 +29,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val recipeDao = WCDatabase.getInstance(application).recipeDao()
         repository = RecipeRepository(recipeDao)
         getAllRecipes = repository.getAllRecipes
-        recipeID = 0
     }
 
     /**
@@ -38,12 +38,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      * @param name, String
      * @return LiveData<List<RecipeEntity>>
      */
-    fun getRecipe(name: String): List<RecipeEntity>?{
-        var recipes: List<RecipeEntity>? = listOf<RecipeEntity>()
+    fun getRecipe(name: String){
         viewModelScope.launch(Dispatchers.IO){
-            recipes = repository.getRecipeByName(name).value
+            foundRecipes.postValue(repository.getRecipeByName(name).value)
         }
-        return recipes
     }
 
 
@@ -55,7 +53,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun getRecipeID(name: String) {
         viewModelScope.launch(Dispatchers.IO){
-            recipeID = repository.getRecipeId(name)
+            recipeID.postValue(repository.getRecipeId(name))
         }
     }
 

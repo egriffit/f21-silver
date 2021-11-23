@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
@@ -18,7 +19,7 @@ import com.example.workout_companion.viewmodel.RecipeViewModel
 fun AddRecipeForm(navController: NavController, recipeViewModel: RecipeViewModel)
 {
     val recipeName = remember{ mutableStateOf("") }
-
+    val recipes = recipeViewModel.foundRecipes.observeAsState().value
     Column(modifier = Modifier.fillMaxWidth()
     ) {
             Row(
@@ -40,10 +41,10 @@ fun AddRecipeForm(navController: NavController, recipeViewModel: RecipeViewModel
             Button(onClick = {
                 if(recipeName.value.isNotEmpty()) {
                     //check if recipe exists
-                    val found = recipeViewModel.getRecipe(recipeName.value)
-                    if (found != null) {
-                        if (found.isNotEmpty()) {
-                            navController.navigate("recipe/${found.elementAt(0).name}")
+                    recipeViewModel.getRecipe(recipeName.value)
+                    if (recipes != null) {
+                        if (recipes.isNotEmpty()) {
+                            navController.navigate("recipe/${recipes.elementAt(0).name}")
                         } else {
                             //create a recipe
                             recipeViewModel.insert(recipeName.value)

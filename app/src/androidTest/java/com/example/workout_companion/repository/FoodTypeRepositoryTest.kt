@@ -60,7 +60,7 @@ class FoodTypeRepositoryTest : TestCase() {
     fun getFoodByName() = runBlocking{
         val food = sampleFoodTypeOneFoodList
         repository.insert(food)
-        val byName:List<FoodTypeEntity> = repository.getFoodByName(sampleFoodTypeOneFoodList.elementAt(0).name).getOrAwaitValue()
+        val byName:List<FoodTypeEntity> = repository.getFoodByName(sampleFoodTypeOneFoodList.elementAt(0).name)
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(food))
     }
 
@@ -89,7 +89,7 @@ class FoodTypeRepositoryTest : TestCase() {
         repository.insert(foods)
         repository.insert(foods)
         repository.update(newFood)
-        val found :List<FoodTypeEntity> = repository.getFoodByName(foods.elementAt(0).name).getOrAwaitValue()
+        val found :List<FoodTypeEntity> = repository.getFoodByName(foods.elementAt(0).name)
         MatcherAssert.assertThat(found.elementAt(0).edamam_id, CoreMatchers.equalTo(newFood.edamam_id))
     }
 

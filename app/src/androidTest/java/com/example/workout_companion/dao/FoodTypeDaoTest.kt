@@ -56,7 +56,7 @@ class FoodTypeDaoTest : TestCase(){
         val food = listOf(FoodTypeEntity(1, "carrot", "food_ai215e5b85pdh5ajd4aafa3w2zm8",
             80.0, 100.0, 1.3, 98.0, 0.7))
         dao.insert(food)
-        val byName:List<FoodTypeEntity> = dao.getByName("carrot").getOrAwaitValue()
+        val byName:List<FoodTypeEntity> = dao.getByName("carrot")
         MatcherAssert.assertThat(byName, CoreMatchers.equalTo(food))
     }
 
@@ -91,7 +91,7 @@ class FoodTypeDaoTest : TestCase(){
 
         dao.insert(foods)
        dao.update(newFood)
-        val found :List<FoodTypeEntity> = dao.getByName("carrot").getOrAwaitValue()
+        val found :List<FoodTypeEntity> = dao.getByName("carrot")
         MatcherAssert.assertThat(found.elementAt(0).edamam_id, CoreMatchers.equalTo(newFood.edamam_id))
     }
 
