@@ -76,7 +76,7 @@ class UserRepositoryTest : TestCase() {
     @Test
     fun testCheckIfUserExists() = runBlocking{
         repository.addUser(TestDataGenerator.USER)
-        val exists: Boolean = repository.checkIfUserExists(TestDataGenerator.USER.name)
+        val exists: Boolean = repository.checkIfUserExists()
         assertTrue(exists)
     }
 
@@ -95,7 +95,7 @@ class UserRepositoryTest : TestCase() {
     fun testDelete() = runBlocking{
         repository.addUser(TestDataGenerator.USER)
         repository.deleteUser(TestDataGenerator.USER)
-        val exists: Boolean = repository.checkIfUserExists(TestDataGenerator.USER.name)
+        val exists: Boolean = repository.checkIfUserExists()
         assertFalse(exists)
     }
 

@@ -14,10 +14,10 @@ import com.example.workout_companion.enumeration.MuscleGroupConverter
  * @property target_reps        the target total reps performed across all sets.
  */
 @Entity(tableName = "framework_component",
-//        foreignKeys = [ForeignKey(entity = FrameworkDayEntity::class,
-//            parentColumns = ["id"],
-//            childColumns = ["framework_day_id"],
-//            onDelete = ForeignKey.CASCADE)]
+        foreignKeys = [ForeignKey(entity = FrameworkDayEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["framework_day_id"],
+            onDelete = ForeignKey.CASCADE)]
 )
 data class FrameworkComponentEntity(
     @PrimaryKey(autoGenerate = false)

@@ -77,11 +77,11 @@ class MealDaoTest : TestCase(){
     fun TestGetCount() = runBlocking(){
         val today = LocalDate.now()
 
-        val yesterday = LocalDate.of(2021, Month.OCTOBER, 23)
+        val day = LocalDate.of(2021, Month.OCTOBER, 23)
         val meals = listOf(
             MealEntity(1, "lunch", 500.0, 40.1, 20.1, 15.0, today),
             MealEntity(2, "breakfast", 500.0, 40.1, 20.1, 15.0, today),
-            MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
+            MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, day)
         )
 
         dao.insert(meals)

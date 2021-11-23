@@ -43,7 +43,7 @@ interface MealDao {
     @Query("""
        SELECT * FROM meal 
         WHERE type = :type 
-        AND date = strftime('%Y-%m-%d', DATE('now'))
+        AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
     """)
     fun getByName(type: String): LiveData<List<MealEntity>>
 
@@ -73,7 +73,7 @@ interface MealDao {
     @Query("""
        SELECT id FROM meal 
         WHERE type = :type 
-        AND date = strftime('%Y-%m-%d', DATE('now'))
+        AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
         LIMIT 1
     """)
     fun getMealId(type: String): Int
@@ -86,7 +86,7 @@ interface MealDao {
      */
     @Query("""
         SELECT COUNT(*) FROM meal
-        WHERE date = strftime('%Y-%m-%d', DATE('now'))
+        WHERE date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
         """)
     fun getCount(): Int
 
@@ -99,7 +99,7 @@ interface MealDao {
     @Query("""
         SELECT COUNT(*) FROM meal 
         WHERE type = :name
-        AND date = strftime('%Y-%m-%d', DATE('now'))
+        AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
         """)
     fun getCount(name: String): Int
 
