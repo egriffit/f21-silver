@@ -2,6 +2,10 @@ package com.example.workout_companion.view
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -9,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
+import com.example.workout_companion.view.exercise.WorkoutView
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
+import java.time.LocalDate
 
 
 @SuppressLint("NewApi")
@@ -31,12 +37,16 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val recipeViewModel by lazy { viewModelProvider.get(RecipeViewModel::class.java) }
     val foodInRecipeViewModel by lazy { viewModelProvider.get(FoodInRecipeViewModel::class.java) }
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
+    val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
 
     goalTypeViewModel.loadGoals()
     frameworkTypeViewModel.loadFrameworks()
     frameworkDayViewModel.loadFrameworkDays()
     frameworkComponentViewModel.loadFrameworkComponents()
+
+    val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
+
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
         composable (route = "splashScreen") {
@@ -49,7 +59,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            ExerciseOverview(navController)
+            ExerciseOverview(navController, workoutState)
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,
