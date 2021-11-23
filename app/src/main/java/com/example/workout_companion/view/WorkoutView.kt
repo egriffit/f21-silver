@@ -10,9 +10,18 @@ import androidx.compose.material.Text
 
 @Composable
 fun WorkoutsView(navController: NavController) {
-    Column() {
-        Text (
-            text = "Workouts View"
-        )
+    Column(modifier = Modifier
+        .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+        .fillMaxWidth()
+        .fillMaxHeight(),
+    )
+    {
+        Row(
+            modifier = Modifier.padding(bottom = 10.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text("Exercise Overview Page")
+        }
     }
 }
