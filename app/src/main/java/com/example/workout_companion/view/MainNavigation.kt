@@ -29,8 +29,6 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val goalTypeViewModel by lazy { viewModelProvider.get(GoalTypeViewModel::class.java) }
     val nutritionPlanTypeViewModel by lazy {viewModelProvider.get(NutritionPlanTypeViewModel::class.java) }
     val frameworkTypeViewModel by lazy { viewModelProvider.get(FrameworkTypeViewModel::class.java) }
-    val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
-    val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java) }
     val userViewModel by lazy { viewModelProvider.get(UserViewModel::class.java) }
     val userWithGoalViewModel by lazy { viewModelProvider.get(UserWithGoalViewModel::class.java) }
     val mealViewModel by lazy { viewModelProvider.get(MealViewModel::class.java) }

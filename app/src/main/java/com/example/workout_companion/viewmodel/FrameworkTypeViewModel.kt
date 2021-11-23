@@ -108,8 +108,6 @@ class FrameworkTypeViewModel(application: Application) : AndroidViewModel(applic
         return repository.getFrameworksWithGoalNameWithinMaxWorkouts(goal, maxWorkouts)
     }
 
-
-
     /**
      * Adds a framework to the database
      *
