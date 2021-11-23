@@ -1,17 +1,16 @@
 package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.Text
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WorkoutsView(navController: NavController) {
+fun WorkoutView() {
     Column(modifier = Modifier
         .padding(top = 20.dp, start = 20.dp, end = 20.dp)
         .fillMaxWidth()
@@ -19,11 +18,24 @@ fun WorkoutsView(navController: NavController) {
     )
     {
         Row(
-            modifier = Modifier.padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Exercise Overview Page")
+            OutlinedButton(
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "Start Workout")
+            }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WorkoutViewPreview() {
+    WorkoutView()
 }
