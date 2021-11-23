@@ -5,7 +5,7 @@ import com.example.workout_companion.entity.WorkoutComponentEntity
 import java.time.LocalDate
 
 /**
- * The Database Access Object for the framework_component_set table
+ * The Database Access Object for the workout_component table
  */
 @Dao
 interface WorkoutComponentDao {
