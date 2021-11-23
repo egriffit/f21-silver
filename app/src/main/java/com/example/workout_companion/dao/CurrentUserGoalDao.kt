@@ -27,8 +27,10 @@ interface CurrentUserGoalDao {
      *
      * @return Boolean
      */
-    @Query("""SELECT EXISTS(SELECT 1 FROM current_user_goal WHERE id = 1) """)
+    @Query("""SELECT EXISTS(SELECT 1 FROM 
+        current_user_goal WHERE id = 1) """)
     suspend fun currentGoalExists(): Boolean
+
 
     /**
      * Retrieves a CurrentNutritionPlanAndFrameworkEntity object joining all fields in the goal_type,

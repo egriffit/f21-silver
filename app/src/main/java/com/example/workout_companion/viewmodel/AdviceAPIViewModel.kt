@@ -13,14 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class AdviceAPIViewModel: ViewModel() {
     val advice = mutableStateListOf<adviceItem>()
-
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(base_url)
-            .build()
-    }
+    var success = false
 
     fun getAdviceByType(adviceType: String) {
         viewModelScope.launch {
@@ -29,15 +22,16 @@ class AdviceAPIViewModel: ViewModel() {
 
             try {
                 val found = call.getAdviceByType(adviceType)
-                if(advice.size > 0){
-                    advice.clear()
+                success = true
+                advice.clear()
+                if(found.size > 0){
                     for(a in found) {
                         advice.add(a)
                     }
-                }else{
-                    advice.clear()
                 }
             } catch (e: Exception) {
+                success = false
+
                 advice.clear()
             }
         }

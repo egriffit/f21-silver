@@ -20,23 +20,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.toLowerCase
+import com.example.workout_companion.entity.CurrentNutritionPlanAndFrameworkEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 
 @Composable
-fun AdviceList(currentUserGoalViewModel: CurrentUserGoalViewModel, adviceAPIViewModel: AdviceAPIViewModel){
-    val currentGoals  = currentUserGoalViewModel.getCurrentGoals.value
+fun AdviceList(workoutGoal: String, adviceAPIViewModel: AdviceAPIViewModel){
+
     val showAdvice = remember{ mutableStateOf(false)}
-    var workoutGoal = ""
-    if(currentGoals != null){
-        workoutGoal = currentGoals.FrameWorkWIthGoalEntity.goal
-    }
-    if(workoutGoal.isNotEmpty()){
-        adviceAPIViewModel.getAdviceByType(workoutGoal)
-    }
+    adviceAPIViewModel.getAdviceByType(workoutGoal.lowercase().trim())
     val foundAdvice = adviceAPIViewModel.advice
     Column(){
-        Row(modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center) {
+        Row(modifier = Modifier.fillMaxWidth()
+            .padding(start=20.dp, end = 20.dp),
+            horizontalArrangement = Arrangement.Start)
+        {
+            Text("Workout Goal: $workoutGoal")
+        }
+        Row(modifier = Modifier.fillMaxWidth()
+            .padding(start=20.dp, end = 20.dp),
+        horizontalArrangement = Arrangement.Start) {
             Button(
                 onClick = { showAdvice.value = !showAdvice.value },
                 modifier = Modifier.background(color = Color.LightGray),
@@ -61,6 +68,7 @@ fun AdviceList(currentUserGoalViewModel: CurrentUserGoalViewModel, adviceAPIView
                     )
                 }
             }
+            Spacer(modifier = Modifier.padding(start = 10.dp))
             Text("Advice")
         }
         Row{
@@ -68,13 +76,18 @@ fun AdviceList(currentUserGoalViewModel: CurrentUserGoalViewModel, adviceAPIView
 
                 LazyColumn{
                     if(foundAdvice.size >0) {
-                        foundAdvice.forEach { f ->
+                        foundAdvice.forEachIndexed { index, f ->
                             item {
-                                Text(f.advice)
+                                Row(modifier = Modifier.fillMaxWidth()
+                                    .padding(start=20.dp, end = 20.dp),
+                                    horizontalArrangement = Arrangement.Start)
+                                {
+                                    Text("${index + 1}. ${f.advice}")
+                                }
                             }
                         }
                     }else{
-                        item{
+                        item(){
                             Text("No advice found")
                         }
                     }

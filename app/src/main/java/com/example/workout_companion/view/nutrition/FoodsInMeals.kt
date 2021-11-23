@@ -7,14 +7,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.example.workout_companion.api.edamam.entities.Food
 import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
 import com.example.workout_companion.viewmodel.MealViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 /***
  * Composable to display a column of foods in a meal
@@ -43,18 +50,28 @@ fun FoodsInMeals(
     foodInMealViewModel: FoodInMealViewModel,
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
-    val today = LocalDate.now()
-    val foundFoods =  foodInMealViewModel.getFoodsInMeal(meal, today).observeAsState(listOf()).value
+    LaunchedEffect(key1 = Unit, block = {
+        withContext(Dispatchers.IO) {
+            foodInMealViewModel.getFoodInMeal(meal)
+        }
+
+    })
+    val foundFoods =  foodInMealViewModel.foundFoods.observeAsState().value
+
     if(open.value){
         Column(
             modifier = Modifier.fillMaxHeight()
         ){
             Text("Foods")
-            Column{
+            Column {
                 //display current foods in meal
-                for (food in foundFoods) {
-                    Row {
-                        FoodRow(navController, food)
+                if (foundFoods != null && foundFoods.isNotEmpty()) {
+                    for (food in foundFoods) {
+                        for (f in food.foods) {
+                            Row {
+                                FoodRow(navController, f)
+                            }
+                        }
                     }
                 }
             }

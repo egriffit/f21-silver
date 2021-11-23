@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -18,9 +16,8 @@ import com.example.workout_companion.sampleData.emptyNutritionAPiItem
 import com.example.workout_companion.sampleData.emptyRecipeEntity
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -61,20 +58,31 @@ fun FoundFoods(
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     val foodState = remember { mutableStateOf("") }
-    var dbFoods: List<FoodTypeEntity>? = listOf()
     var dbRecipes: List<RecipeEntity>? = listOf()
+    var dbFoods = SnapshotStateList<FoodTypeEntity>()
     //get foods
     if (food != null) {
         foodState.value = food
-        //1. get existing foods that match the search term from database
-        dbFoods = foodTypeViewModel.getFood(food)
-        //2. get recipes from database that match the search term
-        dbRecipes = recipeViewModel.getRecipe(food)
-        //3. get foods from nutrition api
-        nutritionAPIViewModel.findFood(food)
-    }
-    val apiFoods = nutritionAPIViewModel.foodResults
 
+        LaunchedEffect(key1 = Unit, block = {
+            //1. get existing foods that match the search term from database
+            dbFoods =
+                withContext(Dispatchers.IO){
+                    foodTypeViewModel.getFood(food)
+                    foodTypeViewModel.foodResults
+                }
+
+            //2. get recipes from database that match the search term
+            val dbRecipes =
+                withContext(Dispatchers.IO) {
+                     recipeViewModel.getRecipe(food)
+                }
+            //3. get foods from nutrition api
+            nutritionAPIViewModel.findFood(food)
+        })
+    }
+
+    val apiFoods = nutritionAPIViewModel.foodResults
     //Store foods names in an array with type
     val foodIndexes = mutableListOf<FoodIndex>()
     dbFoods?.forEachIndexed{ index, f ->
@@ -94,6 +102,7 @@ fun FoundFoods(
     //keeps track of indexes, states and entities
     val selectedFoodIndex = remember{mutableStateOf(FoodIndex("", "", 0))}
     val coroutineScope = rememberCoroutineScope()
+
     val selectedFoundAPIFood = remember {mutableStateOf(emptyNutritionAPiItem)}
     val selectedFoodName = remember { mutableStateOf("")}
     val selectedFoundRecipe = remember { mutableStateOf(emptyRecipeEntity)}
@@ -105,7 +114,8 @@ fun FoundFoods(
         topBar = { TopNavigation(navController) },
         bottomBar = {
             Column{
-                Row(modifier = Modifier.padding(start = 100.dp, end = 20.dp)
+                Row(modifier = Modifier
+                    .padding(start = 100.dp, end = 20.dp)
                     .fillMaxWidth()){
                     Button(onClick = {
                         //figure out which food was selected
@@ -195,24 +205,28 @@ fun FoundFoods(
                             selectedFoundAPIFood.value.serving_size_g,
                             selectedFoundAPIFood.value.calories, selectedFoundAPIFood.value.carbohydrates_total_g,
                             selectedFoundAPIFood.value.protein_g, selectedFoundAPIFood.value.fat_total_g)
+
                         coroutineScope.launch(Dispatchers.IO){
-
-                            foodTypeViewModel.addFoodType(foodType)
-                            //retrieve the food id and meal id
-                            delay(1000L)
-
-                            foodTypeViewModel.getId(foodType)
-                            delay(1000L)
-
-                            if (meal != null) {
-                                mealViewModel.getMealId(meal)
-                                delay(1000L)
-                            }
-                            val foodId = foodTypeViewModel.foodID
-                            val mealId = mealViewModel.mealId
+                            val foodId: Int =
+                                withContext(Dispatchers.IO) {
+                                    runBlocking(){
+                                        foodTypeViewModel.addFoodType(foodType)
+                                    }
+                                    runBlocking(){
+                                        foodTypeViewModel.getId(foodType)
+                                    }
+                                    foodTypeViewModel.foodID
+                                }
+                            val mealId: Int =
+                                withContext(Dispatchers.IO) {
+                                    if(meal != null){
+                                        mealViewModel.getMealId(meal)
+                                    }
+                                    mealViewModel.mealId
+                                }
 
                             //create a food_inMeal_object and add to database
-                            if((mealId !=0) &&(foodId !=0)){
+                            if(( mealId != 0) &&(foodId != 0)){
                                 val foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
                                 foodInMealViewModel.insert(foodInMeal)
                                 mealViewModel.addToMeal(foodType.name, foodType.calories, foodType.carbohydrates,

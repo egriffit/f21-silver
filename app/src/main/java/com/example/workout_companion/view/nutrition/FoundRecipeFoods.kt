@@ -6,6 +6,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,7 +48,8 @@ fun FoundRecipeFoods(
     if (food != null) {
         foodState.value = food
         //1. get existing foods that match the search term from database
-        dbFoods = foodTypeViewModel.getFood(food)
+        foodTypeViewModel.getFood(food)
+
         //2. get foods from nutrition api
         nutritionAPIViewModel.findFood(food)
     }
@@ -79,7 +81,8 @@ fun FoundRecipeFoods(
         topBar = { TopNavigation(navController) },
         bottomBar = {
             Column{
-                Row(modifier = Modifier.padding(start = 100.dp, end = 20.dp)
+                Row(modifier = Modifier
+                    .padding(start = 100.dp, end = 20.dp)
                     .fillMaxWidth()){
                     Button(onClick = {
                         //figure out which food was selected

@@ -33,7 +33,7 @@ fun NutritionStatus(
             Text("Calories:   ")
             Text("$currentCal Cal/")
             if (currentGoals?.nutritionPlanType?.calorie != null)
-                Text("$currentGoals.nutritionPlanType.calorie} Cal")
+                Text("${currentGoals.nutritionPlanType.calorie} Cal")
             else {
                 Text("--- Cal")
             }
@@ -45,9 +45,9 @@ fun NutritionStatus(
             Text("Carbohydrates:   ")
             Text("$currentCarbs g/")
             if (currentGoals?.nutritionPlanType?.carbohydrate != null)
-                Text("${currentGoals.nutritionPlanType.carbohydrate} g")
+                Text("${currentGoals.nutritionPlanType.carbohydrate} %")
             else {
-                Text("--- g")
+                Text("--- %")
             }
         }
         Row(
@@ -58,9 +58,9 @@ fun NutritionStatus(
             Text("$currentProtein g/")
             //goal target
             if (currentGoals?.nutritionPlanType?.protein != null)
-                Text("${currentGoals.nutritionPlanType.protein} g")
+                Text("${currentGoals.nutritionPlanType.protein} %")
             else {
-                Text("--- g")
+                Text("--- %")
             }
         }
         Row(
@@ -70,9 +70,9 @@ fun NutritionStatus(
             Text("Fat:   ")
             Text("$currentFat g /")
             if (currentGoals?.nutritionPlanType?.fat != null)
-                Text("${currentGoals.nutritionPlanType.fat} g")
+                Text("${currentGoals.nutritionPlanType.fat} %")
             else {
-                Text("--- g")
+                Text("--- %")
             }
         }
     }

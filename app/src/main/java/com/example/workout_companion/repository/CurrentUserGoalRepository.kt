@@ -33,6 +33,7 @@ class CurrentUserGoalRepository (private val currentUserGoalDao: CurrentUserGoal
     {
         return currentUserGoalDao.currentGoalExists()
     }
+
     /**
      * Adds a CurrentUserGoalEntity to the current_user_goal table
      * if one does not exist

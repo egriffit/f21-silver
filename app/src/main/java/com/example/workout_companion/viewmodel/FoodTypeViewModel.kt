@@ -1,7 +1,9 @@
 package com.example.workout_companion.viewmodel
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.*
+import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.repository.FoodTypeRepository
@@ -16,7 +18,7 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      */
     val getAllFoods: LiveData<List<FoodTypeEntity>>
     var foodID: Int = 0
-
+    val foodResults = mutableStateListOf<FoodTypeEntity>()
     /**
      * FoodType Repository Object
      */
@@ -39,12 +41,22 @@ class FoodTypeViewModel(application: Application) : AndroidViewModel(application
      * @param name, String
      * @return List of FoodTypeEntity objects
      */
-     fun getFood(name: String): List<FoodTypeEntity>?{
-        var food: List<FoodTypeEntity>? = listOf()
-        viewModelScope.launch(Dispatchers.IO){
-            food = repository.getFoodByName(name).value
+     fun getFood(name: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                var foods = repository.getFoodByName(name).value
+                if (foods?.size!! > 0) {
+                    foodResults.clear()
+                    foods?.forEach { food ->
+                        foodResults.add(food)
+                    }
+                } else {
+                    foodResults.clear()
+                }
+            } catch (e: Exception) {
+                foodResults.clear()
+            }
         }
-        return food
     }
 
     /**

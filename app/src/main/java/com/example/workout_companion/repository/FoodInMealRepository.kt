@@ -20,7 +20,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      *
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    suspend fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>> {
+    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>> {
         return foodInMealDao.getFoodInMeal(meal_id)
     }
 
@@ -33,7 +33,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      * @param date, date of meal
      * @return  Int total number of rows found
      */
-    suspend fun getFoodInMeal(type: String, date: LocalDate): LiveData<List<MealWithFoodsEntity>> {
+    fun getFoodInMeal(type: String, date: LocalDate): LiveData<List<MealWithFoodsEntity>> {
         return foodInMealDao.getFoodInMeal(type, date)
     }
 
@@ -43,9 +43,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      * @param meal_id, Int
      * @return List of FoodTypeEntity objects
      */
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getCount(meal_id: Int): Int{
-        val date = LocalDate.now()
+    fun getCount(meal_id: Int): Int{
         return foodInMealDao.getCount(meal_id)
     }
 
@@ -55,8 +53,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      * @param type, name of meal
      * @return List of FoodTypeEntity objects
      */
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getCount(type: String): Int{
+    fun getCount(type: String): Int{
         val date = LocalDate.now()
         return foodInMealDao.getCount(type, date)
     }
@@ -69,8 +66,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      * @return List of FoodTypeEntity objects
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getCount(type: String, date: LocalDate): Int{
-        val date = LocalDate.now()
+    fun getCount(type: String, date: LocalDate): Int{
         return foodInMealDao.getCount(type, date)
     }
 
@@ -117,10 +113,10 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
     }
 
     /**
-     * Delete all foods in  Food_in_meal record  that matches the meal_id
-     * for the integer provided
+     * Delete all foods in  Food_in_meal record  that matches the
+     * FoodInMealEntity provided
      *
-     * @param meal_id, Int
+     * @param item, FoodInMealEntity
      * @return void
      */
     suspend fun delete(item: FoodInMealEntity){

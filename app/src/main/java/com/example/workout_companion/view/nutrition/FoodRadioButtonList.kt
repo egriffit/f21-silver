@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun FoodRadioButtonList(navController: NavController,
                         meal: String,
-                        dbFoods: List<FoodTypeEntity>?,
+                        dbFoods: SnapshotStateList<FoodTypeEntity>?,
                         dbRecipes: List<RecipeEntity>?,
                         apiFoods: SnapshotStateList<ApiNinjaNutrition>,
                         selectedFoodIndex: MutableState<FoodIndex>

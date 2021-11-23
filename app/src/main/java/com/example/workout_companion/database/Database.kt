@@ -28,7 +28,7 @@ import com.example.workout_companion.utility.DateTimeConverter
     //Add all entities to this list
 ],
     views = [FrameworkWithGoalEntity::class],
-version = 27,
+version = 29,
 exportSchema = false)
 @TypeConverters(DateTimeConverter::class)
 abstract class WCDatabase: RoomDatabase() {
@@ -59,7 +59,7 @@ abstract class WCDatabase: RoomDatabase() {
 
         /**
          * Code to instantiate and retrieve the instance of the database
-         * @param Context, the context of the application using the database
+         * @param context, the context of the application using the database
          * @return WCDatabase object
          */
         fun getInstance(context: Context): WCDatabase{

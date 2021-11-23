@@ -22,6 +22,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * FoodType Repoository Object
      */
     private val repository: FoodInMealRepository
+    var foundFoods = MutableLiveData<List<MealWithFoodsEntity>>()
 
     /**
      * Function to initialize the view.
@@ -39,8 +40,8 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      *
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>>?{
-        var mealFoods= MutableLiveData<List<MealWithFoodsEntity>>()
+    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>>{
+        val mealFoods= MutableLiveData<List<MealWithFoodsEntity>>()
         viewModelScope.launch(Dispatchers.IO){
             mealFoods.postValue(repository.getFoodInMeal(meal_id).value)
         }
@@ -80,7 +81,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
     fun getFoodsInMeal(type: String, date: LocalDate): LiveData<List<FoodTypeEntity>> {
         var mealFoods: List<MealWithFoodsEntity>?
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
-        var found= MutableLiveData<List<FoodTypeEntity>>()
+        val found= MutableLiveData<List<FoodTypeEntity>>()
 
         viewModelScope.launch(Dispatchers.IO) {
             mealFoods = repository.getFoodInMeal(type, date).value
@@ -117,14 +118,11 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * @param type, string
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getFoodInMeal(type: String): List<MealWithFoodsEntity>?{
-        var today = LocalDate.now()
-        var mealFoods: List<MealWithFoodsEntity>? = listOf<MealWithFoodsEntity>()
+    fun getFoodInMeal(type: String){
+        val today = LocalDate.now()
         viewModelScope.launch(Dispatchers.IO){
-            mealFoods = repository.getFoodInMeal(type, today).value
+            foundFoods.postValue(repository.getFoodInMeal(type, today).value)
         }
-        return mealFoods
     }
 
     /**
@@ -135,7 +133,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      */
     @RequiresApi(Build.VERSION_CODES.O)
     fun getCount(name: String): Int{
-        var count: Int = 0
+        var count = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount(name)
         }
@@ -151,7 +149,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      */
     @RequiresApi(Build.VERSION_CODES.O)
     fun getCount(type: String, date: LocalDate): Int{
-        var count: Int = 0
+        var count = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount(type, date)
         }
