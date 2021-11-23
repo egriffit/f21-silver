@@ -48,7 +48,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      * @property workout The workout to add
      */
     suspend fun addWorkout(workout: WorkoutEntity) {
-        repository.addWorkout(workout)
+        repository.createWorkout(workout)
     }
 
     /**

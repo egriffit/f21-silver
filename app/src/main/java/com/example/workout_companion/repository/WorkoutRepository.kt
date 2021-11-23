@@ -1,19 +1,23 @@
 package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
-import com.example.workout_companion.dao.WorkoutComponentDao
-import com.example.workout_companion.dao.WorkoutComponentSetDao
-import com.example.workout_companion.dao.WorkoutDao
-import com.example.workout_companion.dao.WorkoutWithComponents
+import com.example.workout_companion.dao.*
+import com.example.workout_companion.entity.WorkoutComponentEntity
+import com.example.workout_companion.entity.WorkoutComponentSetEntity
 import com.example.workout_companion.entity.WorkoutEntity
+import com.example.workout_companion.enumeration.Progress
 import java.time.LocalDate
+import kotlin.math.floor
 
 /**
- * Repository for access to workouts
+ * Repository for accessing, creating, and removing workouts
  *
- * @property workoutDao Dao for accessing the workout tables in the database
+ * @property workoutDao Dao for accessing/modifying the workout tables in the database
+ * @property componentDao Dao for accessing/modifying the workout component tables in the database
+ * @property setDao Dao for accessing/modifying the workout component set tables in the database
  */
-class WorkoutRepository(private val workoutDao: WorkoutDao) {
+class WorkoutRepository(private val workoutDao: WorkoutDao, private val componentDao: WorkoutComponentDao,
+    private val setDao: WorkoutComponentSetDao) {
 
     /**
      * All workouts in the database
@@ -43,12 +47,33 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     }
 
     /**
-     * Adds a workout to the database
+     * Create a workout, its components, and its sets in the database based off of the given
+     * framework day.
      *
-     * @param workout The workout to add
+     * @param frameworkDayWithComponents The framework day that serves as a template for the workout
      */
-    suspend fun addWorkout(workout: WorkoutEntity) {
-        workoutDao.addWorkout(workout)
+    suspend fun createWorkout(frameworkDayWithComponents: FrameworkDayWithComponents) {
+        if (!doesWorkoutExist(LocalDate.now()))
+        {
+            val newWorkout = WorkoutEntity(LocalDate.now(), Progress.IN_PROGRESS, frameworkDayWithComponents.day.id)
+            workoutDao.addWorkout(newWorkout)
+
+            for (component in frameworkDayWithComponents.components) {
+                val newComponent = WorkoutComponentEntity(newWorkout.date, component.id)
+                componentDao.addWorkoutComponent(newComponent)
+
+                var leftoverReps: Int = component.target_reps % component.target_sets
+                val repsPerSet = floor((component.target_reps / component.target_sets).toDouble()).toInt()
+
+                for (i in 1..component.target_sets) {
+                    val reps = repsPerSet + if (leftoverReps > 0) leftoverReps-- else 0
+
+                    // We are leaving all other inputs as defaults
+                    val newSet = WorkoutComponentSetEntity(workout_component_id = component.id, reps = reps)
+                    setDao.addSet(newSet)
+                }
+            }
+        }
     }
 
     /**
@@ -67,5 +92,9 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
      */
     suspend fun deleteWorkout(workout: WorkoutEntity) {
         workoutDao.deleteWorkout(workout)
+    }
+
+    fun doesWorkoutExist(date: LocalDate) : Boolean {
+        return workoutDao.getNumberOfWorkouts(date) != 0
     }
 }

@@ -12,7 +12,7 @@ import com.example.workout_companion.enumeration.ProgressConverter
  * @param reps The repetitions performed during this set
  * @param weight The weight used during this set
  * @param status The state of the set
- * @param wger_id The foreign key id of the wger exercise
+ * @param wger_id The foreign key id of the wger exercise or null if it is not selected
  */
 @Entity(tableName = "workout_component_set",
         foreignKeys = [
@@ -25,23 +25,26 @@ import com.example.workout_companion.enumeration.ProgressConverter
         ]
 )
 data class WorkoutComponentSetEntity(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int,
+    var id: Int = 0,
 
     @ColumnInfo(name = "workout_component_id", index = true)
     var workout_component_id: Int,
 
     @ColumnInfo(name = "reps")
-    var reps: Int,
+    var reps: Int = 0,
 
     @ColumnInfo(name = "weight")
-    var weight: Double,
+    var weight: Double = 0.0,
 
     @TypeConverters(ProgressConverter::class)
     @ColumnInfo(name = "status")
-    var status: Progress,
+    var status: Progress = Progress.IN_PROGRESS,
 
     @ColumnInfo(name = "wger_id")
-    var wger_id: Int,
-)
+    var wger_id: Int? = null,
+) {
+    constructor(componentId: Int, reps: Int, weight: Double, status: Progress, wgerId: Int?) :
+            this(0, componentId, reps, weight, status, wgerId)
+}

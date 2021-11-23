@@ -28,9 +28,9 @@ import java.time.LocalDate
     ]
 )
 data class WorkoutComponentEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int,
+    var id: Int = 0,
 
     @TypeConverters(DateTimeConverter::class)
     @ColumnInfo(name = "workout_date", index = true)
@@ -38,4 +38,6 @@ data class WorkoutComponentEntity(
 
     @ColumnInfo(name = "component_id", index = true)
     var component_id: Int,
-)
+) {
+    constructor(date: LocalDate, componentId: Int) : this(0, date, componentId)
+}

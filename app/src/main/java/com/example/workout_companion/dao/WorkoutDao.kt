@@ -50,16 +50,6 @@ data class WorkoutWithComponents(
 interface WorkoutDao {
 
     /**
-     * Returns a workout with its components
-     *
-     * @param date The date of the workout
-     *
-     * @return The workout and its components
-     */
-    @Query("SELECT * FROM workout WHERE workout.date = :date")
-    fun getWorkoutWithComponents(date: LocalDate): LiveData<WorkoutWithComponents>
-
-    /**
      * Gets all workouts in the database
      *
      * @return A LiveData list of the workouts
@@ -76,6 +66,24 @@ interface WorkoutDao {
      */
     @Query("SELECT * FROM workout WHERE date=:date")
     fun getWorkoutOnDate(date: LocalDate): LiveData<WorkoutEntity>
+
+    /**
+     * Returns a workout with its components
+     *
+     * @param date The date of the workout
+     *
+     * @return The workout and its components
+     */
+    @Query("SELECT * FROM workout WHERE workout.date = :date")
+    fun getWorkoutWithComponents(date: LocalDate): LiveData<WorkoutWithComponents>
+
+    /**
+     * Returns the number of workouts on the given day
+     *
+     * @param date The date of the workout
+     */
+    @Query("SELECT COUNT(*) FROM workout WHERE workout.date = :date")
+    fun getNumberOfWorkouts(date: LocalDate): Int
 
     /**
      * Adds a workout to the database
