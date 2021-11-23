@@ -1,13 +1,21 @@
 package com.example.workout_companion.enumeration
 
 import androidx.room.TypeConverter
+import com.example.workout_companion.api.wger.utility.muscleName
 import java.lang.IllegalArgumentException
 
 /**
  * Enumeration of all muscle groups
  */
-enum class MuscleGroup {
-    CHEST, BACK, TRICEPS, BICEPS, SHOULDERS, ABS, LEGS, CALVES
+enum class MuscleGroup(val wgerMuscles: List<muscleName>) {
+    CHEST(listOf(muscleName.PECTORALIS_MAJOR, muscleName.SERRATUS_ANTERIOR)),
+    BACK(listOf(muscleName.TRAPEZIUS, muscleName.LATISSIMUS_DORSI)),
+    TRICEPS(listOf(muscleName.TRICEPS_BRACHII)),
+    BICEPS(listOf(muscleName.BICEPS_BRACHII, muscleName.BICEPS_FEMORIS, muscleName.BRACHIALIS)),
+    SHOULDERS(listOf(muscleName.ANTERIOR_DELTOID)),
+    ABS(listOf(muscleName.RECTUS_ADOMINIS, muscleName.OBLIQUUS_EXTERNUS_ABDOMINIS)),
+    LEGS(listOf(muscleName.GLUTEUS_MAXIMUS, muscleName.QUADRICEPS_FEMORIS)),
+    CALVES(listOf(muscleName.GASTROCNEMIUS, muscleName.SOLEUS)),
 }
 
 /**
