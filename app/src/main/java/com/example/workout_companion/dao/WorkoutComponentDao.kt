@@ -23,7 +23,9 @@ interface WorkoutComponentDao {
     /**
      * Adds a workout component to the database
      *
-     * @param workoutComponent The set to add.
+     * @param workoutComponent The component to add.
+     *
+     * @return The primary key of the new component
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addWorkoutComponent(workoutComponent: WorkoutComponentEntity): Long
@@ -31,7 +33,7 @@ interface WorkoutComponentDao {
     /**
      * Updates a workout component in the database
      *
-     * @param workoutComponent The set to update.
+     * @param workoutComponent The component to update.
      */
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateWorkoutComponent(workoutComponent: WorkoutComponentEntity)
@@ -39,7 +41,7 @@ interface WorkoutComponentDao {
     /**
      * Deletes a workout component from the database
      *
-     * @param workoutComponent The set to delete.
+     * @param workoutComponent The component to delete.
      */
     @Delete
     suspend fun deleteWorkoutComponent(workoutComponent: WorkoutComponentEntity)

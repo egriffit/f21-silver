@@ -3,6 +3,7 @@ package com.example.workout_companion.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.example.workout_companion.dao.FrameworkDayWithComponents
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.WorkoutEntity
 import com.example.workout_companion.repository.WorkoutRepository
@@ -34,7 +35,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     /**
      * Get a workout from the database on a specific date
      *
-     * @property date The date of the workout
+     * @param date The date of the workout
      *
      * @return The workout from the specific date
      */
@@ -43,18 +44,19 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     /**
-     * Add a workout to the database
+     * Add a workout, its components, and its sets to the database, using the framework day as
+     * a template for its construction
      *
-     * @property workout The workout to add
+     * @param frameworkDayWithComponents The framework day that serves as a template for the workout
      */
-    /*suspend fun addWorkout(workout: WorkoutEntity) {
-        repository.createWorkout(workout)
-    }*/
+    suspend fun createWorkout(frameworkDayWithComponents: FrameworkDayWithComponents) {
+        repository.createWorkout(frameworkDayWithComponents)
+    }
 
     /**
      * Update a workout in the database
      *
-     * @property workout The workout to update
+     * @param workout The workout to update
      */
     suspend fun updateWorkout(workout: WorkoutEntity) {
         repository.updateWorkout(workout)
@@ -63,7 +65,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     /**
      * Delete a workout from the database
      *
-     * @property workout The workout to delete
+     * @param workout The workout to delete
      */
     suspend fun deleteWorkout(workout: WorkoutEntity) {
         repository.deleteWorkout(workout)
