@@ -190,7 +190,7 @@ class TestDataGenerator {
             }
         }
 
-        private var nextWorkoutComponentId = 0
+        private var nextWorkoutComponentId = 1
         val WORKOUT_0_COMPONENTS: List<WorkoutComponentEntity> = listOf(
             WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[0].id),
             WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[1].id),
@@ -224,7 +224,7 @@ class TestDataGenerator {
             }
         }
 
-        var nextComponentSetId = 0
+        var nextComponentSetId = 1
         val WORKOUT_0_COMPONENT_0_SETS = listOf(
             WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 100.0, Progress.NOT_STARTED, 0),
             WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 110.0, Progress.NOT_STARTED, 0),
