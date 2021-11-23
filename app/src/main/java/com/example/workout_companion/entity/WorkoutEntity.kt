@@ -21,7 +21,7 @@ import java.time.LocalDate
         )]
 )
 data class WorkoutEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "date")
     @TypeConverters(DateTimeConverter::class)
     var date: LocalDate,

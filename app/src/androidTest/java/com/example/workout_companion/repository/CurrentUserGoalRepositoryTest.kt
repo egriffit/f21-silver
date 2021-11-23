@@ -118,20 +118,14 @@ class CurrentUserGoalRepositoryTest: TestCase(){
     fun currentGoalExists() = runBlocking{
         val currentGoal = CurrentUserGoalEntity(1, 1, 4)
         repository.addCurrentUserGoals(currentGoal)
-        val exists: Boolean? = repository.currentGoalExists.value
-        if (exists != null) {
-            assertTrue(exists)
-        }
+        assertTrue(repository.currentGoalExists())
     }
 
     @Test
     fun addCurrentUserGoals() = runBlocking{
         val currentGoal = CurrentUserGoalEntity(1, 1, 4)
         repository.addCurrentUserGoals(currentGoal)
-        val exists: Boolean? = repository.currentGoalExists.value
-        if (exists != null) {
-            assertTrue(exists)
-        }
+        assertTrue(repository.currentGoalExists())
     }
 
     @Test
