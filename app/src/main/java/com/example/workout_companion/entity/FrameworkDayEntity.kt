@@ -13,11 +13,11 @@ import androidx.room.PrimaryKey
  * @property name               the name of the day
  */
 @Entity(tableName = "framework_day",
-//        foreignKeys = [ForeignKey(entity = FrameworkTypeEntity::class,
-//            parentColumns = ["id"],
-//            childColumns = ["framework_type_id"],
-//            onDelete = ForeignKey.CASCADE)
-//        ]
+        foreignKeys = [ForeignKey(entity = FrameworkTypeEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["framework_type_id"],
+            onDelete = ForeignKey.CASCADE)
+        ]
 )
 data class FrameworkDayEntity(
     @PrimaryKey(autoGenerate = false)

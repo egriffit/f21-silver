@@ -2,8 +2,27 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.FrameworkComponentEntity
 import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.entity.FrameworkTypeEntity
+
+/**
+ * Container class that facilitates collecting a framework day and its components with a single query
+ *
+ * @property day The framework day
+ * @property components The list of components for the given day
+ */
+data class FrameworkDayWithComponents(
+    @Embedded
+    val day: FrameworkDayEntity,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "framework_day_id",
+        entity = FrameworkComponentEntity::class,
+    )
+    val components: List<FrameworkComponentEntity>
+)
 
 @Dao
 interface FrameworkDayDao {
@@ -15,6 +34,12 @@ interface FrameworkDayDao {
      */
     @Query("SELECT * FROM framework_day WHERE framework_type_id = :framework_id")
     fun getAllFrameworkDays(framework_id: Int) : LiveData<List<FrameworkDayEntity>>
+
+    /**
+     * Gets all days in a given framework along with their components
+     */
+    @Query("SELECT * FROM framework_day WHERE framework_type_id = :frameworkId")
+    fun getFrameworkDaysWithComponents(frameworkId: Int): LiveData<List<FrameworkDayWithComponents>>
 
     /**
      * Get count for frameworks with the name and id
