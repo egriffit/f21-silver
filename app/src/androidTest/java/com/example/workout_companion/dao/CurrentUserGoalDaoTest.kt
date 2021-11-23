@@ -111,8 +111,9 @@ class CurrentUserGoalDaoTest : TestCase() {
 
         val currentGoal = CurrentUserGoalEntity(1, 1, 4)
         dao.addCurrentUserGoal(currentGoal)
-        val exists: Boolean? = dao.currentGoalExists().value
-        if (exists != null) {
+        dao.currentGoalExists()
+        val exists: Boolean= dao.currentGoalExists()
+        if (exists != null){
             assertTrue(exists)
         }
     }
