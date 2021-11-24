@@ -75,7 +75,7 @@ class FoodInMealDaoTest : TestCase(){
     @Test
     fun TestGetFoodInMeal() = runBlocking(){
 
-        val found: List<MealWithFoodsEntity>? = dao.getFoods(2).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoods(2)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for(m in found ){
@@ -94,7 +94,7 @@ class FoodInMealDaoTest : TestCase(){
     fun TestGetFoodInMealByName() = runBlocking(){
         val date = LocalDate.of(2021, Month.OCTOBER, 23)
 
-        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal("breakfast", date).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal("breakfast", date)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for(m in found ){
@@ -113,7 +113,7 @@ class FoodInMealDaoTest : TestCase(){
     fun TestGetFoodCountInMeal() = runBlocking(){
         val date = LocalDate.of(2021, Month.OCTOBER, 23)
 
-        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal("breakfast", date).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal("breakfast", date)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for(m in found ){
@@ -132,7 +132,7 @@ class FoodInMealDaoTest : TestCase(){
     fun TestGetFoodCountInMeal2() = runBlocking(){
         val date = LocalDate.of(2021, Month.OCTOBER, 23)
 
-        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for(m in found ){
@@ -153,7 +153,7 @@ class FoodInMealDaoTest : TestCase(){
 
         val foodToUpdate = FoodInMealEntity(2, 2, 2.0)
         dao.update(foodToUpdate)
-        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for (m in found) {
@@ -168,7 +168,7 @@ class FoodInMealDaoTest : TestCase(){
         val date = LocalDate.of(2021, Month.OCTOBER, 23)
         val foodToDelete = FoodInMealEntity(2, 1, 2.0)
         dao.delete(foodToDelete)
-        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for (m in found) {
@@ -186,7 +186,7 @@ class FoodInMealDaoTest : TestCase(){
         val date = LocalDate.of(2021, Month.OCTOBER, 23)
         val foodToDelete = FoodInMealEntity(2, 1, 2.0)
         dao.delete(2)
-        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2).getOrAwaitValue()
+        val found: List<MealWithFoodsEntity>? = dao.getFoodInMeal(2)
         val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
         if (found != null) {
             for (m in found) {

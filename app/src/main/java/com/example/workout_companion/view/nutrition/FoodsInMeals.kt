@@ -50,13 +50,13 @@ fun FoodsInMeals(
     foodInMealViewModel: FoodInMealViewModel,
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
+    val foundFoods =  foodInMealViewModel.foundFoods.observeAsState().value
     LaunchedEffect(key1 = Unit, block = {
         withContext(Dispatchers.IO) {
             foodInMealViewModel.getFoodInMeal(meal)
         }
 
     })
-    val foundFoods =  foodInMealViewModel.foundFoods.observeAsState().value
 
     if(open.value){
         Column(

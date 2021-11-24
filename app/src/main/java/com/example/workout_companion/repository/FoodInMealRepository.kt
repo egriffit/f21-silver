@@ -20,7 +20,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      *
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>> {
+    fun getFoodInMeal(meal_id: Int): List<MealWithFoodsEntity> {
         return foodInMealDao.getFoodInMeal(meal_id)
     }
 
@@ -33,7 +33,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      * @param date, date of meal
      * @return  Int total number of rows found
      */
-    fun getFoodInMeal(type: String, date: LocalDate): LiveData<List<MealWithFoodsEntity>> {
+    fun getFoodInMeal(type: String, date: LocalDate): List<MealWithFoodsEntity> {
         return foodInMealDao.getFoodInMeal(type, date)
     }
 

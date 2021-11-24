@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
+import com.example.workout_companion.api.edamam.entities.Food
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.*
 import com.example.workout_companion.repository.CurrentUserGoalRepository
@@ -23,7 +24,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      */
     private val repository: FoodInMealRepository
     var foundFoods = MutableLiveData<List<MealWithFoodsEntity>>()
-
+    var mealFoodList = MutableLiveData<List<FoodTypeEntity>>()
     /**
      * Function to initialize the view.
      * Initializes the WCDatabase, repository and the list of all FoodType entities
@@ -40,12 +41,10 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      *
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>>{
-        val mealFoods= MutableLiveData<List<MealWithFoodsEntity>>()
+    fun getFoodInMeal(meal_id: Int) {
         viewModelScope.launch(Dispatchers.IO){
-            mealFoods.postValue(repository.getFoodInMeal(meal_id).value)
+            foundFoods.postValue(repository.getFoodInMeal(meal_id))
         }
-        return mealFoods
     }
 
     /**
@@ -55,45 +54,36 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * @parm meal_id, Int
      * @return List<FoodTypeEntity> a list of FoodTypeEntity objects
      */
-    fun getFoodsInMeal(meal_id: Int): List<FoodTypeEntity> {
-        var mealFoods: List<MealWithFoodsEntity>?
-        val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
-
+    fun getFoodsInMeal(meal_id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            mealFoods = repository.getFoodInMeal(meal_id).value
-            if (mealFoods != null) {
-                for (m in mealFoods!!) {
-                    foundFoods.add(m.foods.elementAt(0))
+            foundFoods.postValue(repository.getFoodInMeal(meal_id))
+            if (foundFoods != null) {
+                foundFoods.value?.forEach { m ->
+                    mealFoodList.postValue(m.foods)
                 }
             }
         }
-        return foundFoods
     }
 
-    /**
-     * Retrieves a List of Foods for a meal with the name and date
-     * equal to the string and LocalDate provided
-     *
-     * @param type, String
-     * @param date, LocalDate
-     * @return List<FoodTypeEntity> a list of FoodTypeEntity objects
-     */
-    fun getFoodsInMeal(type: String, date: LocalDate): LiveData<List<FoodTypeEntity>> {
-        var mealFoods: List<MealWithFoodsEntity>?
-        val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
-        val found= MutableLiveData<List<FoodTypeEntity>>()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            mealFoods = repository.getFoodInMeal(type, date).value
-            if (mealFoods != null) {
-                for (m in mealFoods!!) {
-                    foundFoods.add(m.foods.elementAt(0))
-                }
-            }
-        }
-        found.postValue(foundFoods)
-        return found
-    }
+//    /**
+//     * Retrieves a List of Foods for a meal with the name and date
+//     * equal to the string and LocalDate provided
+//     *
+//     * @param type, String
+//     * @param date, LocalDate
+//     * @return List<FoodTypeEntity> a list of FoodTypeEntity objects
+//     */
+//    fun getFoodsInMeal(type: String, date: LocalDate): LiveData<List<FoodTypeEntity>> {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            foundFoods.postValue(repository.getFoodInMeal(type, date))
+//            if (foundFoods != null) {
+//                foundFoods.value.forEach{ m ->
+//                    mealFoodList.postValue(m.Foods)
+//                }
+//            }
+//        }
+//
+//    }
 
     /**
      * Retrieves a List of Foods for a meal with the name and date
@@ -103,12 +93,10 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * @param date, LocalDate
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    fun getFoodInMeal(type: String, date: LocalDate): List<MealWithFoodsEntity>?{
-        var mealFoods: List<MealWithFoodsEntity>? = listOf<MealWithFoodsEntity>()
+    fun getFoodInMeal(type: String, date: LocalDate){
         viewModelScope.launch(Dispatchers.IO){
-            mealFoods = repository.getFoodInMeal(type, date).value
+            foundFoods.postValue(repository.getFoodInMeal(type, date))
         }
-        return mealFoods
     }
 
     /**
@@ -121,7 +109,7 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
     fun getFoodInMeal(type: String){
         val today = LocalDate.now()
         viewModelScope.launch(Dispatchers.IO){
-            foundFoods.postValue(repository.getFoodInMeal(type, today).value)
+            foundFoods.postValue(repository.getFoodInMeal(type, today))
         }
     }
 
@@ -165,7 +153,6 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
             repository.insert(item)
         }
     }
-
     /**
      * Function to initialize a coroutine to add a list of FoodInMealEntity objects to the database
      * @param item, a List<FoodInMealEntity>
@@ -222,24 +209,5 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch(Dispatchers.IO){
             repository.deleteAll()
         }
-    }
-}
-/**
- * FoodTypeViewModel Factory class that is used to initialize the FoodTypeViewModel
- * @param application context
- * @return ViewModelProvider.Factory
- */
-class FoodInMealViewModelFactory(
-    private val application: Application
-): ViewModelProvider.Factory{
-    /**
-     * Method to create an instance of the UserModelView
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T{
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(FoodInMealViewModel::class.java)) {
-            return FoodInMealViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
     }
 }

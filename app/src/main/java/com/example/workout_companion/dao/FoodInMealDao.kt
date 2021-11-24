@@ -31,7 +31,7 @@ interface FoodInMealDao {
         ON a.food_id = food_type.id
         WHERE a.meal_id = :meal_id
     """)
-    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>>
+    fun getFoodInMeal(meal_id: Int): List<MealWithFoodsEntity>
 
     /**
      * Retrieves a List of Foods for a meal with the meal_id
@@ -45,7 +45,7 @@ interface FoodInMealDao {
         FROM food_in_meal
         WHERE meal_Id = :meal_id
     """)
-    fun getFoods(meal_id: Int): LiveData<List<MealWithFoodsEntity>>
+    fun getFoods(meal_id: Int): List<MealWithFoodsEntity>
 
     /**
      * Retrieves a List of Foods for a meal with the name and date
@@ -66,7 +66,7 @@ interface FoodInMealDao {
         WHERE a.type = :type
         AND a.date = :date
     """)
-    fun getFoodInMeal(type: String, date: LocalDate): LiveData<List<MealWithFoodsEntity>>
+    fun getFoodInMeal(type: String, date: LocalDate): List<MealWithFoodsEntity>
 
 
     /**

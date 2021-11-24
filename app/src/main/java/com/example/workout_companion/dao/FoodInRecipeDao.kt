@@ -61,7 +61,7 @@ interface FoodInRecipeDao {
         ON a.food_id = food_type.id
         WHERE a.name = :name
     """)
-    fun getFoodInRecipes(name: String): LiveData<List<RecipeWithFoodsEntity>>
+    fun getFoodInRecipes(name: String): List<RecipeWithFoodsEntity>
 
 
     /**
