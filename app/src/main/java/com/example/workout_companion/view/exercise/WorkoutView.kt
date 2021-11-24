@@ -1,10 +1,7 @@
 package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.entity.WorkoutEntity
 import com.example.workout_companion.enumeration.Progress
+import com.example.workout_companion.view.userform.userIsValid
 import kotlinx.coroutines.flow.combineTransform
 import java.time.LocalDate
 
@@ -52,9 +50,22 @@ fun WorkoutView(workoutState: State<WorkoutWithComponents?>) {
                     }
                 }
             }
-            else
-            {
+            else {
                 // TODO: load the workout here
+
+                OutlinedButton(
+                    onClick = {
+                        val temp = "temp"
+                    }) {
+                    Text("Submit")
+                }
+                Spacer(modifier = Modifier.padding(end = 10.dp))
+                OutlinedButton(
+                    onClick = {
+                        val temp = "temp"
+                    }) {
+                    Text("Cancel")
+                }
             }
         }
     }
