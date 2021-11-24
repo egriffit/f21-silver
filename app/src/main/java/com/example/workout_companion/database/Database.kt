@@ -42,6 +42,7 @@ abstract class WCDatabase: RoomDatabase() {
     abstract fun frameworkTypeDao(): FrameworkTypeDao
     abstract fun frameworkDayDao(): FrameworkDayDao
     abstract fun frameworkComponentDao(): FrameworkComponentDao
+    abstract fun completeFrameworkDao(): CompleteFrameworkDao
     abstract fun foodTypeDao(): FoodTypeDao
     abstract fun mealDao(): MealDao
     abstract fun foodInMealDao(): FoodInMealDao

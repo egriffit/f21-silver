@@ -1,7 +1,8 @@
 package com.example.workout_companion.view
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -9,19 +10,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
+import androidx.test.core.app.ActivityScenario.launch
+import com.example.workout_companion.view.exercise.WorkoutView
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 @SuppressLint("NewApi")
 @Composable
 fun MainNavigation(viewModelProvider: ViewModelProvider) {
+    val coroutineScope = rememberCoroutineScope()
+
     // Put the view models you need here
     val goalTypeViewModel by lazy { viewModelProvider.get(GoalTypeViewModel::class.java) }
     val nutritionPlanTypeViewModel by lazy {viewModelProvider.get(NutritionPlanTypeViewModel::class.java) }
     val frameworkTypeViewModel by lazy { viewModelProvider.get(FrameworkTypeViewModel::class.java) }
-    val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
-    val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java) }
     val userViewModel by lazy { viewModelProvider.get(UserViewModel::class.java) }
     val userWithGoalViewModel by lazy { viewModelProvider.get(UserWithGoalViewModel::class.java) }
     val mealViewModel by lazy { viewModelProvider.get(MealViewModel::class.java) }
@@ -31,12 +38,17 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val recipeViewModel by lazy { viewModelProvider.get(RecipeViewModel::class.java) }
     val foodInRecipeViewModel by lazy { viewModelProvider.get(FoodInRecipeViewModel::class.java) }
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
+    val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
 
-    goalTypeViewModel.loadGoals()
-    frameworkTypeViewModel.loadFrameworks()
-    frameworkDayViewModel.loadFrameworkDays()
-    frameworkComponentViewModel.loadFrameworkComponents()
+    LaunchedEffect(coroutineScope) {
+        val job = goalTypeViewModel.loadGoals()
+        job.join() // Wait for the goals to be made before making the frameworks
+        frameworkTypeViewModel.loadFrameworks()
+    }
+
+    val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
+
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
         composable (route = "splashScreen") {
@@ -49,7 +61,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            ExerciseOverview(navController)
+            ExerciseOverview(navController, workoutState)
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,

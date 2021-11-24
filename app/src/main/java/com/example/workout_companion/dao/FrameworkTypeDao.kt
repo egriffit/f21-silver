@@ -2,6 +2,7 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
 
@@ -16,10 +17,11 @@ interface FrameworkTypeDao {
     /**
      * Get all frameworks within the FrameworkTypeEntity table
      *
-     * @return a LiveData List of all frameworks.
+     * @return a LiveData list of all frameworks.
      */
     @Query("SELECT * FROM framework_type")
     fun getAllFrameworks(): LiveData<List<FrameworkTypeEntity>>
+
 
     /**
      * Get a framework by its primary key, id
@@ -30,6 +32,7 @@ interface FrameworkTypeDao {
      */
     @Query("SELECT * FROM framework_type WHERE id=:framework_id")
     fun getFrameworkById(framework_id: Int): FrameworkTypeEntity?
+
 
     /**
      * Get all frameworks whose number of workouts per week is less than or equal to [maxNumWorkouts]

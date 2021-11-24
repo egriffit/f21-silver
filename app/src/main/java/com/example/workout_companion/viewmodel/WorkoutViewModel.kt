@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.workout_companion.dao.FrameworkDayWithComponents
+import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.WorkoutEntity
 import com.example.workout_companion.repository.WorkoutRepository
@@ -41,6 +42,10 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      */
     fun getWorkoutOnDate(date: LocalDate): LiveData<WorkoutEntity> {
         return repository.getWorkoutOnDate(date)
+    }
+
+    fun getTodaysWorkoutWithComponents(): LiveData<WorkoutWithComponents> {
+        return repository.getWorkoutWithComponents(LocalDate.now())
     }
 
     /**
