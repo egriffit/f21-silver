@@ -74,6 +74,7 @@ interface WorkoutDao {
      *
      * @return The workout and its components
      */
+    @Transaction
     @Query("SELECT * FROM workout WHERE workout.date = :date")
     fun getWorkoutWithComponents(date: LocalDate): LiveData<WorkoutWithComponents>
 
