@@ -59,8 +59,8 @@ fun FoundFoods(
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     val foodState = remember { mutableStateOf("") }
-    var dbRecipes = recipeViewModel.foundRecipes.observeAsState().value
-    var dbFoods = foodTypeViewModel.foodResults.observeAsState().value
+    var dbRecipes = recipeViewModel.foundRecipes.observeAsState(listOf()).value
+    var dbFoods = foodTypeViewModel.foodResults.observeAsState(listOf()).value
     val mealId = mealViewModel.mealId.observeAsState().value
     val foodId = foodTypeViewModel.foodID.observeAsState().value
     val recipeId = recipeViewModel.recipeID.observeAsState().value

@@ -5,11 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -21,6 +18,7 @@ import com.example.workout_companion.viewmodel.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /***
  * Composable to display a the found foods from the Nutrition API
@@ -43,18 +41,21 @@ fun FoundRecipeFoods(
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
     val foodState = remember { mutableStateOf("") }
-    var dbFoods: List<FoodTypeEntity>? = listOf()
+    var dbFoods = foodTypeViewModel.foodResults.observeAsState().value
     val foodId = foodTypeViewModel.foodID.observeAsState().value
     val recipeId = recipeViewModel.recipeID.observeAsState().value
 
     //get foods
     if (food != null) {
-        foodState.value = food
-        //1. get existing foods that match the search term from database
-        foodTypeViewModel.getFood(food)
+        LaunchedEffect(key1 = Unit, block = {
+            //1. get existing foods that match the search term from database
+            withContext(Dispatchers.IO){
+                foodTypeViewModel.getFood(food)
+            }
 
-        //2. get foods from nutrition api
-        nutritionAPIViewModel.findFood(food)
+            //2. get foods from nutrition api
+            nutritionAPIViewModel.findFood(food)
+        })
     }
     val apiFoods = nutritionAPIViewModel.foodResults
 

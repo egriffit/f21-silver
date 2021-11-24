@@ -89,6 +89,7 @@ fun FoodRadioButtonList(navController: NavController,
             if(dbRecipes.isEmpty()){
                 Text("No recipes with this name were found in the database")
             }else{
+                Text("Recipes from the database")
                 dbRecipes.forEachIndexed { index, it ->
                     Row {
                         RadioButton(

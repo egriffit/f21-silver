@@ -135,7 +135,23 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 )
             ){ backStackEntry ->
             RecipeView(navController,
-                backStackEntry.arguments?.getString("name")
+                backStackEntry.arguments?.getString("name"),
+                recipeViewModel,
+                foodInRecipeViewModel
+            )
+        }
+        composable(route = "addRecipeFoods/{name}/{meal}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("meal") { type = NavType.StringType }
+
+            )
+        ){ backStackEntry ->
+            RecipeView(navController,
+                backStackEntry.arguments?.getString("name"),
+                backStackEntry.arguments?.getString("meal"),
+                recipeViewModel,
+                foodInRecipeViewModel
             )
         }
         composable (route = "UpdateGoals") {
