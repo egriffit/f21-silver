@@ -5,7 +5,9 @@ import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.GoalTypeEntity
 import com.example.workout_companion.repository.GoalTypeRepository
+import com.example.workout_companion.database.GOALS
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.IllegalArgumentException
@@ -55,14 +57,9 @@ class GoalTypeViewModel(application: Application): AndroidViewModel(application)
      * Function to load goals in the database
      *
      */
-    fun loadGoals() {
-        viewModelScope.launch(Dispatchers.IO){
-            val goals: List<GoalTypeEntity> = listOf(
-                GoalTypeEntity(1, "Gain Strength", -1),
-                GoalTypeEntity(2, "Gain Mass", -1),
-                GoalTypeEntity(3, "Lose Weight", -1)
-            )
-            repository.addGoal(goals)
+    fun loadGoals() : Job = viewModelScope.launch(Dispatchers.IO) {
+        for(goal in GOALS.values) {
+            repository.addGoal(goal)
         }
     }
 }

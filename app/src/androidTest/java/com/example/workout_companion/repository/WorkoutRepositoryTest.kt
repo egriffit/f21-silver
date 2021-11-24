@@ -6,9 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.workout_companion.dao.FrameworkDayDao
-import com.example.workout_companion.dao.FrameworkDayWithComponents
-import com.example.workout_companion.dao.WorkoutWithComponents
+import com.example.workout_companion.dao.*
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.enumeration.Progress
 import com.example.workout_companion.utility.TestDataGenerator
@@ -30,15 +28,15 @@ class WorkoutRepositoryTest : TestCase() {
 
     private lateinit var db: WCDatabase
     private lateinit var repository: WorkoutRepository
-    private lateinit var frameworkDayDao: FrameworkDayDao
-    private lateinit var framework0DaysWithComponents: LiveData<List<FrameworkDayWithComponents>>
+    private lateinit var completeDao: CompleteFrameworkDao
+    private lateinit var framework0WithDays: LiveData<FrameworkWithDays>
 
     @Before
     public override fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, WCDatabase::class.java).build()
         repository = WorkoutRepository(db.workoutDao(), db.workoutComponentDao(), db.workoutComponentSetDao())
-        frameworkDayDao = db.frameworkDayDao()
+        completeDao = db.completeFrameworkDao()
 
         // The workouts need framework days and components
         TestDataGenerator.addGoalsToDB(db)
@@ -46,7 +44,7 @@ class WorkoutRepositoryTest : TestCase() {
         TestDataGenerator.addFrameworkDaysToDB(db)
         TestDataGenerator.addFrameworkComponentsToDB(db)
 
-        framework0DaysWithComponents = frameworkDayDao.getFrameworkDaysWithComponents(TestDataGenerator.GOAL_0_FRAMEWORKS[0].id)
+        framework0WithDays = completeDao.getFrameworkWithDaysById(TestDataGenerator.GOAL_0_FRAMEWORKS[0].id)
     }
 
     @After
@@ -90,7 +88,7 @@ class WorkoutRepositoryTest : TestCase() {
 
     @Test
     fun createWorkoutTest() = runBlocking {
-        val frameworkDay0 = framework0DaysWithComponents.getOrAwaitValue()[0]
+        val frameworkDay0 = framework0WithDays.getOrAwaitValue().days[0]
         repository.createWorkout(frameworkDay0)
 
         val workoutWithComponents = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
@@ -99,7 +97,7 @@ class WorkoutRepositoryTest : TestCase() {
 
     @Test
     fun updateWorkoutTest() = runBlocking {
-        val frameworkDay1 = framework0DaysWithComponents.getOrAwaitValue()[1]
+        val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
         repository.createWorkout(frameworkDay1)
 
         val updatedWorkout = repository.getWorkoutOnDate(LocalDate.now()).getOrAwaitValue()
@@ -113,7 +111,7 @@ class WorkoutRepositoryTest : TestCase() {
 
     @Test
     fun deleteWorkoutTest() = runBlocking {
-        val frameworkDay1 = framework0DaysWithComponents.getOrAwaitValue()[1]
+        val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
         repository.createWorkout(frameworkDay1)
 
         val workoutWithComponents = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()

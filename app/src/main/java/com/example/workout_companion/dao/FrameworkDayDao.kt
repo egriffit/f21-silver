@@ -6,24 +6,6 @@ import com.example.workout_companion.entity.FrameworkComponentEntity
 import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.entity.FrameworkTypeEntity
 
-/**
- * Container class that facilitates collecting a framework day and its components with a single query
- *
- * @property day The framework day
- * @property components The list of components for the given day
- */
-data class FrameworkDayWithComponents(
-    @Embedded
-    val day: FrameworkDayEntity,
-
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "framework_day_id",
-        entity = FrameworkComponentEntity::class,
-    )
-    val components: List<FrameworkComponentEntity>
-)
-
 @Dao
 interface FrameworkDayDao {
 
@@ -34,12 +16,6 @@ interface FrameworkDayDao {
      */
     @Query("SELECT * FROM framework_day WHERE framework_type_id = :framework_id")
     fun getAllFrameworkDays(framework_id: Int) : LiveData<List<FrameworkDayEntity>>
-
-    /**
-     * Gets all days in a given framework along with their components
-     */
-    @Query("SELECT * FROM framework_day WHERE framework_type_id = :frameworkId")
-    fun getFrameworkDaysWithComponents(frameworkId: Int): LiveData<List<FrameworkDayWithComponents>>
 
     /**
      * Get count for frameworks with the name and id
@@ -60,7 +36,7 @@ interface FrameworkDayDao {
     /**
      * Add a new day to a workout framework
      *
-     * @property frameworkDay   the day to add to the database.
+     * @param frameworkDay the day to add to the database.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFrameworkDay(frameworkDay: FrameworkDayEntity)
@@ -68,7 +44,7 @@ interface FrameworkDayDao {
     /**
      * Adds all days within the collection to a workout framework in the database
      *
-     * @property frameworkDays  a [Collection] of days to to add.
+     * @param frameworkDays a [Collection] of days to to add.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFrameworkDays(frameworkDays: Collection<FrameworkDayEntity>)
@@ -76,7 +52,7 @@ interface FrameworkDayDao {
     /**
      * Adds all days to a workout framework within the database
      *
-     * @property frameworkDays  a comma-separated list of days to add.
+     * @param frameworkDays a comma-separated list of days to add.
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
@@ -84,7 +60,7 @@ interface FrameworkDayDao {
     /**
      * Update an existing day in a workout framework
      *
-     * @property frameworkDay   the updated framework day.
+     * @param frameworkDay the updated framework day.
      */
     @Update
     suspend fun updateFrameworkDay(frameworkDay: FrameworkDayEntity)
@@ -92,7 +68,7 @@ interface FrameworkDayDao {
     /**
      * Delete an existing day from a workout framework
      *
-     * @property frameworkDay   the day to delete.
+     * @param frameworkDay the day to delete.
      */
     @Delete
     suspend fun deleteFrameworkDay(frameworkDay: FrameworkDayEntity)
@@ -100,7 +76,7 @@ interface FrameworkDayDao {
     /**
      * Deletes all existing days from their frameworks in the database
      *
-     * @property frameworkDays  a [Collection] of days to delete.
+     * @param frameworkDays a [Collection] of days to delete.
      */
     @Delete
     suspend fun deleteFrameworkDays(frameworkDays: Collection<FrameworkDayEntity>)
@@ -108,7 +84,7 @@ interface FrameworkDayDao {
     /**
      * Deletes all existing days from their frameworks in the database
      *
-     * @property frameworkDays  a comma-separated list of days to delete.
+     * @param frameworkDays a comma-separated list of days to delete.
      */
     @Delete
     suspend fun deleteFrameworkDays(vararg frameworkDays: FrameworkDayEntity)
