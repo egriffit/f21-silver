@@ -6,14 +6,6 @@ import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
 
-data class FrameworkWithDays(
-    @Embedded
-    val framework: FrameworkTypeEntity,
-
-    @Relation(parentColumn = "id", entityColumn = "framework_type_id", entity = FrameworkDayEntity::class)
-    val days: List<FrameworkDayWithComponents>
-)
-
 /**
  * A Database Access Object for the FrameworkTypeEntity
  *
@@ -25,13 +17,11 @@ interface FrameworkTypeDao {
     /**
      * Get all frameworks within the FrameworkTypeEntity table
      *
-     * @return a LiveData List of all frameworks.
+     * @return a LiveData list of all frameworks.
      */
     @Query("SELECT * FROM framework_type")
     fun getAllFrameworks(): LiveData<List<FrameworkTypeEntity>>
 
-    @Query("SELECT * FROM framework_type")
-    fun getAllFrameworksWithDays(): LiveData<List<FrameworkWithDays>>
 
     /**
      * Get a framework by its primary key, id
@@ -42,6 +32,7 @@ interface FrameworkTypeDao {
      */
     @Query("SELECT * FROM framework_type WHERE id=:framework_id")
     fun getFrameworkById(framework_id: Int): FrameworkTypeEntity?
+
 
     /**
      * Get all frameworks whose number of workouts per week is less than or equal to [maxNumWorkouts]
