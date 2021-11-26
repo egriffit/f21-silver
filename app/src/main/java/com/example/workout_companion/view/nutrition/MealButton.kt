@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ExpandMore
 import androidx.compose.material.icons.sharp.NavigateNext
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import com.example.workout_companion.viewmodel.NutritionAPIViewModel
 import com.example.workout_companion.viewmodel.FoodInMealViewModel
 import com.example.workout_companion.viewmodel.FoodTypeViewModel
 import com.example.workout_companion.viewmodel.MealViewModel
+import kotlinx.coroutines.*
 
 /***
  * Composable to show and hide foods in a meal using a +/- button
@@ -47,41 +49,57 @@ fun MealButton(navController: NavController, meal: String, calories: Double,
                foodTypeViewModel: FoodTypeViewModel, mealViewModel: MealViewModel,
                foodInMealViewModel: FoodInMealViewModel, nutritionAPIViewModel: NutritionAPIViewModel
 ) {
-    val open = remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    )
-    {
-        Row(modifier = Modifier
-            .fillMaxWidth()){
-            Button(onClick = {open.value = !open.value},
-                modifier = Modifier.background(color = Color.LightGray),
-                border= BorderStroke(1.dp, Color.Black),
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)) {
-                if(open.value){
-                    Icon(
-                        Icons.Sharp.ExpandMore,
-                        contentDescription = "",
-                        modifier = Modifier.background(color = Color.LightGray)
-                            .size(20.dp),
-                        tint = Color.Black
-                    )
-                }else{
-                    Icon(
-                        Icons.Sharp.NavigateNext,
-                        contentDescription = "",
-                        modifier = Modifier.background(color = Color.LightGray)
-                            .size(20.dp),
-                        tint = Color.Black
-                    )
-                }
+        val open = remember { mutableStateOf(false) }
+        val foundFoods =  foodInMealViewModel.foundFoods.observeAsState().value
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        )
+        {
+            Row(modifier = Modifier
+                .fillMaxWidth()){
+                Button(onClick = {open.value = !open.value
+                    runBlocking{
+                        val job1: Job = launch(context = Dispatchers.IO){
+                            foodInMealViewModel.foundFoods.postValue(null)
+                            foodInMealViewModel.getFoodInMeal(meal)
+                        }
+                        job1.join()
+                    }
 
+                 },
+                    modifier = Modifier.background(color = Color.LightGray),
+                    border= BorderStroke(1.dp, Color.Black),
+                    colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)) {
+
+                    if(open.value){
+                        Icon(
+                            Icons.Sharp.ExpandMore,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .background(color = Color.LightGray)
+                                .size(20.dp),
+                            tint = Color.Black
+                        )
+
+                    }else{
+                        Icon(
+                            Icons.Sharp.NavigateNext,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .background(color = Color.LightGray)
+                                .size(20.dp),
+                            tint = Color.Black
+                        )
+                    }
+
+                }
+                Spacer(modifier = Modifier.padding(start = 20.dp))
+                Text(meal)
+                Spacer(modifier = Modifier.padding(start = 20.dp))
+                Text("${calories.toInt()} cal")
             }
-            Spacer(modifier = Modifier.padding(start = 20.dp))
-            Text(meal)
-            Spacer(modifier = Modifier.padding(start = 20.dp))
-            Text("${calories.toInt()} cal")
+            if (foundFoods != null) {
+                FoodsInMeals(navController, meal, open, foundFoods)
+            }
         }
-        FoodsInMeals(navController, meal, open, foodTypeViewModel, mealViewModel, foodInMealViewModel, nutritionAPIViewModel)
-    }
 }

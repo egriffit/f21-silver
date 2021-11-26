@@ -7,22 +7,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.workout_companion.api.edamam.entities.Food
-import com.example.workout_companion.viewmodel.NutritionAPIViewModel
-import com.example.workout_companion.viewmodel.FoodInMealViewModel
-import com.example.workout_companion.viewmodel.FoodTypeViewModel
-import com.example.workout_companion.viewmodel.MealViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.workout_companion.entity.MealWithFoodsEntity
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
+
 /***
  * Composable to display a column of foods in a meal
  * It consists of:
@@ -33,10 +24,7 @@ import java.time.LocalDate
  * @param navController, a NavController to navigate to different view
  * @param meal, string
  * @param open, a mutableStateBoolean to check if foods list is visible
- * @param foodTypeViewModel, a  view model to work with food_type table
- * @param mealViewModel, a view model to work with the the meal table
- * @param foodInMealViewModel, a view model to work with the the food_in_meal table
- * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
+ * @param foundFoods, a list of MealWithFoodsEntity objects
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
@@ -45,19 +33,8 @@ fun FoodsInMeals(
     navController: NavController,
     meal: String,
     open: MutableState<Boolean>,
-    foodTypeViewModel: FoodTypeViewModel,
-    mealViewModel: MealViewModel,
-    foodInMealViewModel: FoodInMealViewModel,
-    nutritionAPIViewModel: NutritionAPIViewModel
+    foundFoods: List<MealWithFoodsEntity>
 ) {
-    val foundFoods =  foodInMealViewModel.foundFoods.observeAsState().value
-    LaunchedEffect(key1 = Unit, block = {
-        withContext(Dispatchers.IO) {
-            foodInMealViewModel.getFoodInMeal(meal)
-        }
-
-    })
-
     if(open.value){
         Column(
             modifier = Modifier.fillMaxHeight()
@@ -65,11 +42,13 @@ fun FoodsInMeals(
             Text("Foods")
             Column {
                 //display current foods in meal
-                if (foundFoods != null && foundFoods.isNotEmpty()) {
-                    for (food in foundFoods) {
-                        for (f in food.foods) {
-                            Row {
-                                FoodRow(navController, f)
+                if (foundFoods != null) {
+                    if (foundFoods.isNotEmpty()) {
+                        foundFoods.forEach { food ->
+                            food.foods.forEach { f ->
+                                Row {
+                                    FoodRow(navController, f)
+                                }
                             }
                         }
                     }
