@@ -51,6 +51,7 @@ fun MealButton(navController: NavController, meal: String, calories: Double,
 ) {
         val open = remember { mutableStateOf(false) }
         val foundFoods =  foodInMealViewModel.foundFoods.observeAsState().value
+        var mealCalories = 0.0;
         Column(
             modifier = Modifier.fillMaxWidth()
         )
@@ -64,6 +65,13 @@ fun MealButton(navController: NavController, meal: String, calories: Double,
                             foodInMealViewModel.getFoodInMeal(meal)
                         }
                         job1.join()
+                        val job2: Job = launch(context = Dispatchers.IO){
+                            foundFoods?.forEach{ foodList->
+                                foodList.foods.forEach{ f->
+                                    mealCalories += f.calories
+                                }
+                            }
+                        }
                     }
 
                  },
@@ -96,7 +104,7 @@ fun MealButton(navController: NavController, meal: String, calories: Double,
                 Spacer(modifier = Modifier.padding(start = 20.dp))
                 Text(meal)
                 Spacer(modifier = Modifier.padding(start = 20.dp))
-                Text("${calories.toInt()} cal")
+                Text("${mealCalories.toInt()} cal")
             }
             if (foundFoods != null) {
                 FoodsInMeals(navController, meal, open, foundFoods)

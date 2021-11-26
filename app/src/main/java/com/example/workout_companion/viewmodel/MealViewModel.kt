@@ -4,19 +4,21 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.repository.MealRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 import java.time.LocalDate
 
 class MealViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Retrieves a list of all meals in the meal table for the current date
      */
-    val getAllMeals: LiveData<List<MealEntity>>
+    val getTodaysMeals: LiveData<List<MealEntity>>
     var mealId = MutableLiveData<Int>()
+    val foundMeal = MutableLiveData<List<MealEntity>>()
+
     /**
      * Meal repository Object
      */
@@ -29,7 +31,7 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
     init {
         val mealDao = WCDatabase.getInstance(application).mealDao()
         repository = MealRepository(mealDao)
-        getAllMeals = repository.getAllMeals
+        getTodaysMeals = repository.getTodaysMeals
     }
 
     /**
@@ -40,12 +42,10 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * @param date, LocalDate
      * @return LiveData<List<MealEntity>>
      */
-    fun getMealsByDate(date: LocalDate): List<MealEntity>?{
-        var meal: List<MealEntity>? = listOf<MealEntity>()
+    fun getMealsByDate(date: LocalDate){
         viewModelScope.launch(Dispatchers.IO){
-            meal = repository.getMealsByDate(date).value
+            foundMeal.postValue(repository.getMealsByDate(date))
         }
-        return meal
     }
 
     /**
@@ -56,12 +56,10 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * @param name, String
      * @return LiveData<List<MealEntity>>
      */
-    fun getMealsByName(name: String): List<MealEntity>?{
-        var meal: List<MealEntity>? = listOf<MealEntity>()
+    fun getMealsByName(name: String){
         viewModelScope.launch(Dispatchers.IO){
-            meal = repository.getMealByName(name).value
+            foundMeal.postValue(repository.getMealByName(name))
         }
-        return meal
     }
 
     /**
@@ -70,7 +68,7 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * @return Int
      */
     fun getCount(): Int {
-        var count: Int = 0
+        var count = 0
         viewModelScope.launch(Dispatchers.IO){
             count = repository.getCount()
         }
@@ -99,7 +97,7 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * @return  id, Int
      */
     fun getMealId(name: String, date: LocalDate): Int {
-        var mealId: Int = 0
+        var mealId = 0
         viewModelScope.launch(Dispatchers.IO){
             mealId = repository.getMealId(name, date)
         }
@@ -152,18 +150,14 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * Function to initialize a coroutine to add the calories, carbs, protein, fat totals in a meal
      * in the meal table
      *
-     * @param name, String
-     * @param calories, in grams
-     * @param carbohydrates, in grams
-     * @param protein, in grams
-     * @param fat, in grams
+     * @param meal, name of meal
+     * @param food, FoodTypeEntity being added
+     * @param servings, servings
      * @return void
      */
-    @SuppressLint("NewApi")
-    fun addToMeal(name: String, calories: Double, carbohydrates: Double,
-                  protein: Double, fat: Double){
+    fun addToMeal(meal: MealEntity, food: FoodTypeEntity, servings: Double){
         viewModelScope.launch(Dispatchers.IO){
-            repository.addToMeal(name, calories, carbohydrates, protein, fat)
+            repository.addToMeal(meal,food, servings)
         }
     }
 
@@ -178,11 +172,9 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
      * @param fat, in grams
      * @return void
      */
-    @SuppressLint("NewApi")
-    fun subtractFromMeal(name: String, calories: Double, carbohydrates: Double,
-                         protein: Double, fat: Double){
+    fun subtractFromMeal(meal: MealEntity, food: FoodTypeEntity, servings: Double){
         viewModelScope.launch(Dispatchers.IO){
-            repository.subtractFromMeal(name, calories, carbohydrates, protein, fat)
+            repository.subtractFromMeal(meal, food, servings)
         }
     }
 
@@ -217,24 +209,5 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO){
             repository.deleteAll(date)
         }
-    }
-}
-/**
- * FoodTypeViewModel Factory class that is used to initialize the FoodTypeViewModel
- * @param application context
- * @return ViewModelProvider.Factory
- */
-class MealViewModelFactory(
-    private val application: Application
-): ViewModelProvider.Factory{
-    /**
-     * Method to create an instance of the UserModelView
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T{
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(MealViewModel::class.java)) {
-            return MealViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
     }
 }

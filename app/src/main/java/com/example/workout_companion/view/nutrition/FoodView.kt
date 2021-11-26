@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -36,6 +35,8 @@ fun FoodView(
     val foodId = foodTypeViewModel.foodID.observeAsState().value
     var foodType: FoodTypeEntity = emptyFoodTypeEntity
     val mealId = mealViewModel.mealId.observeAsState().value
+    val foundMeal = mealViewModel.foundMeal.observeAsState(listOf()).value
+
     if(food != null && servingSize != null && calories != null &&
         carbohydrates != null && protein != null && fat != null)
         {
@@ -136,6 +137,7 @@ fun FoodView(
                                 //get the foodId
                                 val jobF2: Job = launch(context = Dispatchers.IO){
                                     foodTypeViewModel.getId(foodType)
+                                    mealViewModel.getMealsByName(meal!!)
                                 }
                                 jobF2.join()
                                 //add food to food_in_meal table
@@ -145,13 +147,9 @@ fun FoodView(
                                         if ((mealId != 0) && (foodId != 0)) {
                                             val foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
                                             foodInMealViewModel.insert(foodInMeal)
-                                            mealViewModel.addToMeal(
-                                                foodType.name,
-                                                foodType.calories,
-                                                foodType.carbohydrates,
-                                                foodType.protein,
-                                                foodType.fat
-                                            )
+                                            if (meal != null) {
+                                                mealViewModel.addToMeal(foundMeal.elementAt(0), foodType, 1.0)
+                                            }
                                         }
                                     }
                                 }

@@ -49,6 +49,7 @@ fun FoodSearchBox(navController: NavController, meal: String){
             )
             {
                 Button(onClick = {
+
                     navController.navigate("searchFood/${food.value}/${meal}")
                 }) {
                     Text(
@@ -58,6 +59,9 @@ fun FoodSearchBox(navController: NavController, meal: String){
                 }
             }
         }
+        /*
+        Testing State, delete in production
+         */
         Text(selectedFoodName.value)
     }
 }

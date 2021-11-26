@@ -21,6 +21,7 @@ interface FoodInMealDao {
      *
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
+    @Transaction
     @Query("""
         SELECT *
         FROM food_type
@@ -55,6 +56,7 @@ interface FoodInMealDao {
      * @param date, LocalDate
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
+    @Transaction
     @Query("""
         SELECT *
         FROM food_type

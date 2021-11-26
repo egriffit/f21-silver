@@ -22,6 +22,7 @@ fun FoodRow(navController: NavController, food: FoodTypeEntity){
     Row(modifier = Modifier.fillMaxWidth()
         .padding(start=20.dp, end = 20.dp)
     ){
+
         Button(onClick = {
             navController.navigate("foodView/${food.name}/${food.serving_size}/${food.calories}/${food.carbohydrates}/${food.protein}/${food.fat}")
         })

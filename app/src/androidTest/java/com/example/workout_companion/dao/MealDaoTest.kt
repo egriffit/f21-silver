@@ -53,7 +53,7 @@ class MealDaoTest : TestCase(){
         )
 
         dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getByDate(today).getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByDate(today)
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(0),))
     }
 
@@ -69,7 +69,7 @@ class MealDaoTest : TestCase(){
         )
 
         dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getByName("breakfast").getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByName("breakfast")
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(1),))
     }
 
@@ -123,7 +123,7 @@ class MealDaoTest : TestCase(){
 
         dao.insert(meals)
         dao.update(updateMeal)
-        val foundMeal: List<MealEntity> = dao.getByName("breakfast").getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByName("breakfast")
         MatcherAssert.assertThat(foundMeal.elementAt(0).calories, CoreMatchers.equalTo(updateMeal.calories))
     }
 

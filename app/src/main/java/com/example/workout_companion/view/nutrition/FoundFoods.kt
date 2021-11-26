@@ -61,6 +61,8 @@ fun FoundFoods(
     val dbRecipes = recipeViewModel.foundRecipes.observeAsState(listOf()).value
     val dbFoods = foodTypeViewModel.foodResults.observeAsState(listOf()).value
     val mealId = mealViewModel.mealId.observeAsState().value
+    val foundMeal = mealViewModel.foundMeal.observeAsState().value
+
     var foodId = foodTypeViewModel.foodID.observeAsState().value
     val recipe = foodInRecipeViewModel.foodsInRecipe.observeAsState().value
 
@@ -177,18 +179,11 @@ fun FoundFoods(
                                         if ((mealId != 0) && (foodId != 0)) {
                                             val foodInMeal = FoodInMealEntity(mealId, foodId!!, 1.0)
                                             foodInMealViewModel.insert(foodInMeal)
-                                            mealViewModel.addToMeal(
-                                                selectedFoundFood.value.name,
-                                                selectedFoundFood.value.calories,
-                                                selectedFoundFood.value.carbohydrates,
-                                                selectedFoundFood.value.protein,
-                                                selectedFoundFood.value.fat
-                                            )
+                                            val foodEntity = selectedFoundFood.value
+                                            mealViewModel.addToMeal(foundMeal?.elementAt(0)!!, foodEntity, 1.0)
                                         }
                                     }
                                 }
-                                //Wait for record to be inserted before navigating
-                                //To Nutrition Overview
                                 jobF2.join()
                                 navController.navigate("NutritionOverview")
                             }
@@ -203,6 +198,7 @@ fun FoundFoods(
 
                                         if (meal != null) {
                                             mealViewModel.getMealId(meal)
+                                            mealViewModel.getMealsByName(meal)
                                         }
                                         //retrieve the foods in the recipe
                                         foodInRecipeViewModel.getFoodInRecipe(selectedFoundRecipe.value.name)
@@ -219,18 +215,26 @@ fun FoundFoods(
                                                 val foodInMeal =
                                                     FoodInMealEntity(mealId, it.id, 1.0)
                                                 foodInMealViewModel.insert(foodInMeal)
-                                                mealViewModel.addToMeal(
-                                                    it.name,
-                                                    it.calories,
-                                                    it.carbohydrates,
-                                                    it.protein,
-                                                    it.fat
-                                                )
                                             }
                                         }
                                     }
                                 }
+                                //wait for food to be added first
                                 jobR2.join()
+                                //update meal totals
+                                val jobR3: Job = launch(context = Dispatchers.IO) {
+                                    if (recipe != null) {
+                                        val recipeFoods: List<FoodTypeEntity> =
+                                            recipe.elementAt(0).foods
+                                        recipeFoods.forEach {
+                                            if ((mealId != null) && (it.id != 0)) {
+                                                mealViewModel.addToMeal(foundMeal?.elementAt(0)!!, it, 1.0)
+                                            }
+                                        }
+                                    }
+                                }
+                                //after meal totals are updated navigate to nutrition overview view
+                                jobR3.join()
                                 navController.navigate("NutritionOverview")
                             }
                         }
@@ -259,6 +263,7 @@ fun FoundFoods(
                                     job.join()
                                     val job2: Job = launch(context = Dispatchers.IO) {
                                         foodTypeViewModel.getId(foodType)
+                                        mealViewModel.getMealsByName(meal!!)
                                     }
                                     //Wait for the ids before add to foodInMealEntity
                                     job2.join()
@@ -269,21 +274,13 @@ fun FoundFoods(
                                                 val foodInMeal =
                                                     FoodInMealEntity(mealId, foodId!!, 1.0)
                                                 foodInMealViewModel.insert(foodInMeal)
-                                                mealViewModel.addToMeal(
-                                                    foodType.name,
-                                                    foodType.calories,
-                                                    foodType.carbohydrates,
-                                                    foodType.protein,
-                                                    foodType.fat,
-                                                )
+                                                mealViewModel.addToMeal(foundMeal?.elementAt(0)!!, foodType, 1.0)
                                             }
                                         }
                                     }
+                                    job3.join()
                                     //wait for food to be added to foodInMeal table before
                                     // navigating to nutrition overview view
-
-                                    job3.join()
-
                                     //remove the found foods from my snapshot state
                                     apiFoods.clear()
                                     //navigate back to nutrition overview view

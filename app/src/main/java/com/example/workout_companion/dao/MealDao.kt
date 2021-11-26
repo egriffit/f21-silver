@@ -30,7 +30,7 @@ interface MealDao {
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
     @Query("SELECT * FROM meal where date = :date")
-    fun getByDate(date: LocalDate): LiveData<List<MealEntity>>
+    fun getByDate(date: LocalDate): List<MealEntity>
 
     /**
      * Retrieves a Meal object from meal table where
@@ -45,7 +45,7 @@ interface MealDao {
         WHERE type = :type 
         AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
     """)
-    fun getByName(type: String): LiveData<List<MealEntity>>
+    fun getByName(type: String): List<MealEntity>
 
     /**
      * Retrieves the ide of a meal based on the name of the meal
