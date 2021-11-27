@@ -137,6 +137,18 @@ class MealRepository (private val mealDao: MealDao) {
         return mealDao.update(meal)
     }
 
+    /**
+     * update a meal in the meal table
+     *
+     * @param meal MealEntity
+     * @return void
+     */
+    suspend fun emptyMeal(meal: MealEntity){
+        val newMeal = emptyMealEntity
+        newMeal.id = meal.id
+        return mealDao.update(newMeal)
+    }
+
 
     /**
      * Update the calories, carbs, protein, fat totals in a meal

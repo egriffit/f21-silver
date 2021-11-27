@@ -47,7 +47,7 @@ fun FoodsInMeals(
                         foundFoods.forEach { food ->
                             food.foods.forEach { f ->
                                 Row {
-                                    FoodRow(navController, f)
+                                    FoodRow(navController, f, meal, food.food_in_meal.servings)
                                 }
                             }
                         }

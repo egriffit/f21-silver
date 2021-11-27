@@ -18,19 +18,20 @@ import com.example.workout_companion.entity.FoodTypeEntity
  * @param food, a FoodTypeEntity
  */
 @Composable
-fun FoodRow(navController: NavController, food: FoodTypeEntity){
+fun FoodRow(navController: NavController, food: FoodTypeEntity, meal: String, servings: Double){
     Row(modifier = Modifier.fillMaxWidth()
         .padding(start=20.dp, end = 20.dp)
     ){
 
         Button(onClick = {
-            navController.navigate("foodView/${food.name}/${food.serving_size}/${food.calories}/${food.carbohydrates}/${food.protein}/${food.fat}")
+            navController.navigate("foodView/${food.name}/${food.serving_size}/${food.calories}/${food.carbohydrates}/${food.protein}/${food.fat}/${meal}")
         })
         {
             Text(text = food.name)
         }
         Spacer(modifier = Modifier.padding(start = 50.dp))
-        Text(text = "${food.calories} cal")
+        Text(text = "${food.calories.toInt()} cal")
+        Text(text = "  x ${servings}")
     }
 }
 

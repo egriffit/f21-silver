@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import java.text.DecimalFormat
 
 @Composable
 fun NutritionStatus(
@@ -27,12 +28,21 @@ fun NutritionStatus(
     var currentProtein = 0.0
     var currentCarbs =  0.0
     var currentFat =  0.0
+    var gramsOfFood = 0.0
+    var proteinPercentage = "0.0"
+    var carbPercentage = "0.0"
+    var fatPercentage = "0.0"
+    var df: DecimalFormat = DecimalFormat("##.##%")
 
     foundMeals.forEach {
         currentCal += it.calories
         currentProtein += it.protein
         currentCarbs += it.carbohydrates
         currentFat += it.fat
+        gramsOfFood = currentProtein + currentCarbs + currentFat
+        carbPercentage = df.format(currentCarbs / gramsOfFood)
+        proteinPercentage = df.format(currentProtein/gramsOfFood)
+        fatPercentage = df.format(currentFat / gramsOfFood)
     }
     Column(modifier = Modifier.padding(bottom = 30.dp)) {
         Row(
@@ -66,7 +76,7 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Carbohydrates:   ")
-            Text("${currentCarbs.toInt()} g/")
+            Text("${carbPercentage}(${currentCarbs.toInt()} g)/")
             if (currentGoals?.nutritionPlanType?.carbohydrate != null)
                 Text("${currentGoals.nutritionPlanType.carbohydrate} %")
             else {
@@ -78,7 +88,7 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Protein:   ")
-            Text("${currentProtein.toInt()} g/")
+            Text("${proteinPercentage} (${currentProtein.toInt()} g)/")
             //goal target
             if (currentGoals?.nutritionPlanType?.protein != null)
                 Text("${currentGoals.nutritionPlanType.protein} %")
@@ -91,7 +101,7 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Fat:   ")
-            Text("${currentFat.toInt()} g /")
+            Text("${fatPercentage} (${currentFat.toInt()} g)/")
             if (currentGoals?.nutritionPlanType?.fat != null)
                 Text("${currentGoals.nutritionPlanType.fat} %")
             else {

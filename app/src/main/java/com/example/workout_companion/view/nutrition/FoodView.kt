@@ -17,6 +17,12 @@ import com.example.workout_companion.sampleData.emptyFoodTypeEntity
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.*
 import kotlinx.coroutines.*
+import androidx.compose.runtime.*
+import androidx.compose.material.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+
+
 
 @Composable
 fun FoodView(
@@ -36,6 +42,8 @@ fun FoodView(
     var foodType: FoodTypeEntity = emptyFoodTypeEntity
     val mealId = mealViewModel.mealId.observeAsState().value
     val foundMeal = mealViewModel.foundMeal.observeAsState(listOf()).value
+    val foodsInMeal = foodInMealViewModel.foundFoods.observeAsState(listOf()).value
+    val servingState = remember{ mutableStateOf(1.0)}
 
     if(food != null && servingSize != null && calories != null &&
         carbohydrates != null && protein != null && fat != null)
@@ -54,8 +62,20 @@ fun FoodView(
                 withContext(Dispatchers.IO){
                     foodTypeViewModel.getId(foodType)
                 }
+                withContext(Dispatchers.IO){
+                    if(meal != null){
+                        foodInMealViewModel.getFoodInMeal(meal)
+                    }
+                }
             })
         }
+    if(foodsInMeal.isNotEmpty()){
+        foodsInMeal.forEach{ f ->
+            if (f.foods.elementAt(0).name == food){
+                servingState.value = f.food_in_meal.servings
+            }
+        }
+    }
 
     Scaffold(
         topBar = { TopNavigation(navController) },
@@ -122,6 +142,23 @@ fun FoodView(
                     Spacer(modifier = Modifier.padding(start = 30.dp))
                     Text("$fat g")
                 }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    OutlinedTextField(
+                        value = servingState.value.toString(),
+                        onValueChange = {
+                            servingState.value = it.toDouble()
+                        },
+                        label = { Text(text = "Servings") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        )
+                    )
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -145,10 +182,14 @@ fun FoodView(
                                     //create a food_inMeal_object and add to database
                                     if (mealId != null && foodId != null) {
                                         if ((mealId != 0) && (foodId != 0)) {
-                                            val foodInMeal = FoodInMealEntity(mealId, foodId, 1.0)
-                                            foodInMealViewModel.insert(foodInMeal)
-                                            if (meal != null) {
-                                                mealViewModel.addToMeal(foundMeal.elementAt(0), foodType, 1.0)
+                                            val foodInMeal = FoodInMealEntity(mealId, foodId, servingState.value)
+                                            if(servingState.value != 0.0){
+                                                foodInMealViewModel.insert(foodInMeal)
+                                            }else{
+                                                foodInMealViewModel.delete(foodInMeal)
+                                            }
+                                            if (meal != null && foundMeal.isNotEmpty()) {
+                                                mealViewModel.calculateMeal(foundMeal.elementAt(0))
                                             }
                                         }
                                     }
@@ -249,6 +290,7 @@ fun FoodView(
                     Spacer(modifier = Modifier.padding(start = 30.dp))
                     Text("$fat g")
                 }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center

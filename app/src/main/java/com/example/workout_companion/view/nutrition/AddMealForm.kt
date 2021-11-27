@@ -53,15 +53,6 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
     val confirmRemove = rememberMaterialDialogState()
     val showRecipeForm = remember { mutableStateOf(false)}
     val showAddMealForm = remember { mutableStateOf(false)}
-//    runBlocking{
-//        foundMeals.forEach { meal ->
-//            val job1: Job = launch(context = Dispatchers.IO) {
-//                foodInMealViewModel.foundFoods.postValue(null)
-//                foodInMealViewModel.getFoodInMeal(meal.type)
-//            }
-//            job1.join()
-//        }
-//    }
 
     val mealName = remember{ mutableStateOf("")}
     //dialog to confirm to remove all records

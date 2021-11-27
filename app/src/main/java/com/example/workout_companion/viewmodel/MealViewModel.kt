@@ -6,10 +6,15 @@ import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.MealEntity
+import com.example.workout_companion.entity.MealWithFoodsEntity
 import com.example.workout_companion.repository.MealRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.workout_companion.sampleData.emptyMealEntity
+import com.example.workout_companion.repository.FoodInMealRepository
+import kotlinx.coroutines.*
 import java.time.LocalDate
+
 
 class MealViewModel(application: Application) : AndroidViewModel(application) {
     /**
@@ -25,6 +30,10 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MealRepository
 
     /**
+     * Food In Meal Repository Object
+     */
+    private val foodInMealRepository: FoodInMealRepository
+    /**
      * Function to initialize the view.
      * Initializes the WCDatabase, repository and the list of all Meal entities
      */
@@ -32,6 +41,8 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         val mealDao = WCDatabase.getInstance(application).mealDao()
         repository = MealRepository(mealDao)
         getTodaysMeals = repository.getTodaysMeals
+        val foodInMealDao = WCDatabase.getInstance(application).foodInMealDao()
+        foodInMealRepository = FoodInMealRepository(foodInMealDao)
     }
 
     /**
@@ -119,6 +130,8 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
+
     /**
      * Function to initialize a coroutine to add a meal to the database
      * with the name provided
@@ -146,6 +159,12 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun emptyMeal(item: MealEntity){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.emptyMeal(item)
+        }
+    }
+
     /**
      * Function to initialize a coroutine to add the calories, carbs, protein, fat totals in a meal
      * in the meal table
@@ -158,6 +177,36 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
     fun addToMeal(meal: MealEntity, food: FoodTypeEntity, servings: Double){
         viewModelScope.launch(Dispatchers.IO){
             repository.addToMeal(meal,food, servings)
+        }
+    }
+
+    /**
+     * Function to initialize a coroutine to add the calories, carbs, protein, fat totals in a meal
+     * in the meal table
+     *
+     * @param meal, name of meal
+     * @param food, FoodTypeEntity being added
+     * @param servings, servings
+     * @return void
+     */
+    fun calculateMeal(meal: MealEntity){
+        viewModelScope.launch(Dispatchers.IO){
+            var foodsInMeals: List<MealWithFoodsEntity> = listOf()
+            val job1: Job = launch(Dispatchers.IO){
+                foodsInMeals = foodInMealRepository.getFoodInMeal(meal.type, LocalDate.now())
+            }
+            job1.join()
+            val job2: Job = launch(Dispatchers.IO){
+                repository.emptyMeal(meal)
+            }
+            job2.join()
+            val job3: Job = launch(Dispatchers.IO){
+                foodsInMeals.forEach{ food ->
+                    val servings = food.food_in_meal.servings
+                    repository.addToMeal(meal, food.foods.elementAt(0), servings)
+                }
+            }
+            job3.join()
         }
     }
 

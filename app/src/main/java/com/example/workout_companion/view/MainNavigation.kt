@@ -18,6 +18,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 @SuppressLint("NewApi")
@@ -74,8 +76,27 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("meal") { type = NavType.StringType }
             )
         ){ backStackEntry ->
-            FoundFoods(navController, backStackEntry.arguments?.getString("foodName"),
-                 backStackEntry.arguments?.getString("meal"),
+            val dbRecipes = recipeViewModel.foundRecipes.observeAsState(listOf()).value
+            val dbFoods = foodTypeViewModel.foodResults.observeAsState(listOf()).value
+            val food = backStackEntry.arguments?.getString("foodName")
+            val meal = backStackEntry.arguments?.getString("meal")
+            //get foods
+            if (food != null) {
+                runBlocking{
+                    val job1: Job = launch(Dispatchers.IO){
+                        foodTypeViewModel.getFood(food)
+                    }
+                    job1.join()
+                    val job2: Job = launch(Dispatchers.IO){
+                        recipeViewModel.getRecipe(food)
+                    }
+                    job2.join()
+                }
+
+            }
+            FoundFoods(navController, food,
+                 meal,
+                dbFoods, dbRecipes,
                 foodTypeViewModel, mealViewModel, foodInMealViewModel,
                 recipeViewModel, foodInRecipeViewModel, nutritionAPIViewModel
                     )
@@ -107,6 +128,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("meal") { type = NavType.StringType },
                 )
         ){ backStackEntry ->
+
             FoodView(navController, backStackEntry.arguments?.getString("foodName"),
                 backStackEntry.arguments?.getString("servingSize")?.toDouble(),
                 backStackEntry.arguments?.getString("calories")?.toDouble(),
