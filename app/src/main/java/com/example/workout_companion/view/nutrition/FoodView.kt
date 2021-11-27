@@ -229,6 +229,42 @@ fun FoodView(
     val foodId = foodTypeViewModel.foodID.observeAsState().value
     val recipeId = recipeViewModel.recipeID.observeAsState().value
 
+    var foodType: FoodTypeEntity = emptyFoodTypeEntity
+    val foundRecipe = recipeViewModel.foundRecipes.observeAsState(listOf()).value
+    val foodsInRecipe = foodInRecipeViewModel.foodsInRecipe.observeAsState(listOf()).value
+    val servingState = remember{ mutableStateOf(1.0)}
+
+    if(food != null && servingSize != null && calories != null &&
+        carbohydrates != null && protein != null && fat != null)
+    {
+        foodType = FoodTypeEntity(
+            0, food, "-1",
+            servingSize, calories, carbohydrates,
+            protein, fat
+        )
+        LaunchedEffect(key1 = Unit, block = {
+            withContext(Dispatchers.IO) {
+                if (recipe != null) {
+                    recipeViewModel.getRecipeID(recipe)
+                }
+            }
+            withContext(Dispatchers.IO){
+                foodTypeViewModel.getId(foodType)
+            }
+            withContext(Dispatchers.IO){
+                if(recipe != null){
+                    foodInRecipeViewModel.getFoodInRecipe(recipe)
+                }
+            }
+        })
+    }
+    if(foodsInRecipe.isNotEmpty()){
+        foodsInRecipe.forEach{ f ->
+            if (f.foods.elementAt(0).name == food){
+                servingState.value = f.food_in_recipe.servings
+            }
+        }
+    }
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
@@ -290,42 +326,74 @@ fun FoodView(
                     Spacer(modifier = Modifier.padding(start = 30.dp))
                     Text("$fat g")
                 }
-
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    OutlinedTextField(
+                        value = servingState.value.toString(),
+                        onValueChange = {
+                            servingState.value = it.toDouble()
+                        },
+                        label = { Text(text = "Servings") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        )
+                    )
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(onClick = {
-                        //!. add the food to the database
-                        if(food != null && servingSize != null && calories != null &&
-                            carbohydrates != null && protein != null && fat != null) {
-                            val foodType = FoodTypeEntity(
-                                0, food, "-1",
-                                servingSize, calories, carbohydrates,
-                                protein, fat
-                            )
-                                foodTypeViewModel.addFoodType(foodType)
-                                //retrieve the food id and meal id
 
-
+                        runBlocking {
+                            //add food to the food_type table
+                            val jobF1: Job = launch(context = Dispatchers.IO) {
+                                //!. add the food to the database
+                                if (food != null && servingSize != null && calories != null &&
+                                    carbohydrates != null && protein != null && fat != null
+                                ) {
+                                    val foodType = FoodTypeEntity(
+                                        0, food, "-1",
+                                        servingSize, calories, carbohydrates,
+                                        protein, fat
+                                    )
+                                    foodTypeViewModel.addFoodType(foodType)
+                                }
+                            }
+                            jobF1.join()
+                            //get the foodId
+                            val jobF2: Job = launch(context = Dispatchers.IO){
                                 foodTypeViewModel.getId(foodType)
-
                                 if (recipe != null) {
                                     recipeViewModel.getRecipeID(recipe)
                                 }
-
-                                //create a food_inMeal_object and add to database
-                                if(foodId != null && recipeId != null) {
+                            }
+                            jobF2.join()
+                            //add food to food_in_meal table
+                            val jobF3: Job = launch(context = Dispatchers.IO) {
+                                if (foodId != null && recipeId != null) {
                                     if ((recipeId != 0) && (foodId != 0)) {
-                                        val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
-                                        foodInRecipeViewModel.insert(foodInRecipe)
+                                        val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, servingState.value)
+                                        if(servingState.value != 0.0){
+                                            foodInRecipeViewModel.insert(foodInRecipe)
+                                        }else{
+                                            foodInRecipeViewModel.delete(foodInRecipe)
+                                        }
                                     }
                                 }
-                        }
-                        if(recipe != null){
-                            navController.navigate("recipe/$recipe")
-                        }else{
-                            navController.navigate("nutritionOverview")
+                            }
+
+                            //Wait for record to be inserted before navigating
+                            //To Nutrition Overview
+                            jobF3.join()
+                            if(recipe != null){
+                                navController.navigate("recipe/$recipe")
+                            }else{
+                                navController.navigate("nutritionOverview")
+                            }
                         }
                     }) {
                         Text("Add Food ")

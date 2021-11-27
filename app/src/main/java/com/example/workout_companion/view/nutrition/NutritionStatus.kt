@@ -64,7 +64,7 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Calories:   ")
-            Text("${currentCal.toInt()} Cal/")
+            Text("${currentCal.toInt()} Cal / ")
             if (currentGoals?.nutritionPlanType?.calorie != null)
                 Text("${currentGoals.nutritionPlanType.calorie} Cal")
             else {
@@ -76,10 +76,13 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Carbohydrates:   ")
-            Text("${carbPercentage}(${currentCarbs.toInt()} g)/")
-            if (currentGoals?.nutritionPlanType?.carbohydrate != null)
-                Text("${currentGoals.nutritionPlanType.carbohydrate} %")
-            else {
+            Text("${currentCarbs.toInt()} g / ")
+            if (currentGoals?.nutritionPlanType?.carbohydrate != null) {
+                var targetCarbGrams =
+                    (currentGoals?.nutritionPlanType?.calorie!! * (currentGoals?.nutritionPlanType?.carbohydrate!!/100)).toInt() / 4.0
+                Text("${targetCarbGrams} g ")
+                //Text("(${df.format(currentGoals?.nutritionPlanType?.carbohydrate!! /100)})")
+            }else {
                 Text("--- %")
             }
         }
@@ -88,11 +91,14 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Protein:   ")
-            Text("${proteinPercentage} (${currentProtein.toInt()} g)/")
+            Text("${currentProtein.toInt()} g / ")
             //goal target
-            if (currentGoals?.nutritionPlanType?.protein != null)
-                Text("${currentGoals.nutritionPlanType.protein} %")
-            else {
+            if (currentGoals?.nutritionPlanType?.protein != null){
+                var targetProteinGrams = (currentGoals?.nutritionPlanType?.calorie!! * (currentGoals?.nutritionPlanType?.protein!!/100)).toInt() /4.0
+                Text("${targetProteinGrams.toInt()} g")
+                //Text("(${df.format(currentGoals?.nutritionPlanType?.protein!! /100)})")
+
+            } else {
                 Text("--- %")
             }
         }
@@ -101,10 +107,12 @@ fun NutritionStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text("Fat:   ")
-            Text("${fatPercentage} (${currentFat.toInt()} g)/")
-            if (currentGoals?.nutritionPlanType?.fat != null)
-                Text("${currentGoals.nutritionPlanType.fat} %")
-            else {
+            Text("${currentFat.toInt()} g/")
+            if (currentGoals?.nutritionPlanType?.fat != null) {
+                var targetFatGrams = (currentGoals?.nutritionPlanType?.calorie!! * (currentGoals?.nutritionPlanType?.fat!! / 100)).toInt() /9.0
+                Text("${targetFatGrams.toInt()} g")
+                //Text("(${df.format(currentGoals?.nutritionPlanType?.fat!!/100)})")
+            }else {
                 Text("--- %")
             }
         }
