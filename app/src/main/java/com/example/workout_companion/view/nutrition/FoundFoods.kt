@@ -112,179 +112,182 @@ fun FoundFoods(
         topBar = { TopNavigation(navController) },
         bottomBar = {
             Column{
-                    Text("Meal: $meal ")
-                    Text("ID: $mealId ")
-                Text("Food: ${selectedFoodName.value} ")
-                Text("FoodId: $foodId ")
+//                    Text("Meal: $meal ")
+//                    Text("ID: $mealId ")
+//                Text("Food: ${selectedFoodName.value} ")
+//                Text("FoodId: $foodId ")
                 Row(modifier = Modifier
                     .padding(start = 100.dp, end = 20.dp)
                     .fillMaxWidth()) {
-                    Button(onClick = {
-                        //figure out which food was selected
-                        if (selectedFoodIndex.value.type == "DBFood") {
-                            if (dbFoods != null) {
-                                selectedFoundFood.value = dbFoods[selectedFoodIndex.value.index]
-                                selectedFoundRecipe.value = emptyRecipeEntity
-                                selectedFoundAPIFood.value = emptyNutritionAPiItem
-                                selectedFoodName.value = selectedFoundRecipe.value.name
-                            }
-                        }
-                        if (selectedFoodIndex.value.type == "Recipe") {
-                            if (dbRecipes != null) {
-                                selectedFoundRecipe.value = dbRecipes[selectedFoodIndex.value.index]
-                                selectedFoundFood.value = emptyFoodTypeEntity
-                                selectedFoundAPIFood.value = emptyNutritionAPiItem
-                                selectedFoodName.value = selectedFoundRecipe.value.name
-                            }
-                        }
-                        if (selectedFoodIndex.value.type == "API") {
-                            selectedFoundAPIFood.value =
-                                apiFoods.elementAt(0)[selectedFoodIndex.value.index]
-                            selectedFoundRecipe.value = emptyRecipeEntity
-                            selectedFoundFood.value = emptyFoodTypeEntity
-                            selectedFoodName.value = selectedFoundAPIFood.value.name
-                        }
-                        if (selectedFoodIndex.value.type == "") {
-                            selectedFoundRecipe.value = emptyRecipeEntity
-                            selectedFoundFood.value = emptyFoodTypeEntity
-                            selectedFoundAPIFood.value = emptyNutritionAPiItem
-                            selectedFoodName.value = ""
-                        }
-                        //Case 1: Add Food
-                        if(selectedFoodIndex.value.type == "DBFood"){
-                            runBlocking {
-                                //add food to meal
-                                val jobF1: Job = launch(context = Dispatchers.IO) {
-
-                                    if (selectedFoundFood.value.name != "") {
-                                        //retrieve the meal id
-                                        if (meal != null) {
-                                            mealViewModel.getMealId(meal)
-                                        }
-                                        foodId = selectedFoundFood.value.id
-                                    }
-                                }
-                                //wait for the ids to be found before adding to FoodInMeal Table
-                                jobF1.join()
-                                val jobF2: Job = launch(context = Dispatchers.IO) {
-                                    //create a food_inMeal_object and add to database
-                                    if (mealId != null && foodId != null && foundMeal != null) {
-                                        if ((mealId != 0) && (foodId != 0) && foundMeal.isNotEmpty()) {
-                                            val foodInMeal = FoodInMealEntity(mealId, foodId!!, 1.0)
-                                            foodInMealViewModel.insert(foodInMeal)
-                                            val foodEntity = selectedFoundFood.value
-                                            mealViewModel.calculateMeal(foundMeal?.elementAt(0)!!)
-                                        }
-                                    }
-                                }
-                                jobF2.join()
-                                navController.navigate("NutritionOverview")
-                            }
-                        }
-
-                        //case 2 add recipe foods to meal
-                        if(selectedFoodIndex.value.type == "Recipe"){
-                            runBlocking {
-                                //add food to meal
-                                val jobR1: Job = launch(context = Dispatchers.IO) {
-                                    if (selectedFoundRecipe.value.name != "") {
-
-                                        if (meal != null) {
-                                            mealViewModel.getMealId(meal)
-                                            mealViewModel.getMealsByName(meal)
-                                        }
-                                        //retrieve the foods in the recipe
-                                        foodInRecipeViewModel.getFoodInRecipe(selectedFoundRecipe.value.name)
-                                    }
-                                }
-                                //Wait for ids to be found first
-                                jobR1.join()
-                                val jobR2: Job = launch(context= Dispatchers.IO) {
-                                    if (recipe != null) {
-                                        val recipeFoods: List<FoodTypeEntity> =
-                                            recipe.elementAt(0).foods
-                                        recipeFoods.forEach {
-                                            if ((mealId != null) && (it.id != 0)) {
-                                                val foodInMeal =
-                                                    FoodInMealEntity(mealId, it.id, 1.0)
-                                                foodInMealViewModel.insert(foodInMeal)
-                                            }
-                                        }
-                                    }
-                                }
-                                //wait for food to be added first
-                                jobR2.join()
-                                //update meal totals
-                                val jobR3: Job = launch(context = Dispatchers.IO) {
-                                    if (recipe != null) {
-                                        val recipeFoods: List<FoodTypeEntity> =
-                                            recipe.elementAt(0).foods
-                                        recipeFoods.forEach {
-                                            if ((mealId != null) && (it.id != 0)) {
-                                                mealViewModel.calculateMeal(foundMeal?.elementAt(0)!!)
-                                            }
-                                        }
-                                    }
-                                }
-                                //after meal totals are updated navigate to nutrition overview view
-                                jobR3.join()
-                                navController.navigate("NutritionOverview")
-                            }
-                        }
-
-                        //case 3 add API foods to meal
-                        if(selectedFoodIndex.value.type == "API") {
-                            runBlocking {
-                                //add found api food to meal
-                                if (selectedFoundAPIFood.value.name != "") {
-                                    //store the food in the food table
-                                    val foodType = FoodTypeEntity(
-                                        0,
-                                        selectedFoundAPIFood.value.name,
-                                        "-1",
-                                        selectedFoundAPIFood.value.serving_size_g,
-                                        selectedFoundAPIFood.value.calories,
-                                        selectedFoundAPIFood.value.carbohydrates_total_g,
-                                        selectedFoundAPIFood.value.protein_g,
-                                        selectedFoundAPIFood.value.fat_total_g
-                                    )
-                                    //add food to database
-                                    val job: Job = launch(context = Dispatchers.IO) {
-                                        foodTypeViewModel.addFoodType(foodType)
-                                    }
-                                    //wait for food to be inserted before getting id
-                                    job.join()
-                                    val job2: Job = launch(context = Dispatchers.IO) {
-                                        foodTypeViewModel.getId(foodType)
-                                        mealViewModel.getMealsByName(meal!!)
-                                    }
-                                    //Wait for the ids before add to foodInMealEntity
-                                    job2.join()
-                                    val job3: Job = launch {
-                                        //create a food_inMeal_object and add to database
-                                        if (mealId != null && foodId != null) {
-                                            if ((mealId != 0) && (foodId != 0)) {
-                                                val foodInMeal =
-                                                    FoodInMealEntity(mealId, foodId!!, 1.0)
-                                                foodInMealViewModel.insert(foodInMeal)
-                                                mealViewModel.calculateMeal(foundMeal?.elementAt(0)!!)
-                                            }
-                                        }
-                                    }
-                                    job3.join()
-                                    //wait for food to be added to foodInMeal table before
-                                    // navigating to nutrition overview view
-                                    //remove the found foods from my snapshot state
-                                    //apiFoods.clear()
-                                    //navigate back to nutrition overview view
-                                    navController.navigate("NutritionOverview")
-                                }
-                            }
-                        }
-                    }){
-                        Text("Add Food")
-                    }
-                    Spacer(modifier = Modifier.padding(start=50.dp))
+//                    Button(onClick = {
+//                        //figure out which food was selected
+//                        if (selectedFoodIndex.value.type == "DBFood") {
+//                            if (dbFoods != null) {
+//                                selectedFoundFood.value = dbFoods[selectedFoodIndex.value.index]
+//                                selectedFoundRecipe.value = emptyRecipeEntity
+//                                selectedFoundAPIFood.value = emptyNutritionAPiItem
+//                                selectedFoodName.value = selectedFoundRecipe.value.name
+//                            }
+//                        }
+//                        if (selectedFoodIndex.value.type == "Recipe") {
+//                            if (dbRecipes != null) {
+//                                selectedFoundRecipe.value = dbRecipes[selectedFoodIndex.value.index]
+//                                selectedFoundFood.value = emptyFoodTypeEntity
+//                                selectedFoundAPIFood.value = emptyNutritionAPiItem
+//                                selectedFoodName.value = selectedFoundRecipe.value.name
+//                            }
+//                        }
+//                        if (selectedFoodIndex.value.type == "API") {
+//                            selectedFoundAPIFood.value =
+//                                apiFoods.elementAt(0)[selectedFoodIndex.value.index]
+//                            selectedFoundRecipe.value = emptyRecipeEntity
+//                            selectedFoundFood.value = emptyFoodTypeEntity
+//                            selectedFoodName.value = selectedFoundAPIFood.value.name
+//                        }
+//                        if (selectedFoodIndex.value.type == "") {
+//                            selectedFoundRecipe.value = emptyRecipeEntity
+//                            selectedFoundFood.value = emptyFoodTypeEntity
+//                            selectedFoundAPIFood.value = emptyNutritionAPiItem
+//                            selectedFoodName.value = ""
+//                        }
+//                        //Case 1: Add Food
+//                        if(selectedFoodIndex.value.type == "DBFood"){
+//                            runBlocking {
+//                                //add food to meal
+//                                val jobF1: Job = launch(context = Dispatchers.IO) {
+//
+//                                    if (selectedFoundFood.value.name != "") {
+//                                        //retrieve the meal id
+//                                        if (meal != null) {
+//                                            mealViewModel.getMealId(meal)
+//                                        }
+//                                        foodId = selectedFoundFood.value.id
+//                                    }
+//                                }
+//                                //wait for the ids to be found before adding to FoodInMeal Table
+//                                jobF1.join()
+//                                val jobF2: Job = launch(context = Dispatchers.IO) {
+//                                    //create a food_inMeal_object and add to database
+//                                    if (mealId != null && foodId != null && foundMeal != null) {
+//                                        if ((mealId != 0) && (foodId != 0) && foundMeal.isNotEmpty()) {
+//                                            val foodInMeal = FoodInMealEntity(mealId, foodId!!, 1.0)
+//                                            foodInMealViewModel.insert(foodInMeal)
+//                                            val foodEntity = selectedFoundFood.value
+//                                            mealViewModel.calculateMeal(foundMeal?.elementAt(0)!!)
+//                                        }
+//                                    }
+//                                }
+//                                jobF2.join()
+//                                navController.navigate("NutritionOverview")
+//                            }
+//                        }
+//
+//                        //case 2 add recipe foods to meal
+//                        if(selectedFoodIndex.value.type == "Recipe"){
+//                            runBlocking {
+//                                //add food to meal
+//                                val jobR1: Job = launch(context = Dispatchers.IO) {
+//                                    if (selectedFoundRecipe.value.name != "") {
+//
+//                                        if (meal != null) {
+//                                            mealViewModel.getMealId(meal)
+//                                            mealViewModel.getMealsByName(meal)
+//                                        }
+//                                        //retrieve the foods in the recipe
+//                                        foodInRecipeViewModel.getFoodInRecipe(selectedFoundRecipe.value.name)
+//                                    }
+//                                }
+//                                //Wait for ids to be found first
+//                                jobR1.join()
+//                                val jobR2: Job = launch(context= Dispatchers.IO) {
+//                                    if (recipe != null) {
+//                                        val recipeFoods: List<FoodTypeEntity> =
+//                                            recipe.elementAt(0).foods
+//                                        recipeFoods.forEach {
+//                                            if ((mealId != null) && (it.id != 0)) {
+//                                                val foodInMeal =
+//                                                    FoodInMealEntity(mealId, it.id, 1.0)
+//                                                foodInMealViewModel.insert(foodInMeal)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                //wait for food to be added first
+//                                jobR2.join()
+//                                //update meal totals
+//                                val jobR3: Job = launch(context = Dispatchers.IO) {
+//                                    if (recipe != null) {
+//                                        val recipeFoods: List<FoodTypeEntity> =
+//                                            recipe.elementAt(0).foods
+//                                        recipeFoods.forEach {
+//                                            if ((mealId != null) && (it.id != 0)) {
+//                                                mealViewModel.calculateMeal(foundMeal?.elementAt(0)!!)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                //after meal totals are updated navigate to nutrition overview view
+//                                jobR3.join()
+//                                navController.navigate("NutritionOverview")
+//                            }
+//                        }
+//
+//                        //case 3 add API foods to meal
+//                        if(selectedFoodIndex.value.type == "API") {
+//                            runBlocking {
+//                                //add found api food to meal
+//                                if (selectedFoundAPIFood.value.name != "") {
+//                                    //store the food in the food table
+//                                    val foodType = FoodTypeEntity(
+//                                        0,
+//                                        selectedFoundAPIFood.value.name,
+//                                        "-1",
+//                                        selectedFoundAPIFood.value.serving_size_g,
+//                                        selectedFoundAPIFood.value.calories,
+//                                        selectedFoundAPIFood.value.carbohydrates_total_g,
+//                                        selectedFoundAPIFood.value.protein_g,
+//                                        selectedFoundAPIFood.value.fat_total_g
+//                                    )
+//                                    //add food to database
+//                                    val job: Job = launch(context = Dispatchers.IO) {
+//                                        foodTypeViewModel.addFoodType(foodType)
+//                                    }
+//                                    //wait for food to be inserted before getting id
+//                                    job.join()
+//                                    val job2: Job = launch(context = Dispatchers.IO) {
+//                                        foodTypeViewModel.getId(foodType)
+//                                        mealViewModel.getMealsByName(meal!!)
+//                                    }
+//                                    //Wait for the ids before add to foodInMealEntity
+//                                    job2.join()
+//                                    val job3: Job = launch {
+//                                        //create a food_inMeal_object and add to database
+//                                        if (mealId != null && foodId != null) {
+//                                            if ((mealId != 0) && (foodId != 0)) {
+//                                                val foodInMeal =
+//                                                    FoodInMealEntity(mealId, foodId!!, 1.0)
+//                                                foodInMealViewModel.insert(foodInMeal)
+//                                            }
+//                                        }
+//                                    }
+//                                    job3.join()
+//                                    val job4: Job = launch(Dispatchers.IO){
+//                                        mealViewModel.calculateMeal(foundMeal?.elementAt(0)!!)
+//                                    }
+//                                    job4.join()
+//                                    //wait for food to be added to foodInMeal table before
+//                                    // navigating to nutrition overview view
+//                                    //remove the found foods from my snapshot state
+//                                    //apiFoods.clear()
+//                                    //navigate back to nutrition overview view
+//                                    navController.navigate("NutritionOverview")
+//                                }
+//                            }
+//                        }
+//                    }){
+//                        Text("Add Food")
+//                    }
+//                    Spacer(modifier = Modifier.padding(start=50.dp))
                     Button(onClick = {
                         navController.navigate("NutritionOverview")
                     }){
