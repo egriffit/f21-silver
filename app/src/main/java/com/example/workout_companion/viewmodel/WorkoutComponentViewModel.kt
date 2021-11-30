@@ -2,9 +2,14 @@ package com.example.workout_companion.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.WorkoutComponentEntity
 import com.example.workout_companion.repository.WorkoutComponentRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 /**
@@ -13,6 +18,10 @@ import java.time.LocalDate
  * @param application The application.
  */
 class WorkoutComponentViewModel(application: Application) : AndroidViewModel(application) {
+    /**
+     * Variable to store workout components for day
+     */
+    val workoutComponents = MutableLiveData<List<WorkoutComponentEntity>>()
 
     /**
      * The repository for accessing the database
@@ -29,10 +38,11 @@ class WorkoutComponentViewModel(application: Application) : AndroidViewModel(app
      *
      * @param date The date to search with.
      *
-     * @return A list of all workout components.
      */
-    suspend fun getWorkoutComponentsForDate(date: LocalDate): List<WorkoutComponentEntity> {
-        return repository.getWorkoutComponentsForDate(date)
+    suspend fun getWorkoutComponentsForDate(date: LocalDate){
+        viewModelScope.launch(Dispatchers.IO){
+            workoutComponents.postValue(repository.getWorkoutComponentsForDate(date))
+        }
     }
 
     /**

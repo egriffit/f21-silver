@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FrameworkComponentSetRow() {
+fun FrameworkComponentSetRow(exercise: MutableState<String>) {
 
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
@@ -104,5 +104,6 @@ fun FrameworkComponentSetRow() {
 @Preview(showBackground = true)
 @Composable
 fun TestingPreview() {
-    FrameworkComponentSetRow()
+    val exercise = remember {mutableStateOf("Push-Up")}
+    FrameworkComponentSetRow(exercise)
 }

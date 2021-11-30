@@ -10,16 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import androidx.test.core.app.ActivityScenario.launch
 import com.example.workout_companion.entity.FoodTypeEntity
-import com.example.workout_companion.view.exercise.WorkoutView
+import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.*
 
 
@@ -43,6 +38,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
     val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
+    val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
+    val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -64,7 +61,19 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            ExerciseOverview(navController, workoutState)
+            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
+            val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
+            runBlocking {
+                val JobE2: Job = launch(Dispatchers.IO){
+                    if(framework_type_id != null) {
+                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
+                    }
+                }
+            }
+            //Load the framework days
+            if(frameworkDays != null){
+                ExerciseOverview(navController, workoutState, frameworkDays!!, frameworkComponentViewModel)
+            }
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,
@@ -129,14 +138,13 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("meal") { type = NavType.StringType },
                 )
         ){ backStackEntry ->
-            var food: String = backStackEntry.arguments?.getString("foodName")!!
-            var servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
-            var calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
-            var carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
-            var protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
-            var fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
-            var meal: String = backStackEntry.arguments?.getString("meal")!!
-            var foodType = FoodTypeEntity(
+            val food: String = backStackEntry.arguments?.getString("foodName")!!
+            val servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
+            val calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
+            val carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
+            val protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
+            val fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
+            val foodType = FoodTypeEntity(
                     0, food, "-1",
                     servingSize, calories, carbohydrates,
                     protein, fat
@@ -170,14 +178,13 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("recipe") { type = NavType.StringType },
             )
         ){ backStackEntry ->
-            var food: String = backStackEntry.arguments?.getString("foodName")!!
-            var servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
-            var calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
-            var carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
-            var protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
-            var fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
-            var recipe: String = backStackEntry.arguments?.getString("recipe")!!
-            var foodType = FoodTypeEntity(
+            val food: String = backStackEntry.arguments?.getString("foodName")!!
+            val servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
+            val calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
+            val carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
+            val protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
+            val fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
+            val foodType = FoodTypeEntity(
                 0, food, "-1",
                 servingSize, calories, carbohydrates,
                 protein, fat
@@ -241,6 +248,15 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         composable (route = "Landing") {
             LandingPage(navController)
         }
+        composable (route = "searchExercise/{muscle}",
+                arguments = listOf(
+                    navArgument("muscle") { type = NavType.StringType },
+                )
+        ){ backStackEntry ->
+            FoundExerises(navController,
+            backStackEntry.arguments?.getString("muscle"))
+        }
+
         // Other routes go here
     }
 }

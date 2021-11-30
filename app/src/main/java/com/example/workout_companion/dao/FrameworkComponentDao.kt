@@ -19,7 +19,7 @@ interface FrameworkComponentDao {
      * @return a LiveData List of all components of a day.
      */
     @Query("SELECT * FROM framework_component WHERE framework_day_id=:day_id")
-    fun getAllComponentsOfDay(day_id: Int) : LiveData<List<FrameworkComponentEntity>>
+    fun getAllComponentsOfDay(day_id: Int) : List<FrameworkComponentEntity>
 
     /**
      * Get the number of components where the framework_day_id,
