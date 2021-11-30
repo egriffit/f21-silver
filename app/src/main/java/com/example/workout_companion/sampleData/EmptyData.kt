@@ -1,9 +1,11 @@
 package com.example.workout_companion.sampleData
 
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutritionItem
+import com.example.workout_companion.dao.NutritionPlanTypeDao
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.RecipeEntity
 import com.example.workout_companion.entity.MealEntity
+import com.example.workout_companion.entity.NutritionPlanTypeEntity
 import java.time.LocalDate
 
 /* EmptyData.kt
@@ -21,3 +23,4 @@ var emptyFoodTypeEntity = FoodTypeEntity(
     0.0, 0.0, 0.0)
 
 var emptyMealEntity = MealEntity(0, "", 0.0, 0.0, 0.0, 0.0, LocalDate.now())
+var emptyNutritionPlanTypeEntity = NutritionPlanTypeEntity(0, 0, 0.0, 0.0, 0.0, 0.0)

@@ -87,10 +87,6 @@ fun FoodView(
                     .padding(50.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text("Meal: $meal ")
-                Text("ID: $mealId ")
-                Text("Food: $food ")
-                Text("ID: $foodId ")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -166,19 +162,14 @@ fun FoodView(
                     Button(onClick = {
 
                             runBlocking {
-                                //add food to the food_type table
-                                val jobF1: Job = launch(context = Dispatchers.IO){
-                                    foodTypeViewModel.addFoodType(foodType)
-                                }
-                                jobF1.join()
                                 //get the foodId
-                                val jobF2: Job = launch(context = Dispatchers.IO){
+                                val jobF1: Job = launch(context = Dispatchers.IO){
                                     foodTypeViewModel.getId(foodType)
                                     mealViewModel.getMealsByName(meal!!)
                                 }
-                                jobF2.join()
+                                jobF1.join()
                                 //add food to food_in_meal table
-                                val jobF3: Job = launch(context = Dispatchers.IO) {
+                                val jobF2: Job = launch(context = Dispatchers.IO) {
                                     //create a food_inMeal_object and add to database
                                     if (mealId != null && foodId != null) {
                                         if ((mealId != 0) && (foodId != 0)) {
@@ -197,7 +188,7 @@ fun FoodView(
 
                                 //Wait for record to be inserted before navigating
                                 //To Nutrition Overview
-                                jobF3.join()
+                                jobF2.join()
                                 navController.navigate("NutritionOverview")
                             }
                         }) {
@@ -349,31 +340,16 @@ fun FoodView(
                     Button(onClick = {
 
                         runBlocking {
-                            //add food to the food_type table
-                            val jobF1: Job = launch(context = Dispatchers.IO) {
-                                //!. add the food to the database
-                                if (food != null && servingSize != null && calories != null &&
-                                    carbohydrates != null && protein != null && fat != null
-                                ) {
-                                    val foodType = FoodTypeEntity(
-                                        0, food, "-1",
-                                        servingSize, calories, carbohydrates,
-                                        protein, fat
-                                    )
-                                    foodTypeViewModel.addFoodType(foodType)
-                                }
-                            }
-                            jobF1.join()
                             //get the foodId
-                            val jobF2: Job = launch(context = Dispatchers.IO){
+                            val jobF1: Job = launch(context = Dispatchers.IO){
                                 foodTypeViewModel.getId(foodType)
                                 if (recipe != null) {
                                     recipeViewModel.getRecipeID(recipe)
                                 }
                             }
-                            jobF2.join()
+                            jobF1.join()
                             //add food to food_in_meal table
-                            val jobF3: Job = launch(context = Dispatchers.IO) {
+                            val jobF2: Job = launch(context = Dispatchers.IO) {
                                 if (foodId != null && recipeId != null) {
                                     if ((recipeId != 0) && (foodId != 0)) {
                                         val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, servingState.value)
@@ -388,7 +364,7 @@ fun FoodView(
 
                             //Wait for record to be inserted before navigating
                             //To Nutrition Overview
-                            jobF3.join()
+                            jobF2.join()
                             if(recipe != null){
                                 navController.navigate("recipe/$recipe")
                             }else{

@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
 import androidx.test.core.app.ActivityScenario.launch
+import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.view.exercise.WorkoutView
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
@@ -128,6 +129,25 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("meal") { type = NavType.StringType },
                 )
         ){ backStackEntry ->
+            var food: String = backStackEntry.arguments?.getString("foodName")!!
+            var servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
+            var calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
+            var carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
+            var protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
+            var fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
+            var meal: String = backStackEntry.arguments?.getString("meal")!!
+            var foodType = FoodTypeEntity(
+                    0, food, "-1",
+                    servingSize, calories, carbohydrates,
+                    protein, fat
+                )
+            runBlocking{
+                val jobF1: Job = launch(context = Dispatchers.IO){
+                    foodTypeViewModel.addFoodType(foodType)
+                }
+                jobF1.join()
+            }
+
 
             FoodView(navController, backStackEntry.arguments?.getString("foodName"),
                 backStackEntry.arguments?.getString("servingSize")?.toDouble(),
@@ -150,6 +170,24 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("recipe") { type = NavType.StringType },
             )
         ){ backStackEntry ->
+            var food: String = backStackEntry.arguments?.getString("foodName")!!
+            var servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
+            var calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
+            var carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
+            var protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
+            var fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
+            var recipe: String = backStackEntry.arguments?.getString("recipe")!!
+            var foodType = FoodTypeEntity(
+                0, food, "-1",
+                servingSize, calories, carbohydrates,
+                protein, fat
+            )
+            runBlocking{
+                val jobF1: Job = launch(context = Dispatchers.IO){
+                    foodTypeViewModel.addFoodType(foodType)
+                }
+                jobF1.join()
+            }
             FoodView(navController, backStackEntry.arguments?.getString("foodName"),
                 backStackEntry.arguments?.getString("servingSize")?.toDouble(),
                 backStackEntry.arguments?.getString("calories")?.toDouble(),
