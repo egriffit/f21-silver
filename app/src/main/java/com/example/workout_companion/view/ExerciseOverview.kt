@@ -13,12 +13,12 @@ import com.example.workout_companion.viewmodel.FrameworkComponentViewModel
 @Composable
 fun ExerciseOverview(navController: NavController,
                      workoutState: State<WorkoutWithComponents?>,
-                    frameworkDays: List<FrameworkDayEntity>,
+                     frameworkDays: List<FrameworkDayEntity>,
                      frameworkComponentViewModel: FrameworkComponentViewModel
 ){
     Scaffold(
-    topBar = { TopNavigation(navController) },
-    bottomBar = {},
-    content = { WorkoutView(workoutState) }
+        topBar = { TopNavigation(navController) },
+        bottomBar = {},
+        content = { WorkoutView(navController, workoutState, frameworkDays, frameworkComponentViewModel) }
     )
 }
