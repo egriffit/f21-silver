@@ -19,6 +19,6 @@ fun ExerciseOverview(navController: NavController,
     Scaffold(
     topBar = { TopNavigation(navController) },
     bottomBar = {},
-    content = { WorkoutView(navController, workoutState, frameworkDays, frameworkComponentViewModel) }
+    content = { ExerciseOverview(navController, workoutState, frameworkDays, frameworkComponentViewModel) }
     )
 }
