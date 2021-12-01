@@ -52,7 +52,7 @@ class FrameworkComponentRepositoryTest : TestCase() {
     fun addSingleComponentTest() = runBlocking {
         repository.addFrameworkComponent(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS[0])
 
-        val day0ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val day0ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
         assertEquals(day0ComponentsInDB.size, 1)
         assertTrue(day0ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS[0]))
     }
@@ -61,7 +61,7 @@ class FrameworkComponentRepositoryTest : TestCase() {
     fun addCollectionOfComponentsTest() = runBlocking {
         repository.addFrameworkComponents(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS)
 
-        val day0ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val day0ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
         assertEquals(day0ComponentsInDB, TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS)
     }
 
@@ -70,7 +70,7 @@ class FrameworkComponentRepositoryTest : TestCase() {
         repository.addFrameworkComponents(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0],
             TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1])
 
-        val day2ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id).getOrAwaitValue()
+        val day2ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id)
         assertEquals(day2ComponentsInDB.size, 2)
         assertTrue(day2ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0]))
         assertTrue(day2ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1]))
@@ -90,17 +90,17 @@ class FrameworkComponentRepositoryTest : TestCase() {
         val updatedComponent = FrameworkComponentEntity(0, 0, MuscleGroup.BACK, 5, 25)
         repository.updateFrameworkComponent(updatedComponent)
 
-        val day0ComponentsInDB = repository.getAllComponentsOfDay(0).getOrAwaitValue()
+        val day0ComponentsInDB = repository.getAllComponentsOfDay(0)
         assertEquals(day0ComponentsInDB.first(), updatedComponent)
     }
 
     @Test
     fun updateNonExistentComponentTest() = runBlocking {
         val component = FrameworkComponentEntity(0, 0, MuscleGroup.BACK, 3, 15)
-        val componentsBeforeUpdate = repository.getAllComponentsOfDay(0).getOrAwaitValue()
+        val componentsBeforeUpdate = repository.getAllComponentsOfDay(0)
 
         repository.updateFrameworkComponent(component)
-        val componentsAfterUpdate = repository.getAllComponentsOfDay(0).getOrAwaitValue()
+        val componentsAfterUpdate = repository.getAllComponentsOfDay(0)
 
         assertEquals(componentsBeforeUpdate, componentsAfterUpdate)
     }
@@ -110,7 +110,7 @@ class FrameworkComponentRepositoryTest : TestCase() {
         repository.addFrameworkComponent(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0])
         repository.deleteFrameworkComponent(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0])
 
-        val day1ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id).getOrAwaitValue()
+        val day1ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id)
         assertTrue(day1ComponentsInDB.isEmpty())
     }
 
@@ -119,7 +119,7 @@ class FrameworkComponentRepositoryTest : TestCase() {
         repository.addFrameworkComponents(TestDataGenerator.FRAMEWORK_2_DAY_0_COMPONENTS)
         repository.deleteFrameworkComponents(TestDataGenerator.FRAMEWORK_2_DAY_0_COMPONENTS)
 
-        val day0ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[0].id).getOrAwaitValue()
+        val day0ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[0].id)
         assertTrue(day0ComponentsInDB.isEmpty())
     }
 
@@ -130,7 +130,7 @@ class FrameworkComponentRepositoryTest : TestCase() {
             TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1],
             TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[2])
 
-        val day1ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id).getOrAwaitValue()
+        val day1ComponentsInDB = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id)
         assertFalse(day1ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0]))
         assertFalse(day1ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1]))
         assertFalse(day1ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[2]))
@@ -141,10 +141,10 @@ class FrameworkComponentRepositoryTest : TestCase() {
         repository.addFrameworkComponents(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS)
 
         val component = FrameworkComponentEntity(424, TestDataGenerator.FRAMEWORK_0_DAYS[0].id, MuscleGroup.BACK, 3, 15)
-        val componentsBeforeRemove = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val componentsBeforeRemove = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
 
         repository.updateFrameworkComponent(component)
-        val componentsAfterRemove = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val componentsAfterRemove = repository.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
 
         assertEquals(componentsBeforeRemove, componentsAfterRemove)
     }

@@ -10,7 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
+import com.example.workout_companion.api.wger.entities.wgerExercise
+import com.example.workout_companion.api.wger.utility.muscleNameConverter
 import com.example.workout_companion.entity.FoodTypeEntity
+import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
 import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
@@ -40,6 +43,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
     val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
     val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
+    val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -253,8 +257,10 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                     navArgument("muscle") { type = NavType.StringType },
                 )
         ){ backStackEntry ->
+            val m  = backStackEntry.arguments?.getString("muscle")!!
             FoundExerises(navController,
-            backStackEntry.arguments?.getString("muscle"))
+                m,
+            wgerApiViewModel)
         }
 
         // Other routes go here

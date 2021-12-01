@@ -221,7 +221,7 @@ fun FoundRecipeFoods(
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
                 if(recipe != null){
-                     FoodRadioButtonList(navController, recipe, dbFoods, apiFoods, selectedFoodIndex)
+                     FoodRadioButtonList(navController, recipe, dbFoods, apiFoods)
                 }
             }
         }

@@ -84,25 +84,6 @@ fun FoundFoods(
     }
     val apiFoods = nutritionAPIViewModel.foodResults
 
-    //Store foods names in an array with type
-    dbFoods?.forEachIndexed{ index, f ->
-        foodIndexes.add(FoodIndex(f.name, "DBFood", index))
-    }
-    dbRecipes?.forEachIndexed{ index, r ->
-        foodIndexes.add(FoodIndex(r.name, "Recipe", index))
-    }
-    if(apiFoods.size != 0){
-        apiFoods.elementAt(0).forEachIndexed{index, apiFood ->
-            foodIndexes.add(FoodIndex(apiFood.name, "API", index))
-        }
-    }
-
-
-    //create a list of pairs with type and relative index
-    //keeps track of indexes, states and entities
-    val selectedFoodIndex = remember{mutableStateOf(FoodIndex("", "", 0))}
-
-
     //dialog box called when a food is searched for
     Scaffold(
         topBar = { TopNavigation(navController) },
@@ -132,7 +113,7 @@ fun FoundFoods(
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
                 if(meal != null){
-                     FoodRadioButtonList(navController, meal, dbFoods, dbRecipes, apiFoods, selectedFoodIndex)
+                     FoodRadioButtonList(navController, meal, dbFoods, dbRecipes, apiFoods)
                 }
             }
         }

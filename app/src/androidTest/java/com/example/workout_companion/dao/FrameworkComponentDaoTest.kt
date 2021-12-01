@@ -51,7 +51,7 @@ class FrameworkComponentDaoTest : TestCase() {
     fun addSingleComponentTest() = runBlocking {
         dao.addFrameworkComponent(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS[0])
 
-        val day0ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val day0ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
         assertEquals(day0ComponentsInDB.size, 1)
         assertTrue(day0ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS[0]))
     }
@@ -60,7 +60,7 @@ class FrameworkComponentDaoTest : TestCase() {
     fun addCollectionOfComponentsTest() = runBlocking {
         dao.addFrameworkComponents(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS)
 
-        val day0ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val day0ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
         assertEquals(day0ComponentsInDB, TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS)
     }
 
@@ -69,7 +69,7 @@ class FrameworkComponentDaoTest : TestCase() {
         dao.addFrameworkComponents(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0],
             TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1])
 
-        val day2ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id).getOrAwaitValue()
+        val day2ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id)
         assertEquals(day2ComponentsInDB.size, 2)
         assertTrue(day2ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0]))
         assertTrue(day2ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1]))
@@ -89,17 +89,17 @@ class FrameworkComponentDaoTest : TestCase() {
         val updatedComponent = FrameworkComponentEntity(0, 0, MuscleGroup.BACK, 5, 25)
         dao.updateFrameworkComponent(updatedComponent)
 
-        val day0ComponentsInDB = dao.getAllComponentsOfDay(0).getOrAwaitValue()
+        val day0ComponentsInDB = dao.getAllComponentsOfDay(0)
         assertEquals(day0ComponentsInDB.first(), updatedComponent)
     }
 
     @Test
     fun updateNonExistentComponentTest() = runBlocking {
         val component = FrameworkComponentEntity(0, 0, MuscleGroup.BACK, 3, 15)
-        val componentsBeforeUpdate = dao.getAllComponentsOfDay(0).getOrAwaitValue()
+        val componentsBeforeUpdate = dao.getAllComponentsOfDay(0)
 
         dao.updateFrameworkComponent(component)
-        val componentsAfterUpdate = dao.getAllComponentsOfDay(0).getOrAwaitValue()
+        val componentsAfterUpdate = dao.getAllComponentsOfDay(0)
 
         assertEquals(componentsBeforeUpdate, componentsAfterUpdate)
     }
@@ -109,7 +109,7 @@ class FrameworkComponentDaoTest : TestCase() {
         dao.addFrameworkComponent(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0])
         dao.deleteFrameworkComponent(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0])
 
-        val day1ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id).getOrAwaitValue()
+        val day1ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id)
         assertTrue(day1ComponentsInDB.isEmpty())
     }
 
@@ -118,7 +118,7 @@ class FrameworkComponentDaoTest : TestCase() {
         dao.addFrameworkComponents(TestDataGenerator.FRAMEWORK_2_DAY_0_COMPONENTS)
         dao.deleteFrameworkComponents(TestDataGenerator.FRAMEWORK_2_DAY_0_COMPONENTS)
 
-        val day0ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[0].id).getOrAwaitValue()
+        val day0ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[0].id)
         assertTrue(day0ComponentsInDB.isEmpty())
     }
 
@@ -129,7 +129,7 @@ class FrameworkComponentDaoTest : TestCase() {
             TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1],
             TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[2])
 
-        val day1ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id).getOrAwaitValue()
+        val day1ComponentsInDB = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_2_DAYS[1].id)
         assertFalse(day1ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[0]))
         assertFalse(day1ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[1]))
         assertFalse(day1ComponentsInDB.contains(TestDataGenerator.FRAMEWORK_2_DAY_1_COMPONENTS[2]))
@@ -140,10 +140,10 @@ class FrameworkComponentDaoTest : TestCase() {
         dao.addFrameworkComponents(TestDataGenerator.FRAMEWORK_0_DAY_0_COMPONENTS)
 
         val component = FrameworkComponentEntity(424, TestDataGenerator.FRAMEWORK_0_DAYS[0].id, MuscleGroup.BACK, 3, 15)
-        val componentsBeforeRemove = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val componentsBeforeRemove = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
 
         dao.updateFrameworkComponent(component)
-        val componentsAfterRemove = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id).getOrAwaitValue()
+        val componentsAfterRemove = dao.getAllComponentsOfDay(TestDataGenerator.FRAMEWORK_0_DAYS[0].id)
 
         assertEquals(componentsBeforeRemove, componentsAfterRemove)
     }
