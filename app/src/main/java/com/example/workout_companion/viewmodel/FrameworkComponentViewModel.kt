@@ -12,7 +12,10 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class FrameworkComponentViewModel(application: Application) : AndroidViewModel(application) {
-
+    /**
+     * value for found components for a day
+     */
+    val components = MutableLiveData<List<FrameworkComponentEntity>>()
     /**
      * The repository for framework components
      */
@@ -30,8 +33,8 @@ class FrameworkComponentViewModel(application: Application) : AndroidViewModel(a
      *
      * @return a LiveData List of all components in a day.
      */
-    fun getAllComponentsOfDay(day_id: Int) : LiveData<List<FrameworkComponentEntity>> {
-        return repository.getAllComponentsOfDay(day_id)
+    fun getAllComponentsOfDay(day_id: Int) {
+        components.postValue(repository.getAllComponentsOfDay(day_id))
     }
 
     /**

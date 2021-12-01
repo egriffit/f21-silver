@@ -21,19 +21,10 @@ class WgerAPIViewModel: ViewModel() {
     val exerciseInMuscles = mutableStateListOf<wgerExercise>()
     val exerciseInfo = mutableStateListOf<ExerciseInfo>()
 
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(base_url)
-            .build()
-    }
-
-    fun getExercisesByMuscleGroup(muscle: String) {
+    fun getExercisesByMuscleGroup(muscleId: Int) {
         viewModelScope.launch {
             val call = wgerApi()
                 .create(WgerApi::class.java)
-            var muscleId = toMuscleName(muscle)
 
             val response = try {
                 val exercises = call.getExerciseByMuscle(2, muscleId)

@@ -15,7 +15,7 @@ interface FrameworkDayDao {
      * @property framework_id   the primary key of the framework used for the query.
      */
     @Query("SELECT * FROM framework_day WHERE framework_type_id = :framework_id")
-    fun getAllFrameworkDays(framework_id: Int) : LiveData<List<FrameworkDayEntity>>
+    fun getAllFrameworkDays(framework_id: Int) : List<FrameworkDayEntity>
 
     /**
      * Get count for frameworks with the name and id

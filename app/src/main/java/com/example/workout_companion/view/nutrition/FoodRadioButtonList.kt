@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
  * @param dbFoods, list of FoodTypeEntities,
  * @param dbRecipes, list of RecipeEntity,
  * @param apiFoods, SnapshotStateList of APINinjaNutrition objects
- * @param selectedFoodIndex, mutable state to keep track of the currently selected radio button
  */
 @Composable
 fun FoodRadioButtonList(navController: NavController,
@@ -35,7 +34,6 @@ fun FoodRadioButtonList(navController: NavController,
                         dbFoods: List<FoodTypeEntity>?,
                         dbRecipes: List<RecipeEntity>?,
                         apiFoods: SnapshotStateList<ApiNinjaNutrition>,
-                        selectedFoodIndex: MutableState<FoodIndex>
 ) {
     //create radio buttons for foods from the database
     Column(modifier = Modifier.fillMaxWidth()){
@@ -119,7 +117,6 @@ fun FoodRadioButtonList(navController: NavController,
                         recipe: String,
                         dbFoods: List<FoodTypeEntity>?,
                         apiFoods: SnapshotStateList<ApiNinjaNutrition>,
-                        selectedFoodIndex: MutableState<FoodIndex>
 ) {
     //create radio buttons for foods from the database
     Column(modifier = Modifier.fillMaxWidth()){
