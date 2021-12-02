@@ -1,6 +1,7 @@
 package com.example.workout_companion.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.workout_companion.api.nutrition_api_ninja.entities.ApiNinjaNutrition
@@ -9,16 +10,18 @@ import com.example.workout_companion.api.utility.FoodData
 import com.example.workout_companion.api.wger.Properties.base_url
 import com.example.workout_companion.api.wger.WgerApi
 import com.example.workout_companion.api.wger.entities.ExerciseInfo
+import com.example.workout_companion.api.wger.entities.Result
 import com.example.workout_companion.api.wger.entities.wgerExercise
 import com.example.workout_companion.api.wger.utility.muscleNameConverter.fromMuscleName
 import com.example.workout_companion.api.wger.utility.muscleNameConverter.toMuscleName
 import com.example.workout_companion.api.wger.wgerApi
+import com.example.workout_companion.sampleData.emptyWgerApi
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class WgerAPIViewModel: ViewModel() {
-    val exerciseInMuscles = mutableStateListOf<wgerExercise>()
+    val exerciseInMuscles = mutableStateOf<wgerExercise>(emptyWgerApi)
     val exerciseInfo = mutableStateListOf<ExerciseInfo>()
 
     fun getExercisesByMuscleGroup(muscleId: Int) {
@@ -26,16 +29,13 @@ class WgerAPIViewModel: ViewModel() {
             val call = wgerApi()
                 .create(WgerApi::class.java)
 
-            val response = try {
+            try {
+                exerciseInMuscles.value = emptyWgerApi
                 val exercises = call.getExerciseByMuscle(2, muscleId)
-                if(exerciseInMuscles.size > 0){
-                    exerciseInMuscles.clear()
-                    exerciseInMuscles.add(exercises)
-                }else{
-                    exerciseInMuscles.clear()
-                }
+                    exerciseInMuscles.value = exercises
             } catch (e: Exception) {
-                exerciseInMuscles.clear()
+                //Oh No!!!
+                exerciseInMuscles.value = emptyWgerApi
             }
         }
 
@@ -46,7 +46,7 @@ class WgerAPIViewModel: ViewModel() {
             val call = wgerApi()
                 .create(WgerApi::class.java)
 
-            val response = try {
+            try {
                 val exercise = call.getExerciseById(exerciseId, 2)
                 if(exerciseInfo.size > 0){
                     exerciseInfo.clear()
@@ -61,14 +61,14 @@ class WgerAPIViewModel: ViewModel() {
     }
 
     fun getExercisesFromResponse(response: wgerExercise?): List<ExerciseData>{
-        var wgerId: Int = 0
-        var name: String = ""
-        var description:  String = ""
-        var image: String = "";
-        var muscles: MutableList<String> = mutableListOf()
-        var equipment: MutableList<Int> = mutableListOf()
-        var exercises: MutableList<ExerciseData> = mutableListOf()
-        var images: MutableList<String> = mutableListOf()
+        var wgerId = 0
+        var name = ""
+        var description = ""
+        var image = ""
+        val muscles: MutableList<String> = mutableListOf()
+        val equipment: MutableList<Int> = mutableListOf()
+        val exercises: MutableList<ExerciseData> = mutableListOf()
+        val images: MutableList<String> = mutableListOf()
         response?.results?.forEach{
             wgerId = it.id
             name = it.name
@@ -88,24 +88,24 @@ class WgerAPIViewModel: ViewModel() {
     }
 
     fun getExercisesFromResponse(response: ExerciseInfo?): ExerciseData{
-        var wgerId: Int = 0
-        var name: String = ""
-        var description:  String = ""
-        var image: String = "";
-        var muscles: MutableList<String> = mutableListOf()
-        var equipment: MutableList<Int> = mutableListOf()
-        var images: MutableList<String> = mutableListOf()
+        var wgerId = 0
+        var name = ""
+        var description = ""
+        var image = ""
+        val muscles: MutableList<String> = mutableListOf()
+        val equipment: MutableList<Int> = mutableListOf()
+        val images: MutableList<String> = mutableListOf()
             wgerId = response?.id!!
-            name = response?.name
+            name = response.name
             description = response?.description
-        response?.muscles?.forEach{ m ->
-                var muscle = fromMuscleName(m as Int)
+        response.muscles.forEach{ m ->
+                val muscle = fromMuscleName(m as Int)
                 muscles.add(muscle)
             }
-        response?.equipment?.forEach{ e->
+        response.equipment.forEach{ e->
                     equipment.add(e.id)
             }
-        response?.images?.forEach { i ->
+        response.images.forEach { i ->
             images.add(i as String)
         }
             return ExerciseData(wgerId, name, description, muscles, equipment, images)

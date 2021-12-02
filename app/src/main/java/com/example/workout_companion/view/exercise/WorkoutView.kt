@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.entity.FrameworkDayEntity
-import com.example.workout_companion.view.FrameworkComponentItem
 import com.example.workout_companion.viewmodel.FrameworkComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,14 +57,14 @@ fun WorkoutView(navController: NavController,
                                 expanded = !expanded
                                 selectedDay = it.id
                             }) {
-                            Text(text = "${it.name}")
+                            Text(text = it.name)
                         }
                     }
                 }
             }
         }else{
             runBlocking {
-                val job: Job = launch(Dispatchers.IO) {
+                launch(Dispatchers.IO) {
                     if (selectedDay != 0) {
                         frameworkComponentViewModel.getAllComponentsOfDay(selectedDay)
                     }

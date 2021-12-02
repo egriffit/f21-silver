@@ -1,4 +1,4 @@
-package com.example.workout_companion.view
+package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,8 +17,8 @@ import androidx.navigation.NavController
 fun FrameworkComponentItem(navController: NavController, muscle: String) {
     Column {
 
-        var expandedState = remember { mutableStateOf(false) }
-        var selectedExercise = remember{ mutableStateOf("")}
+        val expandedState = remember { mutableStateOf(false) }
+        val selectedExercise = remember{ mutableStateOf("")}
         FrameworkComponentHeader(navController, muscle, expandedState)
         if(expandedState.value == true) {
             // TODO: load each set found in the database here
@@ -32,7 +32,7 @@ fun FrameworkComponentItem(navController: NavController, muscle: String) {
 @Composable
 fun FrameworkComponentHeader(navController: NavController, muscle: String, expanded: MutableState<Boolean>) {
 
-    val muscleGroupState by remember { mutableStateOf("$muscle") }
+    val muscleGroupState by remember { mutableStateOf(muscle) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
