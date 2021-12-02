@@ -263,6 +263,17 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             wgerApiViewModel)
         }
 
+        composable (route = "ExerciseView/{exerciseId}",
+            arguments = listOf(
+                navArgument("exerciseId") { type = NavType.StringType },
+            )
+        ){ backStackEntry ->
+            val exerciseId  = backStackEntry.arguments?.getString("exerciseId")!!.toInt()
+            wgerApiViewModel.getExericseInfo(exerciseId)
+            val exerciseInfo = wgerApiViewModel.exerciseInfo
+//            ExerciseView(navController,
+//                exerciseInfo)
+        }
         // Other routes go here
     }
 }

@@ -9,12 +9,11 @@ import com.example.workout_companion.api.utility.ExerciseData
 import com.example.workout_companion.api.utility.FoodData
 import com.example.workout_companion.api.wger.Properties.base_url
 import com.example.workout_companion.api.wger.WgerApi
-import com.example.workout_companion.api.wger.entities.ExerciseInfo
-import com.example.workout_companion.api.wger.entities.Result
-import com.example.workout_companion.api.wger.entities.wgerExercise
+import com.example.workout_companion.api.wger.entities.*
 import com.example.workout_companion.api.wger.utility.muscleNameConverter.fromMuscleName
 import com.example.workout_companion.api.wger.utility.muscleNameConverter.toMuscleName
 import com.example.workout_companion.api.wger.wgerApi
+import com.example.workout_companion.sampleData.emptyExerciseInfo
 import com.example.workout_companion.sampleData.emptyWgerApi
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -22,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class WgerAPIViewModel: ViewModel() {
     val exerciseInMuscles = mutableStateOf<wgerExercise>(emptyWgerApi)
-    val exerciseInfo = mutableStateListOf<ExerciseInfo>()
+    val exerciseInfo = mutableStateOf<ExerciseInfo>(emptyExerciseInfo)
 
     fun getExercisesByMuscleGroup(muscleId: Int) {
         viewModelScope.launch {
@@ -48,14 +47,9 @@ class WgerAPIViewModel: ViewModel() {
 
             try {
                 val exercise = call.getExerciseById(exerciseId, 2)
-                if(exerciseInfo.size > 0){
-                    exerciseInfo.clear()
-                    exerciseInfo.add(exercise)
-                }else{
-                    exerciseInfo.clear()
-                }
+                    exerciseInfo.value = exercise
             } catch (e: Exception) {
-                exerciseInfo.clear()
+                exerciseInfo.value = emptyExerciseInfo
             }
         }
     }
