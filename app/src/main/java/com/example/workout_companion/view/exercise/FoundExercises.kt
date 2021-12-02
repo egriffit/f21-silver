@@ -42,7 +42,7 @@ fun FoundExerises(
         ) {
             item {
                 if (found.value.results.isNotEmpty()) {
-//                    ExerciseRadioButtons(navController, found.value, selectedIndex, selectedId)
+                    ExerciseRadioButtons(navController, found.value, muscle!!, selectedIndex, selectedId)
                 }
             }
             item {

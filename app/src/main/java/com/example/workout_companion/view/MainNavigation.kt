@@ -11,9 +11,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
 import com.example.workout_companion.api.wger.entities.wgerExercise
+import com.example.workout_companion.api.wger.utility.muscleName
 import com.example.workout_companion.api.wger.utility.muscleNameConverter
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
+import com.example.workout_companion.view.exercise.ExerciseView
 import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
@@ -263,16 +265,21 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             wgerApiViewModel)
         }
 
-        composable (route = "ExerciseView/{exerciseId}",
+        composable (route = "ExerciseView/{muscle}/{exerciseId}",
             arguments = listOf(
                 navArgument("exerciseId") { type = NavType.StringType },
-            )
+                navArgument("muscle") { type = NavType.StringType },
+
+                )
         ){ backStackEntry ->
             val exerciseId  = backStackEntry.arguments?.getString("exerciseId")!!.toInt()
+            val muscleName  = backStackEntry.arguments?.getString("muscle")!!
+
             wgerApiViewModel.getExericseInfo(exerciseId)
             val exerciseInfo = wgerApiViewModel.exerciseInfo
-//            ExerciseView(navController,
-//                exerciseInfo)
+            if(exerciseInfo.value != null) {
+                ExerciseView(navController, exerciseInfo.value, muscleName)
+            }
         }
         // Other routes go here
     }

@@ -18,7 +18,8 @@ import kotlinx.coroutines.*
 @Composable
 fun ExerciseView(
     navController: NavController,
-    exerciseInfo: ExerciseInfo
+    exerciseInfo: ExerciseInfo,
+    muscleGroupName: String
 ){
     Scaffold(
         topBar = { TopNavigation(navController) },
@@ -129,7 +130,7 @@ fun ExerciseView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Spacer(modifier = Modifier.padding(start = 30.dp))
-                    Button(onClick = { cancel(navController) }) {
+                    Button(onClick = { navController.navigate("searchExercise/${muscleGroupName}") }) {
                         Text("Cancel")
                     }
                 }
