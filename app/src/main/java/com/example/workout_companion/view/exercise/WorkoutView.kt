@@ -19,10 +19,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
-fun WorkoutView(navController: NavController,
-                workoutState: State<WorkoutWithComponents?>,
-                frameworkDays: List<FrameworkDayEntity>,
-                frameworkComponentViewModel: FrameworkComponentViewModel
+fun WorkoutView(
+    navController: NavController,
+    workoutState: State<WorkoutWithComponents?>,
+    frameworkDays: List<FrameworkDayEntity>,
+    frameworkComponentViewModel: FrameworkComponentViewModel
 ){
     val frameworkComponents = frameworkComponentViewModel.components.observeAsState().value
     var selectedDay by remember { mutableStateOf(0) }
@@ -57,14 +58,14 @@ fun WorkoutView(navController: NavController,
                                 expanded = !expanded
                                 selectedDay = it.id
                             }) {
-                            Text(text = it.name)
+                            Text(text = "${it.name}")
                         }
                     }
                 }
             }
         }else{
             runBlocking {
-                launch(Dispatchers.IO) {
+                val job: Job = launch(Dispatchers.IO) {
                     if (selectedDay != 0) {
                         frameworkComponentViewModel.getAllComponentsOfDay(selectedDay)
                     }
