@@ -274,11 +274,16 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         ){ backStackEntry ->
             val exerciseId  = backStackEntry.arguments?.getString("exerciseId")!!.toInt()
             val muscleName  = backStackEntry.arguments?.getString("muscle")!!
-
-            wgerApiViewModel.getExericseInfo(exerciseId)
-            val exerciseInfo = wgerApiViewModel.exerciseInfo
+            var exerciseInfo = wgerApiViewModel.exerciseInfo
+            runBlocking{
+                val exerciseJob: Job = launch(Dispatchers.IO){
+                    wgerApiViewModel.getExericseInfo(exerciseId)
+                }
+                exerciseJob.join()
+                exerciseInfo = wgerApiViewModel.exerciseInfo
+            }
             if(exerciseInfo.value != null) {
-                ExerciseView(navController, exerciseInfo.value, muscleName)
+                ExerciseView(navController, exerciseInfo.value, muscleName, exerciseId)
             }
         }
         // Other routes go here

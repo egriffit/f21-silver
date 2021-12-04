@@ -34,7 +34,7 @@ fun ExerciseRadioButtons(navController: NavController, exercises: wgerExercise,
                     colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
                 )
                 Button(onClick = {
-                    navController.navigate("ExerciseView/${muscleName}/${selectedID.value}")
+                    navController.navigate("ExerciseView/${muscleName}/${exercise.id}")
                 }) {
                     Text("${exercise.name}")
                 }
