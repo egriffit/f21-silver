@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.workout_companion.api.wger.entities.wgerExercise
 import com.example.workout_companion.enumeration.MuscleGroupConverter
 import com.example.workout_companion.viewmodel.WgerAPIViewModel
 
