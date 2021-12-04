@@ -36,3 +36,19 @@ fun ExerciseOverview(navController: NavController,
         content = { WorkoutView(navController, workoutState, dayId, frameworkDays, frameworkComponentViewModel) }
     )
 }
+
+@Composable
+fun ExerciseOverview(navController: NavController,
+                     workoutState: State<WorkoutWithComponents?>,
+                     frameworkDays: List<FrameworkDayEntity>,
+                     dayId: Int,
+                     muscleId: Int,
+                     exerciseId: Int,
+                     frameworkComponentViewModel: FrameworkComponentViewModel
+){
+    Scaffold(
+        topBar = { TopNavigation(navController) },
+        bottomBar = {},
+        content = { WorkoutView(navController, workoutState, dayId, muscleId, exerciseId, frameworkDays, frameworkComponentViewModel) }
+    )
+}

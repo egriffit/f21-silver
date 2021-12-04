@@ -23,11 +23,16 @@ fun WorkoutView(
     navController: NavController,
     workoutState: State<WorkoutWithComponents?>,
     dayId: Int,
+    muscleId: Int,
+    exerciseId: Int,
     frameworkDays: List<FrameworkDayEntity>,
     frameworkComponentViewModel: FrameworkComponentViewModel
 ){
     val frameworkComponents = frameworkComponentViewModel.components.observeAsState().value
     var selectedDay = remember { mutableStateOf(dayId) }
+    val selectedMuscle = remember{mutableStateOf(muscleId)}
+    val selectedExercise = remember{mutableStateOf(exerciseId)}
+
     Column(modifier = Modifier
         .padding(top = 20.dp, start = 20.dp, end = 20.dp)
         .fillMaxWidth()
@@ -85,7 +90,7 @@ fun WorkoutView(
                 LazyColumn{
                     frameworkComponents.forEach { m ->
                        item{
-                           FrameworkComponentItem(navController, selectedDay.value, m.muscle_group.name)
+                           FrameworkComponentItem(navController, selectedDay.value, m.id, m.muscle_group.name)
                        }
                     }
                 }
@@ -116,8 +121,21 @@ fun WorkoutView(
     frameworkDays: List<FrameworkDayEntity>,
     frameworkComponentViewModel: FrameworkComponentViewModel
 ){
-    WorkoutView(navController, workoutState, 0, frameworkDays, frameworkComponentViewModel)
+    WorkoutView(navController, workoutState, 0, 0, 0, frameworkDays, frameworkComponentViewModel)
 }
+
+@Composable
+fun WorkoutView(
+    navController: NavController,
+    workoutState: State<WorkoutWithComponents?>,
+    dayId: Int,
+    frameworkDays: List<FrameworkDayEntity>,
+    frameworkComponentViewModel: FrameworkComponentViewModel
+){
+    WorkoutView(navController, workoutState, dayId, 0, 0, frameworkDays, frameworkComponentViewModel)
+}
+
+
 
 @Preview(showBackground = true)
 @Composable

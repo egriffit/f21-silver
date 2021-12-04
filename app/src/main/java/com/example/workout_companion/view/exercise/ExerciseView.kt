@@ -21,6 +21,7 @@ fun ExerciseView(
     exerciseInfo: ExerciseInfo,
     muscleGroupName: String,
     dayId: Int,
+    muscleId: Int,
     exerciseId: Int,
 ) {
     Scaffold(
@@ -32,7 +33,7 @@ fun ExerciseView(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Spacer(modifier = Modifier.padding(start = 30.dp))
-                Button(onClick = { navController.navigate("searchExercise/${muscleGroupName}/${dayId}") }) {
+                Button(onClick = { navController.navigate("searchExercise/${muscleGroupName}/${dayId}/${muscleId}") }) {
                     Text("Done")
                 }
             }

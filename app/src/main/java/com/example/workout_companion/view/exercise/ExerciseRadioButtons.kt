@@ -15,7 +15,8 @@ import com.example.workout_companion.api.wger.entities.wgerExercise
 
 @Composable
 fun ExerciseRadioButtons(navController: NavController, exercises: wgerExercise,
-                         muscleName: String,
+                         muscleId: Int,
+                         muscle: String,
                          dayId: Int,
                          selectedIndex: MutableState<Int>, selectedID: MutableState<Int>){
 //create radio buttons for foods from the database
@@ -35,7 +36,8 @@ fun ExerciseRadioButtons(navController: NavController, exercises: wgerExercise,
                     colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
                 )
                 Button(onClick = {
-                    navController.navigate("ExerciseView/${muscleName}/${exercise.id}/${dayId}")
+                    //ExerciseView/{muscle}{muscleId}/{exerciseId}/{dayId}
+                    navController.navigate("ExerciseView/m/${muscle}/${muscleId}/e/${exercise.id}/d/${dayId}")
                 }) {
                     Text("${exercise.name}")
                 }

@@ -18,6 +18,7 @@ import com.example.workout_companion.viewmodel.WgerAPIViewModel
 @Composable
 fun FoundExerises(
     navController: NavController,
+    muscleId: Int,
     muscle: String?,
     dayID: Int,
     wgerAPi: WgerAPIViewModel
@@ -30,10 +31,10 @@ fun FoundExerises(
             Text("Found Exercises for ${muscle}")
         }
         val muscleGroup = MuscleGroupConverter.toMuscleGroup(muscle!!)
-        val muscleId = muscleGroup.wgerMuscles.elementAt(0).id
+        val muscleIDWGER = muscleGroup.wgerMuscles.elementAt(0).id
         Text("${muscleId} - ${muscleGroup.wgerMuscles.elementAt(0).descName}")
         LaunchedEffect(key1 = Unit, block = {
-            wgerAPi.getExercisesByMuscleGroup(muscleId)
+            wgerAPi.getExercisesByMuscleGroup(muscleIDWGER)
         })
         val found = wgerAPi.exerciseInMuscles
         LazyColumn(
@@ -42,12 +43,18 @@ fun FoundExerises(
         ) {
             item {
                 if (found.value.results.isNotEmpty()) {
-                    ExerciseRadioButtons(navController, found.value, muscle!!, dayID, selectedIndex, selectedId)
+                    ExerciseRadioButtons(navController, found.value, muscleId!!, muscle, dayID, selectedIndex, selectedId)
                 }
             }
             item {
                 Row() {
-                    Button(onClick = { navController.navigate("ExerciseOverview/${dayID}/m/${selectedId.value}") }) {
+                    Button(onClick = {
+                            if(selectedId.value != 0) {
+                                navController.navigate("ExerciseOverview/d/${dayID}/m/${muscleId}/e/${selectedId.value}")
+                            }
+                        }
+                    )
+                    {
                         Text("Submit")
                     }
                     Spacer(modifier = Modifier.padding(start = 20.dp))
