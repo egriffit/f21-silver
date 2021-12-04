@@ -14,12 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 
 @Composable
-fun FrameworkComponentItem(navController: NavController, muscle: String) {
+fun FrameworkComponentItem(navController: NavController, dayId: Int, muscle: String) {
     Column {
 
         val expandedState = remember { mutableStateOf(false) }
         val selectedExercise = remember{ mutableStateOf("")}
-        FrameworkComponentHeader(navController, muscle, expandedState)
+        FrameworkComponentHeader(navController, dayId,  muscle, expandedState)
         if(expandedState.value == true) {
             // TODO: load each set found in the database here
             for (i in 1..3) {
@@ -30,8 +30,7 @@ fun FrameworkComponentItem(navController: NavController, muscle: String) {
 }
 
 @Composable
-fun FrameworkComponentHeader(navController: NavController, muscle: String, expanded: MutableState<Boolean>) {
-
+fun FrameworkComponentHeader(navController: NavController, dayId: Int,  muscle: String, expanded: MutableState<Boolean>) {
     val muscleGroupState by remember { mutableStateOf(muscle) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
     Row(
@@ -62,7 +61,7 @@ fun FrameworkComponentHeader(navController: NavController, muscle: String, expan
 
             // Exercise Name
             TextButton(
-                onClick = { navController.navigate("searchExercise/${muscle}")},
+                onClick = { navController.navigate("searchExercise/${muscle}/${dayId}")},
             ) {
                 Text(text = exerciseState)
             }

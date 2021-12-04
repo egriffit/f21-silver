@@ -19,6 +19,7 @@ import com.example.workout_companion.viewmodel.WgerAPIViewModel
 fun FoundExerises(
     navController: NavController,
     muscle: String?,
+    dayID: Int,
     wgerAPi: WgerAPIViewModel
 ) {
     val selectedId = remember { mutableStateOf(0) }
@@ -41,16 +42,16 @@ fun FoundExerises(
         ) {
             item {
                 if (found.value.results.isNotEmpty()) {
-                    ExerciseRadioButtons(navController, found.value, muscle!!, selectedIndex, selectedId)
+                    ExerciseRadioButtons(navController, found.value, muscle!!, dayID, selectedIndex, selectedId)
                 }
             }
             item {
                 Row() {
-                    Button(onClick = { navController.navigate("ExerciseOverview") }) {
+                    Button(onClick = { navController.navigate("ExerciseOverview/${dayID}/m/${selectedId.value}") }) {
                         Text("Submit")
                     }
                     Spacer(modifier = Modifier.padding(start = 20.dp))
-                    Button(onClick = { navController.navigate("ExerciseOverview") }) {
+                    Button(onClick = { navController.navigate("ExerciseOverview/d/${dayID}") }) {
                         Text("Cancel")
                     }
                 }
