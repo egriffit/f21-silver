@@ -39,7 +39,7 @@ class WorkoutComponentSetViewModel(application: Application) : AndroidViewModel(
      * @param set: WorkoutComponentSet
      *
      */
-    suspend fun getSetsFprComponent(id: Int){
+    suspend fun getSetsForComponent(id: Int){
         viewModelScope.launch(Dispatchers.IO){
             workoutComponentSets.postValue(repository.getSetsForComponent(id))
         }

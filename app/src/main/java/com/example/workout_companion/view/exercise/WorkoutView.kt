@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,6 +44,8 @@ fun WorkoutView(
     val selectedMuscle = remember{mutableStateOf(muscleId)}
     val selectedExercise = remember{mutableStateOf(exerciseId)}
     var exerciseName = ""
+    val focusManager = LocalFocusManager.current
+
     if(exerciseId != 0){
         LaunchedEffect(key1 = Unit, block = {
             wgerAPi.getExericseInfo(exerciseId )
@@ -66,13 +69,15 @@ fun WorkoutView(
                 //if (workoutState.value == null) {
                 var expanded by remember { mutableStateOf(false) }
                 OutlinedButton(
-                    onClick = { expanded = !expanded }
+                    onClick = { expanded = !expanded  }
                 ) {
                     Text(text = "Start Workout")
                 }
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = {}
+                    onDismissRequest = {
+                        focusManager.clearFocus()
+                    }
                 ) {
                     frameworkDays.forEach {
                         DropdownMenuItem(

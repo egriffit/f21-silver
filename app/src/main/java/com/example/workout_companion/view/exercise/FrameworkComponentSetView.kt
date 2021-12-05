@@ -35,19 +35,24 @@ fun FrameworkComponentSetRow(
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
     // TODO: remember the progress state of the set entity
-    var checkState by remember { mutableStateOf(false) }
+    var checkState = remember { mutableStateOf(false) }
     // TODO: remember the weight of the given set entity
-    var weightState by remember { mutableStateOf("0.0") }
+    var weightState = remember { mutableStateOf("0.0") }
     // TODO: remember the reps of the given set entity
-    var setState by remember { mutableStateOf("0") }
+    var setState = remember { mutableStateOf("0") }
 
     val focusManager = LocalFocusManager.current
-
-    checkState = workoutComponentSetEntity.status == Progress.COMPLETE
+    if(workoutComponentSetEntity.status != Progress.NOT_STARTED){
+        checkState.value = workoutComponentSetEntity.status == Progress.COMPLETE
+    }
     // TODO: remember the weight of the given set entity
-    weightState = workoutComponentSetEntity.weight.toString()
+    if(workoutComponentSetEntity.weight != 0.0){
+        weightState.value = workoutComponentSetEntity.weight.toString()
+    }
     // TODO: remember the reps of the given set entity
-    setState = workoutComponentSetEntity.reps.toString()
+    if(workoutComponentSetEntity.reps != 0){
+        setState.value = workoutComponentSetEntity.reps.toString()
+    }
     var completionStatus: Progress
 
     Row(
@@ -57,38 +62,38 @@ fun FrameworkComponentSetRow(
     ) {
         // Progress state check box
         Checkbox(
-            checked = checkState,
+            checked = checkState.value,
             // TODO: write the new state to the database with the view model
             onCheckedChange = {
-                checkState = it
+                checkState.value = it
                 focusManager.clearFocus()
-//                if(exerciseId != 0){
-//                    if(!checkState){
-//                        completionStatus = Progress.IN_PROGRESS
-//                    }else{
-//                        completionStatus = Progress.COMPLETE
-//                    }
-//                    val set = WorkoutComponentSetEntity(0, workoutComponentId, setState.toInt(), weightState.toDouble(), completionStatus, exerciseId)
-//                    runBlocking {
-//                        launch(Dispatchers.IO){
-//                            workoutComponentSetViewModel.addSet(set)
-//                        }
-//                    }
-//                }
+                if(exerciseId != 0){
+                    if(!checkState.value){
+                        completionStatus = Progress.IN_PROGRESS
+                    }else{
+                        completionStatus = Progress.COMPLETE
+                    }
+                    val set = WorkoutComponentSetEntity(0, workoutComponentId, setState.value.toInt(), weightState.value.toDouble(), completionStatus, exerciseId)
+                    runBlocking {
+                        launch(Dispatchers.IO){
+                            workoutComponentSetViewModel.addSet(set)
+                        }
+                    }
+                }
             },
             modifier = Modifier.weight(1f)
         )
 
         // Weight Input Field
         OutlinedTextField(
-            value = weightState,
+            value = weightState.value,
             // TODO: write the new weight state to the database with the view model
             onValueChange = { newValue ->
                 if (newValue.isEmpty() or (newValue.toDoubleOrNull() != null) ) {
-                    weightState = newValue
+                    weightState.value = newValue
                 }
             },
-            enabled = !checkState,
+            enabled = !checkState.value,
             singleLine = true,
             textStyle = TextStyle(textAlign = TextAlign.Center),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -107,11 +112,11 @@ fun FrameworkComponentSetRow(
 
         // Reps Input Field
         OutlinedTextField(
-            value = setState,
+            value = setState.value,
             onValueChange = { newValue ->
-                setState = newValue.filter { it.isDigit() }
+                setState.value = newValue.filter { it.isDigit() }
             },
-            enabled = !checkState,
+            enabled = !checkState.value,
             singleLine = true,
             textStyle = TextStyle(textAlign = TextAlign.Center),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.workout_companion.entity.WorkoutComponentSetEntity
@@ -36,33 +37,34 @@ fun FrameworkComponentItem(navController: NavController,
         val expandedState = remember { mutableStateOf(false) }
         val selectedExercise = remember{ mutableStateOf("")}
         FrameworkComponentHeader(navController, dayId, muscleId, muscle, searchedMuscle, exerciseId, exerciseName, expandedState)
-        val foundSets = workoutComponentSetViewModel.workoutComponentSets.observeAsState().value
         if(expandedState.value) {
                 runBlocking{
                     launch(Dispatchers.IO){
-                        workoutComponentSetViewModel.getSetsFprComponent(workoutId)
+                        workoutComponentSetViewModel.getSetsForComponent(workoutId)
                     }
                 }
-//            if(foundSets != null && foundSets.isNotEmpty()){
-//                        foundSets.forEach(){
-//                            FrameworkComponentSetRow(
-//                                exerciseId,
-//                                workoutId,
-//                                workoutComponentSetViewModel,
-//                                it
-//                            )
-//                        }
-//                if(foundSets.size < 3){
-//                    for (i in foundSets.size+1..3) {
-//                        FrameworkComponentSetRow(
-//                            exerciseId,
-//                            workoutId,
-//                            workoutComponentSetViewModel,
-//                            WorkoutComponentSetEntity(0, muscleId, 0, 0.0, Progress.NOT_STARTED, null)
-//                        )
-//                    }
-//                }
-//            }else{
+            val foundSets = workoutComponentSetViewModel.workoutComponentSets.observeAsState().value
+
+            if(foundSets != null && foundSets.isNotEmpty()){
+                        foundSets.forEach(){
+                            FrameworkComponentSetRow(
+                                exerciseId,
+                                workoutId,
+                                workoutComponentSetViewModel,
+                                it
+                            )
+                        }
+                if(foundSets.size < 3){
+                    for (i in foundSets.size+1..3) {
+                        FrameworkComponentSetRow(
+                            exerciseId,
+                            workoutId,
+                            workoutComponentSetViewModel,
+                            WorkoutComponentSetEntity(0, muscleId, 0, 0.0, Progress.NOT_STARTED, null)
+                        )
+                    }
+                }
+            }else{
                 for (i in 1..3) {
                         FrameworkComponentSetRow(
                             exerciseId,
@@ -71,7 +73,7 @@ fun FrameworkComponentItem(navController: NavController,
                             WorkoutComponentSetEntity(0, muscleId, 0, 0.0, Progress.NOT_STARTED, null)
                         )
                     }
-//                }
+                }
             }
         }
     }
@@ -86,20 +88,22 @@ fun FrameworkComponentHeader(navController: NavController, dayId: Int,
                              expanded: MutableState<Boolean>) {
     val muscleGroupState by remember { mutableStateOf(muscle) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         // Drop Down Icon
         if(expanded.value == true) {
-            Button(onClick = { expanded.value = !expanded.value }) {
+            Button(onClick = { expanded.value = !expanded.value }, ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = "Localized Description"
                 )
             }
         }else {
-            Button(onClick = { expanded.value = !expanded.value }) {
+            Button(onClick = { expanded.value = !expanded.value}
+            ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowRight,
                     contentDescription = "Localized Description"
