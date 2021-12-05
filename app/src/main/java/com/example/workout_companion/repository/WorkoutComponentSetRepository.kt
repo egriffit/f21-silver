@@ -5,6 +5,10 @@ import com.example.workout_companion.entity.WorkoutComponentSetEntity
 
 class WorkoutComponentSetRepository(private val dao: WorkoutComponentSetDao) {
 
+    suspend fun getSetsForComponent(id: Int): List<WorkoutComponentSetEntity>{
+        return dao.getSetsForComponent(id)
+    }
+
     suspend fun addSet(set: WorkoutComponentSetEntity) {
         dao.addSet(set)
     }

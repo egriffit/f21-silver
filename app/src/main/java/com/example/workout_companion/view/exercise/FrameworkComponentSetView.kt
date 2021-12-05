@@ -16,11 +16,21 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.workout_companion.entity.WorkoutComponentSetEntity
+import com.example.workout_companion.viewmodel.WorkoutComponentSetViewModel
+import com.example.workout_companion.enumeration.Progress
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
-fun FrameworkComponentSetRow(exercise: MutableState<String>) {
+fun FrameworkComponentSetRow(
+    exerciseId: Int,
+    workoutComponentId: Int,
+    workoutComponentSetViewModel: WorkoutComponentSetViewModel,
+    workoutComponentSetEntity: WorkoutComponentSetEntity
+) {
 
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
@@ -32,6 +42,13 @@ fun FrameworkComponentSetRow(exercise: MutableState<String>) {
     var setState by remember { mutableStateOf("0") }
 
     val focusManager = LocalFocusManager.current
+
+    checkState = workoutComponentSetEntity.status == Progress.COMPLETE
+    // TODO: remember the weight of the given set entity
+    weightState = workoutComponentSetEntity.weight.toString()
+    // TODO: remember the reps of the given set entity
+    setState = workoutComponentSetEntity.reps.toString()
+    var completionStatus: Progress
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -45,6 +62,19 @@ fun FrameworkComponentSetRow(exercise: MutableState<String>) {
             onCheckedChange = {
                 checkState = it
                 focusManager.clearFocus()
+//                if(exerciseId != 0){
+//                    if(!checkState){
+//                        completionStatus = Progress.IN_PROGRESS
+//                    }else{
+//                        completionStatus = Progress.COMPLETE
+//                    }
+//                    val set = WorkoutComponentSetEntity(0, workoutComponentId, setState.toInt(), weightState.toDouble(), completionStatus, exerciseId)
+//                    runBlocking {
+//                        launch(Dispatchers.IO){
+//                            workoutComponentSetViewModel.addSet(set)
+//                        }
+//                    }
+//                }
             },
             modifier = Modifier.weight(1f)
         )
@@ -67,14 +97,14 @@ fun FrameworkComponentSetRow(exercise: MutableState<String>) {
             }),
             modifier = Modifier.weight(2f)
         )
-        
+
         // Weight Units Label
         Text(
             text = "lb",
             textAlign = TextAlign.Center,
             modifier = Modifier.weight(2f)
         )
-        
+
         // Reps Input Field
         OutlinedTextField(
             value = setState,
@@ -90,7 +120,7 @@ fun FrameworkComponentSetRow(exercise: MutableState<String>) {
             }),
             modifier = Modifier.weight(2f)
         )
-        
+
         // Reps label
         Text(
             text = "reps",
@@ -100,9 +130,14 @@ fun FrameworkComponentSetRow(exercise: MutableState<String>) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun TestingPreview() {
-    val exercise = remember {mutableStateOf("Push-Up")}
-    FrameworkComponentSetRow(exercise)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun TestingPreview() {
+//    //val exercise = remember {mutableStateOf("Push-Up")}
+//    val exerciseId = 1
+//    val frameworkId = 1
+//
+//    val workoutComponentSetViewModel by lazy { viewModelProvider.get(WorkoutComponentSetViewModel::class.java)}
+//
+//    FrameworkComponentSetRow(exercise)
+//}

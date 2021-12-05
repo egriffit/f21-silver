@@ -43,6 +43,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
     val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
     val workoutComponentViewModel by lazy { viewModelProvider.get(WorkoutComponentViewModel::class.java)}
+    val workoutComponentSetViewModel by lazy { viewModelProvider.get(WorkoutComponentSetViewModel::class.java)}
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -294,7 +295,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             if(frameworkDays != null){
                 ExerciseOverview(navController, workoutState, frameworkDays,
                     frameworkComponentViewModel, wgerApiViewModel, workoutViewModel,
-                    workoutComponentViewModel)
+                    workoutComponentViewModel, workoutComponentSetViewModel)
             }
         }
         // exercise overview view with day
@@ -317,7 +318,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             if(frameworkDays != null){
                 ExerciseOverview(navController, workoutState, frameworkDays,
                     day, frameworkComponentViewModel, wgerApiViewModel,
-                    workoutViewModel, workoutComponentViewModel)
+                    workoutViewModel, workoutComponentViewModel,
+                    workoutComponentSetViewModel)
             }
         }
 
@@ -350,7 +352,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             if(frameworkDays != null){
                 ExerciseOverview(navController, workoutState, frameworkDays, day,
                     muscleId, exerciseId, searchedMuscle, frameworkComponentViewModel,
-                    wgerApiViewModel, workoutViewModel, workoutComponentViewModel)
+                    wgerApiViewModel, workoutViewModel, workoutComponentViewModel,
+                    workoutComponentSetViewModel)
             }
         }
         // Other routes go here

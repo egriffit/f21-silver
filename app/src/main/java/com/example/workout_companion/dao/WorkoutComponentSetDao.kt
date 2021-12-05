@@ -18,6 +18,17 @@ interface WorkoutComponentSetDao {
     @Query("SELECT * FROM workout_component_set")
     fun getAllSets(): List<WorkoutComponentSetEntity>
 
+
+    /**
+     * Gets all sets for a component
+     *
+     * @param id, workout component id
+     * @return A list of all sets in the database.
+     */
+    @Query("SELECT * FROM workout_component_set WHERE workout_component_id =:id")
+    fun getSetsForComponent(id: Int): List<WorkoutComponentSetEntity>
+
+
     /**
      * Adds a set to the database
      *

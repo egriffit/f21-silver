@@ -27,6 +27,16 @@ interface WorkoutComponentDao {
      *
      * @return The primary key of the new component
      */
+    @Query ("SELECT COUNT(*) FROM workout_component WHERE workout_date=:date AND component_id=:component_id")
+    fun count(date: LocalDate, component_id: Int): Int
+
+    /**
+     * Adds a workout component to the database
+     *
+     * @param workoutComponent The component to add.
+     *
+     * @return The primary key of the new component
+     */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addWorkoutComponent(workoutComponent: WorkoutComponentEntity): Long
 

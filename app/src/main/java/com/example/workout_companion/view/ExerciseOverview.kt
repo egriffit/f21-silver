@@ -8,10 +8,7 @@ import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.view.exercise.WorkoutView
 import com.example.workout_companion.view.inputfields.TopNavigation
-import com.example.workout_companion.viewmodel.FrameworkComponentViewModel
-import com.example.workout_companion.viewmodel.WgerAPIViewModel
-import com.example.workout_companion.viewmodel.WorkoutComponentViewModel
-import com.example.workout_companion.viewmodel.WorkoutViewModel
+import com.example.workout_companion.viewmodel.*
 
 @Composable
 fun ExerciseOverview(navController: NavController,
@@ -20,13 +17,15 @@ fun ExerciseOverview(navController: NavController,
                      frameworkComponentViewModel: FrameworkComponentViewModel,
                      wgerAPIViewModel: WgerAPIViewModel,
                      workoutViewModel: WorkoutViewModel,
-                     workoutComponentViewModel: WorkoutComponentViewModel
+                     workoutComponentViewModel: WorkoutComponentViewModel,
+                     workoutComponentSetViewModel: WorkoutComponentSetViewModel,
 ){
     Scaffold(
     topBar = { TopNavigation(navController) },
     bottomBar = {},
     content = { WorkoutView(navController, workoutState, frameworkDays,
-        frameworkComponentViewModel, wgerAPIViewModel, workoutViewModel, workoutComponentViewModel) }
+        frameworkComponentViewModel, wgerAPIViewModel, workoutViewModel, workoutComponentViewModel,
+        workoutComponentSetViewModel) }
     )
 }
 
@@ -38,13 +37,15 @@ fun ExerciseOverview(navController: NavController,
                      frameworkComponentViewModel: FrameworkComponentViewModel,
                      wgerAPIViewModel: WgerAPIViewModel,
                      workoutViewModel: WorkoutViewModel,
-                     workoutComponentViewModel: WorkoutComponentViewModel
+                     workoutComponentViewModel: WorkoutComponentViewModel,
+                     workoutComponentSetViewModel: WorkoutComponentSetViewModel,
 ){
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
         content = { WorkoutView(navController, workoutState, dayId, frameworkDays,
-            frameworkComponentViewModel, wgerAPIViewModel, workoutViewModel, workoutComponentViewModel) }
+            frameworkComponentViewModel, wgerAPIViewModel, workoutViewModel, workoutComponentViewModel,
+            workoutComponentSetViewModel) }
     )
 }
 
@@ -59,13 +60,15 @@ fun ExerciseOverview(navController: NavController,
                      frameworkComponentViewModel: FrameworkComponentViewModel,
                      wgerAPIViewModel: WgerAPIViewModel,
                      workoutViewModel: WorkoutViewModel,
-                     workoutComponentViewModel: WorkoutComponentViewModel
+                     workoutComponentViewModel: WorkoutComponentViewModel,
+                     workoutComponentSetViewModel: WorkoutComponentSetViewModel
 ){
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
         content = { WorkoutView(navController, workoutState, dayId, muscleId,
             exerciseId, searchedMuscle, frameworkDays, frameworkComponentViewModel,
-            wgerAPIViewModel, workoutViewModel, workoutComponentViewModel) }
+            wgerAPIViewModel, workoutViewModel, workoutComponentViewModel,
+            workoutComponentSetViewModel) }
     )
 }
