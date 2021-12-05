@@ -14,12 +14,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 
 @Composable
-fun FrameworkComponentItem(navController: NavController, dayId: Int, muscleId: Int, muscle: String) {
+fun FrameworkComponentItem(navController: NavController,
+                           dayId: Int,
+                           muscleId: Int,
+                           muscle: String,
+                           searchedMuscle: String,
+                           exerciseId: Int,
+                           exerciseName: String) {
     Column {
 
         val expandedState = remember { mutableStateOf(false) }
         val selectedExercise = remember{ mutableStateOf("")}
-        FrameworkComponentHeader(navController, dayId, muscleId, muscle, expandedState)
+        FrameworkComponentHeader(navController, dayId, muscleId, muscle, searchedMuscle, exerciseId, exerciseName, expandedState)
         if(expandedState.value == true) {
             // TODO: load each set found in the database here
             for (i in 1..3) {
@@ -32,7 +38,11 @@ fun FrameworkComponentItem(navController: NavController, dayId: Int, muscleId: I
 @Composable
 fun FrameworkComponentHeader(navController: NavController, dayId: Int,
                              muscleId: Int,
-                             muscle: String, expanded: MutableState<Boolean>) {
+                             muscle: String,
+                             searchedMuscle: String,
+                             exerciseId: Int,
+                             exerciseName: String,
+                             expanded: MutableState<Boolean>) {
     val muscleGroupState by remember { mutableStateOf(muscle) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
     Row(
@@ -59,13 +69,18 @@ fun FrameworkComponentHeader(navController: NavController, dayId: Int,
             Text(text = muscleGroupState)
 
             // Spacer
-            Text(text = "  -")
+            Text(text = " -")
 
             // Exercise Name
-            TextButton(
-                onClick = { navController.navigate("searchExercise/${muscle}/${dayId}/${muscleId}")},
-            ) {
-                Text(text = exerciseState)
+            Column(){
+                if(searchedMuscle == muscle){
+                    Text("${exerciseName}")
+                }
+                TextButton(
+                    onClick = { navController.navigate("searchExercise/${muscle}/${dayId}/${muscleId}")},
+                ) {
+                    Text(text = exerciseState)
+                }
             }
     }
 }

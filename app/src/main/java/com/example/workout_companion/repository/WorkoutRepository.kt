@@ -78,6 +78,15 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
     }
 
     /**
+     * Create a workout
+     *
+     * @param workout,  Workout
+     */
+    suspend fun createWorkout(workout: WorkoutEntity) {
+        workoutDao.addWorkout(workout)
+    }
+
+        /**
      * Updates a workout in the database
      *
      * @param workout The workout to update

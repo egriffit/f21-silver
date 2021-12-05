@@ -37,6 +37,7 @@ fun FoundExerises(
             wgerAPi.getExercisesByMuscleGroup(muscleIDWGER)
         })
         val found = wgerAPi.exerciseInMuscles
+
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = 20.dp)
@@ -50,7 +51,7 @@ fun FoundExerises(
                 Row() {
                     Button(onClick = {
                             if(selectedId.value != 0) {
-                                navController.navigate("ExerciseOverview/d/${dayID}/m/${muscleId}/e/${selectedId.value}")
+                                navController.navigate("ExerciseOverview/d/${dayID}/m/${muscleId}/s/${muscle}/e/${selectedId.value}")
                             }
                         }
                     )

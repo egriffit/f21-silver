@@ -38,6 +38,18 @@ class FrameworkComponentViewModel(application: Application) : AndroidViewModel(a
     }
 
     /**
+     * Get all components in a framework day
+     * with a specified target sets
+     *
+     * @property day_id the primary key of the framework day.
+     * @property sets - target sets for framework
+     * @return a LiveData List of all components in a day.
+     */
+    fun getComponentsOfDay(day_id: Int, sets: Int) {
+        components.postValue(repository.getComponentsOfDay(day_id, sets))
+    }
+
+    /**
      * Add a component to a framework day
      *
      * @property component  the component to add.

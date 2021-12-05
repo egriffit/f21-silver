@@ -10,11 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import com.example.workout_companion.api.wger.entities.wgerExercise
-import com.example.workout_companion.api.wger.utility.muscleName
-import com.example.workout_companion.api.wger.utility.muscleNameConverter
 import com.example.workout_companion.entity.FoodTypeEntity
-import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
 import com.example.workout_companion.view.exercise.ExerciseView
 import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
@@ -46,6 +42,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
     val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
     val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
+    val workoutComponentViewModel by lazy { viewModelProvider.get(WorkoutComponentViewModel::class.java)}
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -280,24 +277,24 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 exerciseJob.join()
                 exerciseInfo = wgerApiViewModel.exerciseInfo
             }
-            if(exerciseInfo.value != null) {
-                ExerciseView(navController, exerciseInfo.value, muscle, dayId,  muscleId, exerciseId )
-            }
+            ExerciseView(navController, exerciseInfo.value, muscle, dayId,  muscleId, exerciseId )
         }
         //basic exercise overview view
         composable (route = "ExerciseOverview") {
-            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
+            val frameworkTypeId = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
             val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
             runBlocking {
-                val JobE2: Job = launch(Dispatchers.IO){
-                    if(framework_type_id != null) {
-                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
+                launch(Dispatchers.IO){
+                    if(frameworkTypeId != null) {
+                        frameworkDayViewModel.getAllFrameworkDays(frameworkTypeId)
                     }
                 }
             }
             //Load the framework days
             if(frameworkDays != null){
-                ExerciseOverview(navController, workoutState, frameworkDays!!, frameworkComponentViewModel)
+                ExerciseOverview(navController, workoutState, frameworkDays,
+                    frameworkComponentViewModel, wgerApiViewModel, workoutViewModel,
+                    workoutComponentViewModel)
             }
         }
         // exercise overview view with day
@@ -307,46 +304,53 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 )
         ) { backStackEntry ->
             val day = backStackEntry.arguments?.getString("day")!!.toInt()
-            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
+            val frameworkTypeId = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
             val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
             runBlocking {
-                val JobE2: Job = launch(Dispatchers.IO){
-                    if(framework_type_id != null) {
-                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
+                launch(Dispatchers.IO){
+                    if(frameworkTypeId != null) {
+                        frameworkDayViewModel.getAllFrameworkDays(frameworkTypeId)
                     }
                 }
             }
             //Load the framework days
             if(frameworkDays != null){
-                ExerciseOverview(navController, workoutState, frameworkDays!!, day, frameworkComponentViewModel)
+                ExerciseOverview(navController, workoutState, frameworkDays,
+                    day, frameworkComponentViewModel, wgerApiViewModel,
+                    workoutViewModel, workoutComponentViewModel)
             }
         }
 
         // exercise overview view with day and exercise
         //ExerciseOverview/d/${dayID}/m/${selectedId.value}
-        composable (route = "ExerciseOverview/d/{day}/m/{muscleId}/e/{exerciseId}",
+        composable (route = "ExerciseOverview/d/{day}/m/{muscleId}/s/{searchedMuscle}/e/{exerciseId}",
             arguments = listOf(
                 navArgument("day") { type = NavType.StringType },
                 navArgument("muscleId") { type = NavType.StringType },
                 navArgument("exerciseId") { type = NavType.StringType },
+                navArgument("searchedMuscle") { type = NavType.StringType },
+
                 )
         ) { backStackEntry ->
             val day = backStackEntry.arguments?.getString("day")!!.toInt()
             val muscleId = backStackEntry.arguments?.getString("muscleId")!!.toInt()
             val exerciseId = backStackEntry.arguments?.getString("exerciseId")!!.toInt()
+            val searchedMuscle = backStackEntry.arguments?.getString("searchedMuscle")!!
 
-            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
+            val frameworkTypeId = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
             val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
             runBlocking {
-                val JobE2: Job = launch(Dispatchers.IO){
-                    if(framework_type_id != null) {
-                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
+                launch(Dispatchers.IO){
+                    if(frameworkTypeId != null) {
+                        frameworkDayViewModel.getAllFrameworkDays(frameworkTypeId)
                     }
                 }
             }
             //Load the framework days
             if(frameworkDays != null){
-                ExerciseOverview(navController, workoutState, frameworkDays!!, day, muscleId, exerciseId, frameworkComponentViewModel)
+                ExerciseOverview(navController, workoutState, frameworkDays, day,
+                    muscleId, exerciseId, searchedMuscle, frameworkComponentViewModel,
+                    wgerApiViewModel, workoutViewModel, workoutComponentViewModel)
             }
         }
         // Other routes go here

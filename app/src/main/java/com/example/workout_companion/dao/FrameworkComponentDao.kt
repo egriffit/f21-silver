@@ -22,6 +22,16 @@ interface FrameworkComponentDao {
     fun getAllComponentsOfDay(day_id: Int) : List<FrameworkComponentEntity>
 
     /**
+     * Get all components of a specific workout framework day
+     *
+     * @property day_id the primary key of the framework day.
+     *
+     * @return a LiveData List of all components of a day.
+     */
+    @Query("SELECT * FROM framework_component WHERE framework_day_id=:day_id AND target_sets=:sets")
+    fun getComponentsOfDay(day_id: Int, sets: Int) : List<FrameworkComponentEntity>
+
+    /**
      * Get the number of components where the framework_day_id,
      * muscle_group, target_sets, and target_reps are equal to the integer
      * and muscle group enum provided4
