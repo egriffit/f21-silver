@@ -52,6 +52,10 @@ interface CurrentUserGoalDao {
                     WHERE current_user_goal.id = 1""")
     fun getCurrentGoals(): LiveData<CurrentNutritionPlanAndFrameworkEntity>
 
+    @Transaction
+    @Query("SELECT * FROM current_user_goal WHERE id = 1")
+    fun getCurrentGoal(): LiveData<CurrentUserGoalEntity>
+
     /**
      * Adds a CurrentUserGoalEntity to the current_user_goal table
      *

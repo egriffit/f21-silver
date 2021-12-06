@@ -20,6 +20,7 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * Retrieves a list of all UserEntities in the users table
      */
     val getCurrentGoals: LiveData<CurrentNutritionPlanAndFrameworkEntity>
+    val currentGoal: LiveData<CurrentUserGoalEntity>
     val getCurrentGoalIds: LiveData<CurrentUserGoalEntity>
     var currentGoalExists = MutableLiveData<Boolean>()
 
@@ -37,6 +38,7 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
         repository = CurrentUserGoalRepository(currentUserGoalDao)
         getCurrentGoals = repository.getCurrentUserGoals
         getCurrentGoalIds = repository.getCurrentGoalIds
+        currentGoal = repository.currentGoal
     }
     fun checkIfExists(){
         viewModelScope.launch(Dispatchers.IO){

@@ -46,6 +46,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
     val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
     val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
+    val completeFrameworkViewModel by lazy { viewModelProvider.get(CompleteFrameworkViewModel::class.java) }
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -54,6 +55,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     }
 
     val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
+    val userGoalState = currentUserGoalViewModel.currentGoal.observeAsState()
+    val allFrameworksWithDays = completeFrameworkViewModel.getAllFrameworksWithDays().observeAsState(listOf())
 
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
@@ -67,19 +70,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
-            val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
-            runBlocking {
-                val JobE2: Job = launch(Dispatchers.IO){
-                    if(framework_type_id != null) {
-                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
-                    }
-                }
-            }
-            //Load the framework days
-            if(frameworkDays != null){
-                ExerciseOverview(navController, workoutState, frameworkDays!!, frameworkComponentViewModel)
-            }
+            val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(userGoalState.value!!.framework_type_id).observeAsState()
+            ExerciseOverview(navController, workoutState, currentFramework, frameworkComponentViewModel, allFrameworksWithDays)
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,

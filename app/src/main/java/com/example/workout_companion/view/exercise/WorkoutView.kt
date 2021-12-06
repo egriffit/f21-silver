@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.workout_companion.dao.FrameworkWithDays
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.entity.FrameworkDayEntity
 import com.example.workout_companion.viewmodel.FrameworkComponentViewModel
@@ -22,18 +23,19 @@ import kotlinx.coroutines.runBlocking
 fun WorkoutView(
     navController: NavController,
     workoutState: State<WorkoutWithComponents?>,
-    frameworkDays: List<FrameworkDayEntity>,
-    frameworkComponentViewModel: FrameworkComponentViewModel
+    frameworkWithDays: State<FrameworkWithDays?>,
+    frameworkComponentViewModel: FrameworkComponentViewModel,
+    frameworks: State<List<FrameworkWithDays>>,
 ){
     val frameworkComponents = frameworkComponentViewModel.components.observeAsState().value
-    var selectedDay by remember { mutableStateOf(0) }
     Column(modifier = Modifier
         .padding(top = 20.dp, start = 20.dp, end = 20.dp)
         .fillMaxWidth()
         .fillMaxHeight(),
     )
     {
-        if(selectedDay == 0) {
+        // If we have not done a workout today, we won't have one
+        if (workoutState.value == null) {
             Row(
                 modifier = Modifier
                     .padding(bottom = 10.dp)
@@ -41,7 +43,6 @@ fun WorkoutView(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                //if (workoutState.value == null) {
                 var expanded by remember { mutableStateOf(false) }
                 OutlinedButton(
                     onClick = { expanded = !expanded }
@@ -52,18 +53,21 @@ fun WorkoutView(
                     expanded = expanded,
                     onDismissRequest = {}
                 ) {
-                    frameworkDays.forEach { it ->
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded = !expanded
-                                selectedDay = it.id
-                            }) {
-                            Text(text = "${it.name}")
+                    if (frameworkWithDays.value != null) {
+                        for (dayWithComponents in frameworkWithDays.value!!.days) {
+                            DropdownMenuItem(
+                                onClick = { expanded != expanded }
+                            ) { Text(dayWithComponents.day.name) }
                         }
+                    }
+                    else {
+                        // Reset the expanded flag
+                        expanded = !expanded
                     }
                 }
             }
-        }else{
+        }else {
+            /*
             runBlocking {
                 val job: Job = launch(Dispatchers.IO) {
                     if (selectedDay != 0) {
@@ -101,8 +105,9 @@ fun WorkoutView(
                 }) {
                     Text("Cancel")
                 }
-            }
+            }*/
         }
+    }
 }
 
 @Preview(showBackground = true)
