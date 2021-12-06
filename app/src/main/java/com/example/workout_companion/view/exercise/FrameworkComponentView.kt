@@ -21,8 +21,9 @@ fun FrameworkComponentItem(navController: NavController, componentWithSets: Comp
         modifier = Modifier.fillMaxWidth(),
     ) {
         val expandedState = remember { mutableStateOf(false) }
+        val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
         val selectedExercise = remember{ mutableStateOf("")}
-        FrameworkComponentHeader(navController, "", expandedState)
+        FrameworkComponentHeader(navController, muscleGroupState, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
                 FrameworkComponentSetRow(set)
