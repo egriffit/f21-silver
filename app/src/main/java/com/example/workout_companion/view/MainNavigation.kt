@@ -10,11 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import com.example.workout_companion.api.wger.entities.wgerExercise
-import com.example.workout_companion.api.wger.utility.muscleName
-import com.example.workout_companion.api.wger.utility.muscleNameConverter
 import com.example.workout_companion.entity.FoodTypeEntity
-import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
 import com.example.workout_companion.view.exercise.ExerciseView
 import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
@@ -71,7 +67,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable (route = "ExerciseOverview") {
             val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(userGoalState.value!!.framework_type_id).observeAsState()
-            ExerciseOverview(navController, workoutState, currentFramework, frameworkComponentViewModel, allFrameworksWithDays)
+            ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel)
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,

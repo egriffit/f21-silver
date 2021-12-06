@@ -3,11 +3,14 @@ package com.example.workout_companion.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.workout_companion.dao.FrameworkDayWithComponents
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.WorkoutEntity
 import com.example.workout_companion.repository.WorkoutRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 /**
@@ -54,7 +57,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      *
      * @param frameworkDayWithComponents The framework day that serves as a template for the workout
      */
-    suspend fun createWorkout(frameworkDayWithComponents: FrameworkDayWithComponents) {
+    fun createWorkout(frameworkDayWithComponents: FrameworkDayWithComponents) = viewModelScope.launch(Dispatchers.IO) {
         repository.createWorkout(frameworkDayWithComponents)
     }
 
