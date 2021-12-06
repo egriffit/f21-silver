@@ -1,5 +1,6 @@
 package com.example.workout_companion.view.exercise
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,18 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.workout_companion.dao.ComponentWithSets
 
 @Composable
-fun FrameworkComponentItem(navController: NavController, muscle: String) {
-    Column {
-
+fun FrameworkComponentItem(navController: NavController, componentWithSets: ComponentWithSets) {
+    Column (
+        modifier = Modifier.fillMaxWidth(),
+    ) {
         val expandedState = remember { mutableStateOf(false) }
         val selectedExercise = remember{ mutableStateOf("")}
-        FrameworkComponentHeader(navController, muscle, expandedState)
-        if(expandedState.value == true) {
-            // TODO: load each set found in the database here
-            for (i in 1..3) {
-                FrameworkComponentSetRow(selectedExercise)
+        FrameworkComponentHeader(navController, "", expandedState)
+        if(expandedState.value) {
+            for (set in componentWithSets.sets) {
+                FrameworkComponentSetRow(set)
             }
         }
     }
@@ -35,25 +37,18 @@ fun FrameworkComponentHeader(navController: NavController, muscle: String, expan
     val muscleGroupState by remember { mutableStateOf(muscle) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
     Row(
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         // Drop Down Icon
-        if(expanded.value == true) {
-            Button(onClick = { expanded.value = !expanded.value }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = "Localized Description"
-                )
-            }
-        }else {
-            Button(onClick = { expanded.value = !expanded.value }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowRight,
-                    contentDescription = "Localized Description"
-                )
-            }
-        }
+        val icon = if (expanded.value) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowRight
+        Button(onClick = { expanded.value = !expanded.value }) {
+            Icon(
+                imageVector = icon,
+                contentDescription = "Localized Description"
+            )
+
             // Muscle Group Name
             Text(text = muscleGroupState)
 
@@ -62,15 +57,10 @@ fun FrameworkComponentHeader(navController: NavController, muscle: String, expan
 
             // Exercise Name
             TextButton(
-                onClick = { navController.navigate("searchExercise/${muscle}")},
+                onClick = { navController.navigate("searchExercise/${muscle}") },
             ) {
                 Text(text = exerciseState)
             }
+        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FrameworkComponentItemPreview() {
-    //FrameworkComponentItem("Biceps")
 }

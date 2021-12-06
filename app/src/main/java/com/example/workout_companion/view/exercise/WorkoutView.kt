@@ -22,36 +22,34 @@ fun WorkoutView(
     frameworkWithDays: State<FrameworkWithDays?>,
     workoutViewModel: WorkoutViewModel,
 ){
-    Column(modifier = Modifier
-        .padding(top = 20.dp, start = 20.dp, end = 20.dp)
-        .fillMaxWidth()
-        .fillMaxHeight(),
+    Column(
+        modifier = Modifier
+            .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
     ) {
-        Row(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // If we have not done a workout today, we won't have one
-            if (workoutState.value == null) {
-                FrameworkDaySelector(frameworkWithDays, workoutViewModel::createWorkout)
+        // If we have not done a workout today, we won't have one
+        if (workoutState.value == null) {
+            FrameworkDaySelector(frameworkWithDays, workoutViewModel::createWorkout)
+        }
+        else {
+            // TODO: load the workout here
+            for (component in workoutState.value!!.components) {
+                FrameworkComponentItem(navController, component)
             }
-            else {
-                // TODO: load the workout here
-                OutlinedButton(
-                    onClick = {
-                        // TODO: Set the workout to complete
-                        // TODO: Update the workout in the database
-                    }
-                ) { Text("Submit") }
-                Spacer(modifier = Modifier.padding(end = 10.dp))
-                OutlinedButton(
-                    onClick = {
-                        // TODO: Delete the workout here
-                    }
-                ) { Text("Cancel") }
+
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SubmitButton()
+                //Spacer(modifier = Modifier.padding(end = 10.dp))
+                CancelButton()
             }
         }
     }
@@ -83,6 +81,25 @@ fun FrameworkDaySelector(
             }
         }
     }
+}
+
+@Composable
+fun SubmitButton() {
+    OutlinedButton(
+        onClick = {
+            // TODO: Set the workout to complete
+            // TODO: Update the workout in the database
+        }
+    ) { Text("Submit") }
+}
+
+@Composable
+fun CancelButton() {
+    OutlinedButton(
+        onClick = {
+            // TODO: Delete the workout here
+        }
+    ) { Text("Cancel") }
 }
 
 @Preview(showBackground = true)
