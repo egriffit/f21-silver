@@ -30,7 +30,7 @@ fun WorkoutView(
             .fillMaxWidth()
             .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         // If we have not done a workout today, we won't have one
         if (workoutState.value == null) {
