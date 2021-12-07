@@ -179,9 +179,9 @@ fun FoodView(
                                             }else{
                                                 foodInMealViewModel.delete(foodInMeal)
                                             }
-                                            if (meal != null && foundMeal.isNotEmpty()) {
-                                                mealViewModel.calculateMeal(foundMeal.elementAt(0))
-                                            }
+//                                            if (meal != null && foundMeal.isNotEmpty()) {
+//                                             foodInMealViewModel.calcDailyTotal(mealId)
+//                                            }
                                         }
                                     }
                                 }
@@ -189,6 +189,10 @@ fun FoodView(
                                 //Wait for record to be inserted before navigating
                                 //To Nutrition Overview
                                 jobF2.join()
+                                val jobF3: Job = launch(Dispatchers.IO){
+                                    foodInMealViewModel.calcDailyTotal(mealId!!)
+                                }
+                                jobF3.join()
                                 navController.navigate("NutritionOverview")
                             }
                         }) {

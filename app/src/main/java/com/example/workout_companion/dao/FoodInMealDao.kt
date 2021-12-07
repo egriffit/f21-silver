@@ -42,8 +42,9 @@ interface FoodInMealDao {
      */
     @Transaction
     @Query("""
-        SELECT  a.meal_id as id, a.type as type, SUM(food_type.calories) as calories, SUM(food_type.carbohydrates) as carbohydrates,
-                SUM(food_type.protein) as protein, SUM(food_type.fat) as fat, a.Date
+        SELECT  a.meal_id as id, a.type as type, (SUM(food_type.calories)*a.servings) as calories,
+                (SUM(food_type.carbohydrates)*a.servings) as carbohydrates,
+                (SUM(food_type.protein)*a.servings) as protein, (SUM(food_type.fat)*a.servings) as fat, a.Date
         FROM food_type
         INNER JOIN (SELECT *
             FROM food_in_meal

@@ -4,8 +4,10 @@ import com.example.workout_companion.dao.MealDao
 import com.example.workout_companion.entity.MealEntity
 import java.time.LocalDate
 import androidx.lifecycle.LiveData
+import androidx.room.Query
 import androidx.room.Transaction
 import com.example.workout_companion.api.edamam.entities.ServingSize
+import com.example.workout_companion.entity.AllMealsInDay
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.sampleData.emptyMealEntity
 
@@ -20,7 +22,6 @@ class MealRepository (private val mealDao: MealDao) {
      * @return LiveData<List<MealEntity>>
      */
     val getTodaysMeals: LiveData<List<MealEntity>> = mealDao.getByDate()
-
 
     /**
      * Retrieves all meals from meal table where the date is the same as the
@@ -65,6 +66,15 @@ class MealRepository (private val mealDao: MealDao) {
      */
     fun getMealId(type: String, date: LocalDate): Int{
         return mealDao.getMealId(type, date)
+    }
+
+    /**
+     * Retrieve the daily calories and macronutrient totals
+     *
+     * @return  AllMealsInDay
+     */
+    fun calcDailyTotal(): AllMealsInDay{
+        return mealDao.calcMealTotal()
     }
 
     /**

@@ -25,13 +25,15 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
     private val repository: FoodInMealRepository
     var foundFoods = MutableLiveData<List<MealWithFoodsEntity>>()
     var mealFoodList = MutableLiveData<List<FoodTypeEntity>>()
+    var mealTotal = MutableLiveData<MealEntity>()
     /**
      * Function to initialize the view.
      * Initializes the WCDatabase, repository and the list of all FoodType entities
      */
     init {
         val foodInMealDao = WCDatabase.getInstance(application).foodInMealDao()
-        repository = FoodInMealRepository(foodInMealDao)
+        val mealDao = WCDatabase.getInstance(application).mealDao()
+        repository = FoodInMealRepository(foodInMealDao, mealDao)
     }
 
 
@@ -65,25 +67,6 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-//    /**
-//     * Retrieves a List of Foods for a meal with the name and date
-//     * equal to the string and LocalDate provided
-//     *
-//     * @param type, String
-//     * @param date, LocalDate
-//     * @return List<FoodTypeEntity> a list of FoodTypeEntity objects
-//     */
-//    fun getFoodsInMeal(type: String, date: LocalDate): LiveData<List<FoodTypeEntity>> {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            foundFoods.postValue(repository.getFoodInMeal(type, date))
-//            if (foundFoods != null) {
-//                foundFoods.value.forEach{ m ->
-//                    mealFoodList.postValue(m.Foods)
-//                }
-//            }
-//        }
-//
-//    }
 
     /**
      * Retrieves a List of Foods for a meal with the name and date
@@ -142,6 +125,17 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
             count = repository.getCount(type, date)
         }
         return count
+    }
+
+    /**
+     * Retrieve the daily calories and macronutrient totals
+     *
+     * @return  AllMealsInDay
+     */
+    fun calcDailyTotal(meal_id: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.getMealTotals(meal_id)
+        }
     }
 
     /**

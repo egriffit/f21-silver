@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.AllMealsInDay
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.entity.MealWithFoodsEntity
@@ -42,7 +43,7 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         repository = MealRepository(mealDao)
         getTodaysMeals = repository.getTodaysMeals
         val foodInMealDao = WCDatabase.getInstance(application).foodInMealDao()
-        foodInMealRepository = FoodInMealRepository(foodInMealDao)
+        foodInMealRepository = FoodInMealRepository(foodInMealDao, mealDao)
     }
 
     /**
@@ -115,7 +116,14 @@ class MealViewModel(application: Application) : AndroidViewModel(application) {
         return mealId
     }
 
-
+    /**
+     * Retrieve the daily calories and macronutrient totals
+     *
+     * @return  AllMealsInDay
+     */
+    fun calcDailyTotal(): AllMealsInDay{
+            return repository.calcDailyTotal()
+        }
 
     /**
      * Function to initialize a coroutine to add a MealEntity object to the database

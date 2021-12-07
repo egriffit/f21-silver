@@ -105,8 +105,7 @@ interface MealDao {
     fun getCount(name: String): Int
 
     /**
-     * Retrieve the calories and macronutrient totals
-     * for a meal
+     * Retrieve the daily calories and macronutrient totals
      *
      * @return  AllMealsInDay
      */
