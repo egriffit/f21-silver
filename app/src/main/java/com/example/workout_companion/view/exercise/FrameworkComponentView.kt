@@ -43,7 +43,7 @@ fun FrameworkComponentHeader(navController: NavController, componentWithSets: Co
     ) {
         // Drop Down Icon
         val icon = if (expanded.value) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowRight
-        Button(onClick = { expanded.value = !expanded.value }) {
+        OutlinedButton(onClick = { expanded.value = !expanded.value }) {
             Icon(
                 imageVector = icon,
                 contentDescription = "Localized Description"

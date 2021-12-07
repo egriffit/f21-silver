@@ -35,7 +35,6 @@ fun WorkoutView(
             FrameworkDaySelector(frameworkWithDays, workoutViewModel::createWorkout)
         }
         else {
-            // TODO: load the workout here
             for (component in workoutState.value!!.components) {
                 FrameworkComponentItem(navController, component)
             }
@@ -48,7 +47,6 @@ fun WorkoutView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 SubmitButton()
-                //Spacer(modifier = Modifier.padding(end = 10.dp))
                 CancelButton()
             }
         }
