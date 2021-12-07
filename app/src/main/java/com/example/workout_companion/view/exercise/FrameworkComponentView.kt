@@ -21,9 +21,7 @@ fun FrameworkComponentItem(navController: NavController, componentWithSets: Comp
         modifier = Modifier.fillMaxWidth(),
     ) {
         val expandedState = remember { mutableStateOf(false) }
-        val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
-        val selectedExercise = remember{ mutableStateOf("")}
-        FrameworkComponentHeader(navController, muscleGroupState, expandedState)
+        FrameworkComponentHeader(navController, componentWithSets, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
                 FrameworkComponentSetRow(set)
@@ -33,10 +31,11 @@ fun FrameworkComponentItem(navController: NavController, componentWithSets: Comp
 }
 
 @Composable
-fun FrameworkComponentHeader(navController: NavController, muscle: String, expanded: MutableState<Boolean>) {
+fun FrameworkComponentHeader(navController: NavController, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
 
-    val muscleGroupState by remember { mutableStateOf(muscle) }
+    val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
+
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -58,7 +57,7 @@ fun FrameworkComponentHeader(navController: NavController, muscle: String, expan
 
             // Exercise Name
             TextButton(
-                onClick = { navController.navigate("searchExercise/${muscle}") },
+                onClick = { navController.navigate("searchExercise/${componentWithSets.muscleGroup.name}") },
             ) {
                 Text(text = exerciseState)
             }
