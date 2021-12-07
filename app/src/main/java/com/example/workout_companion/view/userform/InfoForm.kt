@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,10 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
@@ -92,6 +96,8 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
         state = UserState(userWithGoalInDB.value!!)
     }
 
+    val focusManager = LocalFocusManager.current
+
     LazyColumn(
         Modifier
             .background(Color(0xFFEDEAE0))
@@ -107,12 +113,16 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                     value = state.name,
                     onValueChange = { state.name = it },
                     label = { Text(text = "Name?") },
+                    singleLine = true,
                     // Since our name is our primary key, existing user names can't be changed
                     readOnly = userWithGoalInDB.value != null,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
-                    )
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }),
                 )
             }
         }
@@ -124,21 +134,30 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                 OutlinedTextField(
                     value = state.feet,
                     onValueChange = { state.feet = if (it.toIntOrNull() != null) it else "" },
+                    singleLine = true,
                     label = { Text(text = "Feet?") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.moveFocus(FocusDirection.Right)
+                    }),
                 )
                 Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = state.inches,
                     onValueChange = { state.inches = if (it.toIntOrNull() != null) it else "" },
+                    singleLine = true,
                     label = { Text(text = "Inches?") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        // Since the birth date selector is next, just clear any focus
+                        focusManager.clearFocus()
+                    }),
                 )
             }
         }
@@ -171,7 +190,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                     trailingIcon = {
                         Icon(icon, "contentDescription",
                             Modifier.clickable { monthExpanded = !monthExpanded })
-                    }
+                    },
                 )
                 DropdownMenu(
                     expanded = monthExpanded,
@@ -273,7 +292,11 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                     modifier = Modifier.weight(2f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        // Since the gender selection is below this, clear any focus
+                        focusManager.clearFocus()
+                    }),
                 )
             }
         }
@@ -445,7 +468,11 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        // Last item so clear focus
+                        focusManager.clearFocus()
+                    }),
                 )
             }
         }
