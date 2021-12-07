@@ -41,10 +41,8 @@ class NutritionPlanTypeViewModel(application: Application): AndroidViewModel(app
         readAll = repository.getAll
     }
 
-    fun getPlanId(item: NutritionPlanTypeEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            id.postValue(repository.findPlanId(item.calorie, item.carbohydrate, item.protein, item.fat))
-        }
+    fun getPlanId(item: NutritionPlanTypeEntity) = viewModelScope.launch(Dispatchers.IO) {
+        id.postValue(repository.findPlanId(item.calorie, item.carbohydrate, item.protein, item.fat))
     }
     /**
      * Function to initialize a coroutine to add a nutrition plan to the database
@@ -59,10 +57,8 @@ class NutritionPlanTypeViewModel(application: Application): AndroidViewModel(app
      * nutrition_plan_type table with the values in the provided NutritionPlanTypeEntity
      * @param item, a UserEntity
      */
-    fun updatePlan(item: NutritionPlanTypeEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updatePlan(item = item)
-        }
+    fun updatePlan(item: NutritionPlanTypeEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updatePlan(item = item)
     }
 
     /**
@@ -70,10 +66,8 @@ class NutritionPlanTypeViewModel(application: Application): AndroidViewModel(app
      * nutrition_plan_type table with the values in the provided NutritionPlanTypeEntity
      * @param item, a NutritionPlanTypeEntity
      */
-    fun deletePlan(item: NutritionPlanTypeEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.deletePlan(item = item)
-        }
+    fun deletePlan(item: NutritionPlanTypeEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deletePlan(item = item)
     }
 
     /**

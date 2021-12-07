@@ -52,7 +52,11 @@ interface CurrentUserGoalDao {
                     WHERE current_user_goal.id = 1""")
     fun getCurrentGoals(): LiveData<CurrentNutritionPlanAndFrameworkEntity>
 
-    @Transaction
+    /**
+     * Retrieves the user goal entity in the database. There is only every one entry, so the first is collected.
+     *
+     * @return A LiveData object of the CurrentUserGoalEntity
+     */
     @Query("SELECT * FROM current_user_goal WHERE id = 1")
     fun getCurrentGoal(): LiveData<CurrentUserGoalEntity>
 

@@ -13,6 +13,7 @@ import java.time.LocalDate
  * A class containing a workout component and its sets
  *
  * @property component The workout component
+ * @property muscleGroup The muscle group of the workout component
  * @property sets The sets belonging to the workout component
  */
 data class ComponentWithSets(

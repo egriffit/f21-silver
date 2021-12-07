@@ -40,11 +40,14 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
         getCurrentGoalIds = repository.getCurrentGoalIds
         currentGoal = repository.currentGoal
     }
-    fun checkIfExists(){
-        viewModelScope.launch(Dispatchers.IO){
-            currentGoalExists.postValue(repository.currentGoalExists())
-        }
+
+    /**
+     * Check if a user goal exists in the model
+     */
+    fun checkIfExists() = viewModelScope.launch(Dispatchers.IO) {
+        currentGoalExists.postValue(repository.currentGoalExists())
     }
+
     /**
      * Function to initialize a coroutine to add a CurrentUserGoalEntity to the database
      * @param item, a CurrentUserGoalEntity
@@ -63,10 +66,8 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * @param carbohydrate, a double
      * @return void
      */
-    fun updateNutritionPlan(calorie: Double, carbohydrate: Double, protein: Double, fat: Double){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateNutritionPlan(calorie, carbohydrate, protein, fat)
-        }
+    fun updateNutritionPlan(calorie: Double, carbohydrate: Double, protein: Double, fat: Double) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateNutritionPlan(calorie, carbohydrate, protein, fat)
     }
 
     /**
@@ -76,10 +77,8 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * @param nutrition_plan_type_id, a String
      * @return void
      */
-    fun updateNutritionPlanID(nutrition_plan_type_id: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateNutritionPlanID(nutrition_plan_type_id)
-        }
+    fun updateNutritionPlanID(nutrition_plan_type_id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateNutritionPlanID(nutrition_plan_type_id)
     }
 
     /**
@@ -89,10 +88,8 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * @param framework_type, a String
      * @return void
      */
-    fun updateFrameworkType(framework_type: String){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateFrameworkType(framework_type)
-        }
+    fun updateFrameworkType(framework_type: String) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateFrameworkType(framework_type)
     }
 
     /**
@@ -102,10 +99,8 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * @param framework_type_id, an Int
      * @return void
      */
-    fun updateFrameworkTypeID(framework_type_id: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateFrameworkTypeID(framework_type_id)
-        }
+    fun updateFrameworkTypeID(framework_type_id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateFrameworkTypeID(framework_type_id)
     }
 
     /**
@@ -121,10 +116,8 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * @param carbohydrate, a double
      * @return void
      */
-    fun updateNutritionPlanAndFramework(framework_type: String, calorie: Double, carbohydrate: Double, protein: Double, fat: Double){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateNutritionPlanAndFramework(framework_type, calorie, carbohydrate, protein, fat)
-        }
+    fun updateNutritionPlanAndFramework(framework_type: String, calorie: Double, carbohydrate: Double, protein: Double, fat: Double) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateNutritionPlanAndFramework(framework_type, calorie, carbohydrate, protein, fat)
     }
 
     /**
@@ -135,30 +128,7 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * @param nutrition_plan_type_id, a int
      * @return void
      */
-    fun updateNutritionPlanAndFrameworkID(framework_type_id: Int, nutrition_plan_type_id: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateNutritionPlanAndFrameworkID(framework_type_id, nutrition_plan_type_id)
-        }
-    }
-
-
-}
-/**
- * UserViewModel Factory class that is used to initialize the UserViewModel
- * @param application context
- * @return ViewModelProvider.Factory
- */
-class CurrentUserGoalViewModelFactory(
-    private val application: Application
-): ViewModelProvider.Factory{
-    /**
-     * Method to create an instance of the UserModelView
-     */
-    override fun <T: ViewModel?> create(modelClass: Class<T>): T{
-        @Suppress("UNCHECKED_CAST")
-        if (modelClass.isAssignableFrom(CurrentUserGoalViewModel::class.java)) {
-            return CurrentUserGoalViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown View Model Class")
+    fun updateNutritionPlanAndFrameworkID(framework_type_id: Int, nutrition_plan_type_id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateNutritionPlanAndFrameworkID(framework_type_id, nutrition_plan_type_id)
     }
 }

@@ -16,7 +16,7 @@ import java.time.LocalDate
 /**
  * ViewModel for the workout table in the database
  *
- * @property application The application
+ * @param application The application
  */
 class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -66,7 +66,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      *
      * @param workout The workout to update
      */
-    suspend fun updateWorkout(workout: WorkoutEntity) {
+    fun updateWorkout(workout: WorkoutEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateWorkout(workout)
     }
 
@@ -75,7 +75,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      *
      * @param workout The workout to delete
      */
-    suspend fun deleteWorkout(workout: WorkoutEntity) {
+    fun deleteWorkout(workout: WorkoutEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteWorkout(workout)
     }
 }

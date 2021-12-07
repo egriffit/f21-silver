@@ -97,9 +97,3 @@ fun FrameworkComponentSetRow(set: WorkoutComponentSetEntity) {
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun TestingPreview() {
-    //FrameworkComponentSetRow(exercise)
-}

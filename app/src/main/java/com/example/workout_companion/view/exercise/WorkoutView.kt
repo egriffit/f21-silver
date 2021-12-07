@@ -99,11 +99,3 @@ fun CancelButton() {
         }
     ) { Text("Cancel") }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun NoWorkoutViewPreview() {
-
-    val noWorkout: State<WorkoutWithComponents?> = derivedStateOf { null }
-    //WorkoutView(noWorkout, FRAMEWORK_DAYS)
-}

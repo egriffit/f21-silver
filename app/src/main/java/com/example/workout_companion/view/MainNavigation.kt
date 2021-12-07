@@ -39,8 +39,6 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
     val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
-    val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
-    val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
     val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
     val completeFrameworkViewModel by lazy { viewModelProvider.get(CompleteFrameworkViewModel::class.java) }
 
@@ -52,7 +50,6 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
 
     val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
     val userGoalState = currentUserGoalViewModel.currentGoal.observeAsState()
-    val allFrameworksWithDays = completeFrameworkViewModel.getAllFrameworksWithDays().observeAsState(listOf())
 
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
