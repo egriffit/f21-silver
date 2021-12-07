@@ -133,7 +133,9 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
             ) {
                 OutlinedTextField(
                     value = state.feet,
-                    onValueChange = { state.feet = if (it.toIntOrNull() != null) it else "" },
+                    onValueChange = { newValue ->
+                        state.feet = newValue.filter { it.isDigit() }
+                    },
                     singleLine = true,
                     label = { Text(text = "Feet?") },
                     modifier = Modifier.weight(1f),
@@ -147,7 +149,9 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                 Spacer(modifier = Modifier.padding(end = 10.dp))
                 OutlinedTextField(
                     value = state.inches,
-                    onValueChange = { state.inches = if (it.toIntOrNull() != null) it else "" },
+                    onValueChange = { newValue ->
+                        state.inches = newValue.filter { it.isDigit() }
+                    },
                     singleLine = true,
                     label = { Text(text = "Inches?") },
                     modifier = Modifier.weight(1f),
@@ -287,7 +291,11 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
             ) {
                 OutlinedTextField(
                     value = state.weight,
-                    onValueChange = { state.weight = it },
+                    onValueChange = { newValue ->
+                        if (newValue.isEmpty() or (newValue.toDoubleOrNull() != null) ) {
+                            state.weight = newValue
+                        }
+                    },
                     label = { Text(text = "Weight? (In pounds)") },
                     modifier = Modifier.weight(2f),
                     keyboardOptions = KeyboardOptions(
@@ -463,7 +471,9 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
             Row{
                 OutlinedTextField(
                     value = state.maxWorkouts,
-                    onValueChange = { state.maxWorkouts = if (it.toIntOrNull() != null) it else "" },
+                    onValueChange = { newValue ->
+                        state.maxWorkouts = newValue.filter { it.isDigit() }
+                    },
                     label = { Text(text = "Max Number of Workouts/Week?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
