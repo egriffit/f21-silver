@@ -1,6 +1,8 @@
 package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +24,7 @@ fun WorkoutView(
     frameworkWithDays: State<FrameworkWithDays?>,
     workoutViewModel: WorkoutViewModel,
 ){
-    Column(
+    LazyColumn(
         modifier = Modifier
             .padding(top = 20.dp, start = 20.dp, end = 20.dp)
             .fillMaxWidth()
@@ -32,22 +34,26 @@ fun WorkoutView(
     ) {
         // If we have not done a workout today, we won't have one
         if (workoutState.value == null) {
-            FrameworkDaySelector(frameworkWithDays, workoutViewModel::createWorkout)
+            item {
+                FrameworkDaySelector(frameworkWithDays, workoutViewModel::createWorkout)
+            }
         }
         else {
-            for (component in workoutState.value!!.components) {
-                FrameworkComponentItem(navController, component)
+            items(workoutState.value!!.components) { component ->
+                    FrameworkComponentItem(navController, component)
             }
 
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SubmitButton()
-                CancelButton()
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    SubmitButton()
+                    CancelButton()
+                }
             }
         }
     }
