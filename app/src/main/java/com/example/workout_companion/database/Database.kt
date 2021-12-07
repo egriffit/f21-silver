@@ -12,6 +12,7 @@ import com.example.workout_companion.utility.DateTimeConverter
 @Database(entities = [
     UserEntity::class,
     NutritionPlanTypeEntity::class,
+    NutritionStatusEntity::class,
     GoalTypeEntity::class,
     CurrentUserGoalEntity::class,
     FrameworkTypeEntity::class,
@@ -52,6 +53,7 @@ abstract class WCDatabase: RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
     abstract fun workoutComponentDao(): WorkoutComponentDao
     abstract fun workoutComponentSetDao(): WorkoutComponentSetDao
+    abstract fun nutritionStatusDao(): NutritionStatusDao
 
 
     companion object{
