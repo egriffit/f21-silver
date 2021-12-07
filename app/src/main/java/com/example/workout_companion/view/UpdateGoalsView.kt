@@ -51,7 +51,7 @@ fun UpdateGoalsView(navController: NavController,
         }
     }
 
-    val recommendedFrameworkId = remember { mutableStateOf(0) }
+    val recommendedFrameworkId = remember { mutableStateOf(1) }
     val currentProtein = remember { mutableStateOf(0) }
     val currentCarbohydrates = remember { mutableStateOf(0) }
     val currentFat = remember { mutableStateOf(0) }
