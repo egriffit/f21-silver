@@ -13,26 +13,6 @@ import java.time.LocalDate
  */
 class NutritionStatusRepository(private val nutritionStatusDao: NutritionStatusDao) {
     /**
-     * Retrieves all nutrition status from nutrition status table
-     *
-     * @return LiveData<List<NutritionStatusEntity>>
-     */
-    val getAllStatuses: LiveData<List<NutritionStatusEntity>> = nutritionStatusDao.getAllStatuses()
-
-    fun getCurrentStatus(id: Int): LiveData<NutritionStatusEntity> {
-        return nutritionStatusDao.getCurrentStatus(id)
-    }
-
-    /**
-     * Retrieves the total number of rows in the nutrition status table
-     *
-     * @return total number of rows
-     */
-    fun getCount(status: String, date: LocalDate): Int {
-        return nutritionStatusDao.getCount(status, date)
-    }
-
-    /**
      * Retrieves a nutrition status object from nutrition status table for given date
      *
      * @return LiveData<NutritionStatusEntity>
@@ -40,4 +20,50 @@ class NutritionStatusRepository(private val nutritionStatusDao: NutritionStatusD
     fun getStatusByDate(date: LocalDate): LiveData<NutritionStatusEntity> {
         return nutritionStatusDao.getStatusByDate(date)
     }
+
+    /**
+     * Retrieves all nutrition status from nutrition status table
+     *
+     * @return LiveData<List<NutritionStatusEntity>>
+     */
+    val getAllStatuses: LiveData<List<NutritionStatusEntity>> = nutritionStatusDao.getAllStatuses()
+
+    /**
+     * Retrieves a nutrition status object from nutrition status table for given id
+     *
+     * @return LiveData<NutritionStatusEntity>
+     */
+    fun getCurrentStatus(id: Int): LiveData<NutritionStatusEntity> {
+        return nutritionStatusDao.getCurrentStatus(id)
+    }
+
+    /**
+     * Add a status to the nutrition status table
+     *
+     *@param item NutritionStatusEntity
+     * @return void
+     */
+    suspend fun insert(item: NutritionStatusEntity){
+        return nutritionStatusDao.insert(item)
+    }
+
+    /**
+     * Retrieves number of nutrition statuses in the nutrition status table for the current int
+     *
+     * @return Int
+     */
+    suspend fun getCount(status: String, date: LocalDate): Int{
+        return nutritionStatusDao.getCount(status, date)
+    }
+
+    /**
+     * update a nutrition status in the nutrition status table
+     *
+     * @param item NutritionStatusEntity
+     * @return void
+     */
+    suspend fun update(item: NutritionStatusEntity){
+        return nutritionStatusDao.update(item)
+    }
+
 }
