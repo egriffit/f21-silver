@@ -66,8 +66,12 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(userGoalState.value!!.framework_type_id).observeAsState()
-            ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel)
+            // Don't let the user get access to our overview unless they have a goal set
+            if (userGoalState.value != null) {
+                val frameworkId = userGoalState.value!!.framework_type_id
+                val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(frameworkId).observeAsState()
+                ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel)
+            }
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,

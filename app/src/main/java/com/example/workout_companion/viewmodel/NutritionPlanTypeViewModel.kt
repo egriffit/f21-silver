@@ -50,10 +50,8 @@ class NutritionPlanTypeViewModel(application: Application): AndroidViewModel(app
      * Function to initialize a coroutine to add a nutrition plan to the database
      * @param item, a NutritionPlanTypeEntity
      */
-    fun addPlan(item: NutritionPlanTypeEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.addPlan(item = item)
-        }
+    fun addPlan(item: NutritionPlanTypeEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addPlan(item = item)
     }
 
     /**

@@ -49,10 +49,8 @@ class CurrentUserGoalViewModel(application: Application): AndroidViewModel(appli
      * Function to initialize a coroutine to add a CurrentUserGoalEntity to the database
      * @param item, a CurrentUserGoalEntity
      */
-    fun addCurrentUserGoal(item: CurrentUserGoalEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.addCurrentUserGoals(item = item)
-        }
+    fun addCurrentUserGoal(item: CurrentUserGoalEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addCurrentUserGoals(item = item)
     }
 
     /**
