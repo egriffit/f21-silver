@@ -2,6 +2,7 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.AllMealsInDay
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.MealEntity
 import java.time.LocalDate
@@ -102,6 +103,23 @@ interface MealDao {
         AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
         """)
     fun getCount(name: String): Int
+
+    /**
+     * Retrieve the calories and macronutrient totals
+     * for a meal
+     *
+     * @return  AllMealsInDay
+     */
+    @Query("""
+        SELECT SUM(calories) as calories, 
+                SUM(carbohydrates) as carbohydrates, 
+                SUM(protein) as protein, SUM(fat) as fat,
+                 date
+        FROM meal
+        WHERE date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
+        GROUP BY (date)
+        """)
+    fun calcMealTotal(): AllMealsInDay
 
     /**
      * Insert a MealEntity object into the meal table

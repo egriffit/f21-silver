@@ -91,6 +91,27 @@ class FoodInMealDaoTest : TestCase(){
     }
 
     @Test
+    fun TestGetMealTotals() = runBlocking(){
+
+        val found: List<MealWithFoodsEntity>? = dao.getFoods(2)
+        val foundFoods: MutableList<FoodTypeEntity> = mutableListOf()
+        if (found != null) {
+            for(m in found ){
+                foundFoods.add(m.foods.elementAt(0))
+            }
+        }
+        val mealTotal = dao.getMealTotals(2)
+        val expected = listOf(
+            FoodTypeEntity(1, "Bacoon", "-1", 100.0, 200.0, 2.0, 50.0, 48.0),
+            FoodTypeEntity(2, "Eggs", "-1", 20.0, 100.0, 2.0, 15.0, 3.0) ,
+        )
+        MatcherAssert.assertThat(mealTotal.calories, CoreMatchers.equalTo(300.0))
+        MatcherAssert.assertThat(mealTotal.carbohydrates, CoreMatchers.equalTo(4.0))
+        MatcherAssert.assertThat(mealTotal.protein, CoreMatchers.equalTo(65.0))
+        MatcherAssert.assertThat(mealTotal.fat, CoreMatchers.equalTo(51.0))
+    }
+
+    @Test
     fun TestGetFoodInMealByName() = runBlocking(){
         val date = LocalDate.of(2021, Month.OCTOBER, 23)
 

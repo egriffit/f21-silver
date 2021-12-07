@@ -2,6 +2,9 @@ package com.example.workout_companion.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import androidx.room.Dao
+import androidx.room.Query
+
 
 /**
  * An entity joining the food_in_meal, meal, and food_type tables in the database
@@ -23,4 +26,3 @@ data class MealWithFoodsEntity (
     val foods: List<FoodTypeEntity>
 
 )
-

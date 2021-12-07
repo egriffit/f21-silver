@@ -42,6 +42,26 @@ interface FoodInMealDao {
      */
     @Transaction
     @Query("""
+        SELECT  a.meal_id as id, a.type as type, SUM(food_type.calories) as calories, SUM(food_type.carbohydrates) as carbohydrates,
+                SUM(food_type.protein) as protein, SUM(food_type.fat) as fat, a.Date
+        FROM food_type
+        INNER JOIN (SELECT *
+            FROM food_in_meal
+            INNER JOIN meal
+            ON food_in_meal.meal_id = meal.id ) a
+        ON a.food_id = food_type.id
+        WHERE a.meal_id = :meal_id
+    """)
+    fun getMealTotals(meal_id: Int): MealEntity
+
+    /**
+     * Retrieves a List of Foods for a meal with the meal_id
+     * equal to the integer provided
+     *
+     * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
+     */
+    @Transaction
+    @Query("""
         SELECT *
         FROM food_in_meal
         WHERE meal_Id = :meal_id
