@@ -1,4 +1,4 @@
-package com.example.workout_companion.view
+package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Checkbox
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FrameworkComponentSetRow() {
+fun FrameworkComponentSetRow(exercise: MutableState<String>) {
 
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
@@ -104,5 +103,6 @@ fun FrameworkComponentSetRow() {
 @Preview(showBackground = true)
 @Composable
 fun TestingPreview() {
-    FrameworkComponentSetRow()
+    val exercise = remember {mutableStateOf("Push-Up")}
+    FrameworkComponentSetRow(exercise)
 }

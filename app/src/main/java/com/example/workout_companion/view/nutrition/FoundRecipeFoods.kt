@@ -5,22 +5,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.test.core.app.ActivityScenario.launch
 import com.example.workout_companion.entity.*
 import com.example.workout_companion.sampleData.emptyFoodTypeEntity
 import com.example.workout_companion.sampleData.emptyNutritionAPiItem
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /***
  * Composable to display a the found foods from the Nutrition API
@@ -42,19 +38,25 @@ fun FoundRecipeFoods(
     recipeViewModel: RecipeViewModel, foodInRecipeViewModel: FoodInRecipeViewModel,
     nutritionAPIViewModel: NutritionAPIViewModel
 ) {
-    val foodState = remember { mutableStateOf("") }
-    var dbFoods: List<FoodTypeEntity>? = listOf()
-    val foodId = foodTypeViewModel.foodID.observeAsState().value
+    val dbFoods = foodTypeViewModel.foodResults.observeAsState().value
+    var foodId = foodTypeViewModel.foodID.observeAsState().value
     val recipeId = recipeViewModel.recipeID.observeAsState().value
 
     //get foods
     if (food != null) {
-        foodState.value = food
-        //1. get existing foods that match the search term from database
-        foodTypeViewModel.getFood(food)
-
-        //2. get foods from nutrition api
-        nutritionAPIViewModel.findFood(food)
+        LaunchedEffect(key1 = Unit, block = {
+            //1. get existing foods that match the search term from database
+            withContext(Dispatchers.IO){
+                foodTypeViewModel.getFood(food)
+            }
+            withContext(Dispatchers.IO){
+                if (recipe != null) {
+                    recipeViewModel.getRecipeID(recipe)
+                }
+            }
+            //2. get foods from nutrition api
+            nutritionAPIViewModel.findFood(food)
+        })
     }
     val apiFoods = nutritionAPIViewModel.foodResults
 
@@ -73,7 +75,6 @@ fun FoundRecipeFoods(
     //create a list of pairs with type and relative index
     //keeps track of indexes, states and entities
     val selectedFoodIndex = remember{mutableStateOf(FoodIndex("", "", 0))}
-    val coroutineScope = rememberCoroutineScope()
     val selectedFoundAPIFood = remember {mutableStateOf(emptyNutritionAPiItem)}
     val selectedFoodName = remember { mutableStateOf("")}
     val selectedFoundFood = remember { mutableStateOf(emptyFoodTypeEntity)}
@@ -97,7 +98,6 @@ fun FoundRecipeFoods(
                                 selectedFoodName.value = selectedFoundFood.value.name
                             }
                         }
-
                         if(selectedFoodIndex.value.type == "API")
                         {
                             selectedFoundAPIFood.value = apiFoods.elementAt(0)[selectedFoodIndex.value.index]
@@ -109,22 +109,40 @@ fun FoundRecipeFoods(
                             selectedFoundAPIFood.value = emptyNutritionAPiItem
                             selectedFoodName.value = ""
                         }
-                        //add food to recipe
-                        if(selectedFoundFood.value.name != "") {
-                            //retrieve the meal id
-                            if (recipe != null) {
-                                recipeViewModel.getRecipeID(recipe)
-                            }
-                            val foodId = selectedFoundFood.value.id
-
-                            //create a food_inMeal_object and add to database
-                            if(recipeId != null) {
-                                if ((recipeId != 0) && (foodId != 0)) {
-                                    val foodInRecipe = FoodInRecipeEntity(recipeId, foodId, 1.0)
-                                    foodInRecipeViewModel.insert(foodInRecipe)
+                        //Case 1 add food from the database to the recipe
+                        if(selectedFoodIndex.value.type == "DBFood"){
+                            runBlocking {
+                                //get the recipe and food id
+                                val jobF1: Job = launch(context = Dispatchers.IO) {
+                                    foodId = selectedFoundFood.value.id
+                                }
+                                //wait for the ids to be found before adding to FoodInMeal Table
+                                jobF1.join()
+                                val jobF2: Job = launch(context = Dispatchers.IO) {
+                                    //create a food_inMeal_object and add to database
+                                    if (recipeId != null && foodId != null) {
+                                        if ((recipeId != 0) && (foodId != 0)) {
+                                            val foodInRecipe = FoodInRecipeEntity(recipeId,
+                                                foodId!!, 1.0)
+                                            foodInRecipeViewModel.insert(foodInRecipe)
+                                        }
+                                    }
+                                }
+                                //Wait for record to be inserted before navigating
+                                //To Nutrition Overivew
+                                jobF2.join()
+                                //remove the found foods from my snapshot state
+                                apiFoods.clear()
+                                if(recipe != null){
+                                    navController.navigate("recipe/$recipe")
+                                }else{
+                                    navController.navigate("nutritionOverview")
                                 }
                             }
-                            //add found api food to recipe
+                        }
+                        //Case 2 add food from the API to the recipe
+                        if(selectedFoodIndex.value.type == "API") {
+                            //add found api food to meal
                             if (selectedFoundAPIFood.value.name != "") {
                                 //store the food in the food table
                                 val foodType = FoodTypeEntity(
@@ -137,38 +155,43 @@ fun FoundRecipeFoods(
                                     selectedFoundAPIFood.value.protein_g,
                                     selectedFoundAPIFood.value.fat_total_g
                                 )
-                                coroutineScope.launch(Dispatchers.IO) {
-
-                                    foodTypeViewModel.addFoodType(foodType)
-                                    //retrieve the food id and meal id
-                                    delay(1000L)
-
-                                    foodTypeViewModel.getId(foodType)
-                                    delay(1000L)
-
-                                    if (recipe != null) {
-                                        recipeViewModel.getRecipeID(recipe)
-                                        delay(1000L)
+                                runBlocking {
+                                    //add food to database
+                                    val job: Job = launch(context = Dispatchers.IO) {
+                                        foodTypeViewModel.addFoodType(foodType)
                                     }
-                                    if(recipeId != null) {
-                                        //create a Food_in_recipe object and add to database
-                                        if ((recipeId != 0) && (foodId != 0)) {
-                                            val foodInRecipe =
-                                                FoodInRecipeEntity(recipeId, foodId, 1.0)
-                                            foodInRecipeViewModel.insert(foodInRecipe)
+                                    //wait for food to be inserted before getting id
+                                    job.join()
+                                    val job2: Job = launch(context = Dispatchers.IO) {
+                                        foodTypeViewModel.getId(foodType)
+                                    }
+                                    //Wait for the ids before add to foodInMealEntity
+                                    job2.join()
+                                    val job3: Job = launch {
+                                        //create a food_in_recipe object and add to database
+                                        if (recipeId != null && foodId != null) {
+                                            if ((recipeId != 0) && (foodId != 0)) {
+                                                val foodInRecipe =
+                                                    FoodInRecipeEntity(recipeId, foodId!!, 1.0)
+                                                foodInRecipeViewModel.insert(foodInRecipe)
+                                            }
                                         }
                                     }
-                                }
 
-                                //remove the found foods from my snapshot state
-                                apiFoods.clear()
-                                //navigate back to nutrition overview view
+                                    //wait for food to be added to foodInMeal table before
+                                    // navigating to nutrition overivew view
+
+                                    job3.join()
+
+                                    //remove the found foods from my snapshot state
+                                    apiFoods.clear()
+                                    if (recipe != null) {
+                                        navController.navigate("recipe/$recipe")
+                                    } else {
+                                        navController.navigate("nutritionOverview")
+                                    }
+                                }
                             }
-                        }
-                        if(recipe != null){
-                            navController.navigate("recipe/$recipe")
-                        }else{
-                            navController.navigate("nutritionOverview")
                         }
                     }){
                         Text("Add Food")
@@ -198,7 +221,7 @@ fun FoundRecipeFoods(
                     .padding(start = 5.dp, top = 80.dp, bottom = 20.dp, end = 5.dp)
             ){
                 if(recipe != null){
-                     FoodRadioButtonList(navController, recipe, dbFoods, apiFoods, selectedFoodIndex)
+                     FoodRadioButtonList(navController, recipe, dbFoods, apiFoods)
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.AllMealsInDay
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.entity.MealEntity
 import java.time.LocalDate
@@ -30,7 +31,7 @@ interface MealDao {
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
     @Query("SELECT * FROM meal where date = :date")
-    fun getByDate(date: LocalDate): LiveData<List<MealEntity>>
+    fun getByDate(date: LocalDate): List<MealEntity>
 
     /**
      * Retrieves a Meal object from meal table where
@@ -45,7 +46,7 @@ interface MealDao {
         WHERE type = :type 
         AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
     """)
-    fun getByName(type: String): LiveData<List<MealEntity>>
+    fun getByName(type: String): List<MealEntity>
 
     /**
      * Retrieves the ide of a meal based on the name of the meal
@@ -102,6 +103,22 @@ interface MealDao {
         AND date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
         """)
     fun getCount(name: String): Int
+
+    /**
+     * Retrieve the daily calories and macronutrient totals
+     *
+     * @return  AllMealsInDay
+     */
+    @Query("""
+        SELECT SUM(calories) as calories, 
+                SUM(carbohydrates) as carbohydrates, 
+                SUM(protein) as protein, SUM(fat) as fat,
+                 date
+        FROM meal
+        WHERE date = strftime('%Y-%m-%d', DATE('now', 'localtime'))
+        GROUP BY (date)
+        """)
+    fun calcMealTotal(): AllMealsInDay
 
     /**
      * Insert a MealEntity object into the meal table

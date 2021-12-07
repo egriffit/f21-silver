@@ -55,7 +55,7 @@ class RecipeRepositoryTest : TestCase() {
     fun testGetByName() = runBlocking{
         repository.insert(sampleRecipeList)
 
-        val found: List<RecipeEntity> = repository.getRecipeByName("Grilled Cheese").getOrAwaitValue()
+        val found: List<RecipeEntity> = repository.getRecipeByName("Grilled Cheese")
         MatcherAssert.assertThat(found.elementAt(0), CoreMatchers.equalTo(sampleRecipeList.elementAt(0)))
     }
 

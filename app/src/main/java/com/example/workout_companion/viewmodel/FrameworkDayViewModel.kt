@@ -2,6 +2,7 @@ package com.example.workout_companion.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.workout_companion.database.FRAMEWORK_DAYS
 import com.example.workout_companion.database.WCDatabase
 import com.example.workout_companion.entity.FrameworkDayEntity
@@ -12,6 +13,10 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class FrameworkDayViewModel(application: Application) : AndroidViewModel(application) {
+    /**
+     * A list of all framework days for a framework
+     */
+    val frameworkDays = MutableLiveData<List<FrameworkDayEntity>>()
 
     /**
      * The repository for accessing the database
@@ -24,14 +29,14 @@ class FrameworkDayViewModel(application: Application) : AndroidViewModel(applica
     }
 
     /**
-     * Get all days within a workout framework
+     * Get all days within a workout framework and update frameworkDays livedata list
      *
      * @property framework_type_id  the primary key of the workout framework.
-     *
-     * @return a LiveData List of all days within the framework
      */
-    fun getAllFrameworkDays(framework_type_id: Int) : LiveData<List<FrameworkDayEntity>> {
-        return repository.getAllFrameworkDays(framework_type_id)
+    fun getAllFrameworkDays(framework_type_id: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            frameworkDays.postValue(repository.getAllFrameworkDays(framework_type_id))
+        }
     }
 
     /**

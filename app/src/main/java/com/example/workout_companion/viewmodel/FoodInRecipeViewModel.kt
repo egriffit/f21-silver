@@ -78,7 +78,7 @@ class FoodInRecipeViewModel(application: Application) : AndroidViewModel(applica
         var found= MutableLiveData<List<FoodTypeEntity>>()
 
         viewModelScope.launch(Dispatchers.IO) {
-            recipeFoods = repository.getFoodInRecipe(name).value
+            recipeFoods = repository.getFoodInRecipe(name)
             if (recipeFoods != null) {
                 for (m in recipeFoods!!) {
                     foundFoods.add(m.foods.elementAt(0))
@@ -99,7 +99,7 @@ class FoodInRecipeViewModel(application: Application) : AndroidViewModel(applica
      */
     fun getFoodInRecipe(name: String){
         viewModelScope.launch(Dispatchers.IO){
-            foodsInRecipe.postValue(repository.getFoodInRecipe(name).value)
+            foodsInRecipe.postValue(repository.getFoodInRecipe(name))
         }
     }
 

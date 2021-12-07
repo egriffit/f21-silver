@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.entity.NutritionPlanTypeEntity
+import com.example.workout_companion.sampleData.emptyNutritionPlanTypeEntity
 import com.example.workout_companion.view.goals.CalorieIncrementor
 import com.example.workout_companion.view.goals.GoalDropdown
 import com.example.workout_companion.view.goals.MacronutrientSelector
@@ -38,9 +39,12 @@ fun UpdateGoalsView(navController: NavController,
     val maxWorkouts = user?.max_workouts_per_week
     val selectedGoalID = remember { mutableStateOf(0) }
     val selectedGoal = remember {mutableStateOf("")}
+    val currentCalories = remember { mutableStateOf(1500) }
+
     if(goals.isNotEmpty()){
         if(selectedGoalID.value != 0){
             selectedGoal.value = goals[selectedGoalID.value - 1].goal
+            currentCalories.value = 2000 + goals[selectedGoalID.value - 1].caloric_addition
         }
         else{
             selectedGoal.value = goals[0].goal
@@ -48,7 +52,6 @@ fun UpdateGoalsView(navController: NavController,
     }
 
     val recommendedFrameworkId = remember { mutableStateOf(0) }
-    val currentCalories = remember { mutableStateOf(1500) }
     val currentProtein = remember { mutableStateOf(0) }
     val currentCarbohydrates = remember { mutableStateOf(0) }
     val currentFat = remember { mutableStateOf(0) }
@@ -152,32 +155,37 @@ fun UpdateGoalsView(navController: NavController,
                 item {
                     // Submit Button
                     Button(onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            //create a nutrition plan
-                            val nutritionPlan = NutritionPlanTypeEntity(
-                                1,
-                                selectedGoalID.value,
-                                currentCalories.value.toDouble(),
-                                macronutrientStates.elementAt(0).value.toDouble(),
-                                macronutrientStates.elementAt(1).value.toDouble(),
-                                macronutrientStates.elementAt(2).value.toDouble()
-                            )
+                        runBlocking{
+                            var nutritionPlan = emptyNutritionPlanTypeEntity
 
-                            nutritionPlanTypeViewModel.addPlan(nutritionPlan)
-
-                            val nutritionPlanTypeId: Int? =
-                                withContext(Dispatchers.IO) {
-                                    nutritionPlanTypeViewModel.getPlanId(nutritionPlan)
-                                    nutritionPlanTypeViewModel.id.value
-                                }
-                            if(nutritionPlanTypeId != null){
-                                val userGoal = CurrentUserGoalEntity(1,
-                                    nutritionPlanTypeId,
-                                    recommendedFrameworkId.value )
-                                currentUserGoalViewModel.addCurrentUserGoal(userGoal)
+                            val job1: Job = launch(Dispatchers.IO){
+                                nutritionPlan = NutritionPlanTypeEntity(
+                                    1,
+                                    selectedGoalID.value,
+                                    currentCalories.value.toDouble(),
+                                    macronutrientStates.elementAt(0).value.toDouble(),
+                                    macronutrientStates.elementAt(1).value.toDouble(),
+                                    macronutrientStates.elementAt(2).value.toDouble()
+                                )
+                                nutritionPlanTypeViewModel.addPlan(nutritionPlan)
                             }
+                            job1.join()
+                            val job2: Job = launch(Dispatchers.IO){
+                                val nutritionPlanTypeId: Int? =
+                                    withContext(Dispatchers.IO) {
+                                        nutritionPlanTypeViewModel.getPlanId(nutritionPlan)
+                                        nutritionPlanTypeViewModel.id.value
+                                    }
+                                if(nutritionPlanTypeId != null){
+                                    val userGoal = CurrentUserGoalEntity(1,
+                                        nutritionPlanTypeId,
+                                        recommendedFrameworkId.value )
+                                    currentUserGoalViewModel.addCurrentUserGoal(userGoal)
+                                }
+                            }
+                            job2.join()
+                            navController.navigate("Landing")
                         }
-                        navController.navigate("Landing")
                     }) {
                         Text("Submit")
                     }

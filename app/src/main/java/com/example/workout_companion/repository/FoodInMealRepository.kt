@@ -3,24 +3,23 @@ package com.example.workout_companion.repository
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.workout_companion.dao.FoodInMealDao
+import com.example.workout_companion.dao.MealDao
 import com.example.workout_companion.entity.FoodInMealEntity
 import com.example.workout_companion.entity.FoodTypeEntity
+import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.entity.MealWithFoodsEntity
 import java.time.LocalDate
 
-class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
+class FoodInMealRepository (private val foodInMealDao: FoodInMealDao, private val mealDao: MealDao) {
     /**
      * Retrieves a List of Foods for a meal with the meal_id
      * equal to the integer provided
      *
      * @return LiveData<List<MealWithFoodsEntity> a list of MealWithFoodsEntity objects
      */
-    fun getFoodInMeal(meal_id: Int): LiveData<List<MealWithFoodsEntity>> {
+    fun getFoodInMeal(meal_id: Int): List<MealWithFoodsEntity> {
         return foodInMealDao.getFoodInMeal(meal_id)
     }
 
@@ -33,7 +32,7 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
      * @param date, date of meal
      * @return  Int total number of rows found
      */
-    fun getFoodInMeal(type: String, date: LocalDate): LiveData<List<MealWithFoodsEntity>> {
+    fun getFoodInMeal(type: String, date: LocalDate): List<MealWithFoodsEntity> {
         return foodInMealDao.getFoodInMeal(type, date)
     }
 
@@ -69,6 +68,17 @@ class FoodInMealRepository (private val foodInMealDao: FoodInMealDao) {
     fun getCount(type: String, date: LocalDate): Int{
         return foodInMealDao.getCount(type, date)
     }
+
+    /**
+     * Update the calorie and macronutrient totals for a meal
+     */
+    @Transaction
+    suspend fun getMealTotals(meal_id: Int) {
+        val mealEntity = foodInMealDao.getMealTotals(meal_id)
+        mealDao.update(mealEntity)
+    }
+
+
 
     /**
      * Insert a FoodInMealEntity object into the food_in_meal table

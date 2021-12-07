@@ -14,7 +14,7 @@ class FrameworkComponentRepository(private val dao: FrameworkComponentDao) {
      *
      * @return a LiveData List of all components.
      */
-    fun getAllComponentsOfDay(day_id: Int) : LiveData<List<FrameworkComponentEntity>> {
+    fun getAllComponentsOfDay(day_id: Int) : List<FrameworkComponentEntity> {
         return dao.getAllComponentsOfDay(day_id)
     }
 

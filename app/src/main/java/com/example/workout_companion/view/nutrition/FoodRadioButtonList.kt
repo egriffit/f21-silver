@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
  * @param dbFoods, list of FoodTypeEntities,
  * @param dbRecipes, list of RecipeEntity,
  * @param apiFoods, SnapshotStateList of APINinjaNutrition objects
- * @param selectedFoodIndex, mutable state to keep track of the currently selected radio button
  */
 @Composable
 fun FoodRadioButtonList(navController: NavController,
@@ -35,27 +34,26 @@ fun FoodRadioButtonList(navController: NavController,
                         dbFoods: List<FoodTypeEntity>?,
                         dbRecipes: List<RecipeEntity>?,
                         apiFoods: SnapshotStateList<ApiNinjaNutrition>,
-                        selectedFoodIndex: MutableState<FoodIndex>
 ) {
     //create radio buttons for foods from the database
     Column(modifier = Modifier.fillMaxWidth()){
         Text("Results")
         if(dbFoods != null){
             if(dbFoods.isEmpty()){
-                Text("Food not found in database.")
+                //Text("Food not found in database.")
             } else{
                 Text("Foods from the database")
                 dbFoods.forEachIndexed { index, it ->
-                    RadioButton(
-                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "DBFood"),
-                        onClick = {
-                            selectedFoodIndex.value.foodName = it.name
-                            selectedFoodIndex.value.type = "DBFood"
-                            selectedFoodIndex.value.index = index
-                        },
-                        enabled = true,
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-                    )
+//                    RadioButton(
+//                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "DBFood"),
+//                        onClick = {
+//                            selectedFoodIndex.value.foodName = it.name
+//                            selectedFoodIndex.value.type = "DBFood"
+//                            selectedFoodIndex.value.index = index
+//                        },
+//                        enabled = true,
+//                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
+//                    )
                 FoodRadioButton(navController, meal, "Food", it)
                 }
             }
@@ -64,21 +62,21 @@ fun FoodRadioButtonList(navController: NavController,
         }
         //create radio buttons for foods from API
         if(apiFoods.isEmpty()){
-            Text("Food was not found in the api")
+            //Text("Food was not found in the api")
         }else{
             Text("Foods from the Nutrition API")
             apiFoods.elementAt(0).forEachIndexed { index, it ->
                 Row {
-                    RadioButton(
-                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "API"),
-                        onClick = {
-                            selectedFoodIndex.value.foodName = it.name
-                            selectedFoodIndex.value.type = "API"
-                            selectedFoodIndex.value.index = index
-                        },
-                        enabled = true,
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-                    )
+//                    RadioButton(
+//                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "API"),
+//                        onClick = {
+//                            selectedFoodIndex.value.foodName = it.name
+//                            selectedFoodIndex.value.type = "API"
+//                            selectedFoodIndex.value.index = index
+//                        },
+//                        enabled = true,
+//                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
+//                    )
                     // Text(it.name)
                     FoodRadioButton(navController, meal, "Food", it)
                 }
@@ -87,20 +85,21 @@ fun FoodRadioButtonList(navController: NavController,
         //create radio buttons for recipes from the database
         if(dbRecipes != null){
             if(dbRecipes.isEmpty()){
-                Text("No recipes with this name were found in the database")
+                //Text("No recipes with this name were found in the database")
             }else{
+                Text("Recipes from the database")
                 dbRecipes.forEachIndexed { index, it ->
                     Row {
-                        RadioButton(
-                            selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "Recipe"),
-                            onClick = {
-                                selectedFoodIndex.value.foodName = it.name
-                                selectedFoodIndex.value.type = "Recipe"
-                                selectedFoodIndex.value.index = index
-                            },
-                            enabled = true,
-                            colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-                        )
+//                        RadioButton(
+//                            selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "Recipe"),
+//                            onClick = {
+//                                selectedFoodIndex.value.foodName = it.name
+//                                selectedFoodIndex.value.type = "Recipe"
+//                                selectedFoodIndex.value.index = index
+//                            },
+//                            enabled = true,
+//                            colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
+//                        )
                         // Text(it.name)
                         FoodRadioButton(navController, meal, "Recipe", it)
                     }
@@ -118,7 +117,6 @@ fun FoodRadioButtonList(navController: NavController,
                         recipe: String,
                         dbFoods: List<FoodTypeEntity>?,
                         apiFoods: SnapshotStateList<ApiNinjaNutrition>,
-                        selectedFoodIndex: MutableState<FoodIndex>
 ) {
     //create radio buttons for foods from the database
     Column(modifier = Modifier.fillMaxWidth()){
@@ -129,16 +127,16 @@ fun FoodRadioButtonList(navController: NavController,
             } else{
                 Text("Foods from the database")
                 dbFoods.forEachIndexed { index, it ->
-                    RadioButton(
-                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "DBFood"),
-                        onClick = {
-                            selectedFoodIndex.value.foodName = it.name
-                            selectedFoodIndex.value.type = "DBFood"
-                            selectedFoodIndex.value.index = index
-                        },
-                        enabled = true,
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-                    )
+//                    RadioButton(
+//                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "DBFood"),
+//                        onClick = {
+//                            selectedFoodIndex.value.foodName = it.name
+//                            selectedFoodIndex.value.type = "DBFood"
+//                            selectedFoodIndex.value.index = index
+//                        },
+//                        enabled = true,
+//                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
+//                    )
                     RecipeRadioButton(navController, recipe, "Food", it)
                 }
             }
@@ -152,16 +150,16 @@ fun FoodRadioButtonList(navController: NavController,
             Text("Foods from the Nutrition API")
             apiFoods.elementAt(0).forEachIndexed { index, it ->
                 Row {
-                    RadioButton(
-                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "API"),
-                        onClick = {
-                            selectedFoodIndex.value.foodName = it.name
-                            selectedFoodIndex.value.type = "API"
-                            selectedFoodIndex.value.index = index
-                        },
-                        enabled = true,
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
-                    )
+//                    RadioButton(
+//                        selected = (index == selectedFoodIndex.value.index) && (selectedFoodIndex.value.type == "API"),
+//                        onClick = {
+//                            selectedFoodIndex.value.foodName = it.name
+//                            selectedFoodIndex.value.type = "API"
+//                            selectedFoodIndex.value.index = index
+//                        },
+//                        enabled = true,
+//                        colors = RadioButtonDefaults.colors(selectedColor = Color.Magenta)
+//                    )
                     // Text(it.name)
                     RecipeRadioButton(navController, recipe, "Food", it)
                 }

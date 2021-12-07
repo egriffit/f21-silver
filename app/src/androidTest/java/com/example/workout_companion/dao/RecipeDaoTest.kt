@@ -57,7 +57,7 @@ class RecipeDaoTest : TestCase(){
     fun testGetByName() = runBlocking{
         dao.insert(sampleRecipeList)
 
-        val found: List<RecipeEntity> = dao.getRecipe("Grilled Cheese").getOrAwaitValue()
+        val found: List<RecipeEntity> = dao.getRecipe("Grilled Cheese")
         MatcherAssert.assertThat(found.elementAt(0), CoreMatchers.equalTo(sampleRecipeList.elementAt(0),))
     }
 

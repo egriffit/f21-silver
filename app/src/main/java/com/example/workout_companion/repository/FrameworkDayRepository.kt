@@ -13,9 +13,9 @@ class FrameworkDayRepository(private val frameworkDayDao: FrameworkDayDao) {
      *
      * @property framework_type_id  the primary key of the framework.
      *
-     * @return a LiveData List of all days within the framework.
+     * @return a List of all days within the framework.
      */
-    fun getAllFrameworkDays(framework_type_id: Int) : LiveData<List<FrameworkDayEntity>> {
+    fun getAllFrameworkDays(framework_type_id: Int) : List<FrameworkDayEntity> {
         return frameworkDayDao.getAllFrameworkDays(framework_type_id)
     }
 

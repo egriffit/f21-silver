@@ -1,11 +1,15 @@
 package com.example.workout_companion.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.workout_companion.dao.MealDao
 import com.example.workout_companion.entity.MealEntity
 import java.time.LocalDate
 import androidx.lifecycle.LiveData
+import androidx.room.Query
+import androidx.room.Transaction
+import com.example.workout_companion.api.edamam.entities.ServingSize
+import com.example.workout_companion.entity.AllMealsInDay
+import com.example.workout_companion.entity.FoodTypeEntity
+import com.example.workout_companion.sampleData.emptyMealEntity
 
 /**
  * FoodTypeRepository class that abstracts the methods in the Meal DAO
@@ -17,7 +21,7 @@ class MealRepository (private val mealDao: MealDao) {
      *
      * @return LiveData<List<MealEntity>>
      */
-    val getAllMeals: LiveData<List<MealEntity>> = mealDao.getByDate()
+    val getTodaysMeals: LiveData<List<MealEntity>> = mealDao.getByDate()
 
     /**
      * Retrieves all meals from meal table where the date is the same as the
@@ -26,7 +30,7 @@ class MealRepository (private val mealDao: MealDao) {
      * @param date, LocalDate
      * @return LiveData<List<MealEntity>>
      */
-    suspend fun getMealsByDate(date: LocalDate): LiveData<List<MealEntity>>{
+    fun getMealsByDate(date: LocalDate): List<MealEntity>{
         return mealDao.getByDate(date)
     }
 
@@ -35,9 +39,9 @@ class MealRepository (private val mealDao: MealDao) {
      * string provided
      *
      * @param name, String
-     * @return LiveData<List<MealEntity>>
+     * @return List<MealEntity>
      */
-    suspend fun getMealByName(name: String): LiveData<List<MealEntity>>{
+    fun getMealByName(name: String): List<MealEntity>{
         return mealDao.getByName(name)
     }
 
@@ -48,7 +52,7 @@ class MealRepository (private val mealDao: MealDao) {
      * @param type, a string equal to the type of meal
      * @return  id, Int
      */
-    suspend fun getMealId(type: String): Int{
+    fun getMealId(type: String): Int{
         return mealDao.getMealId(type)
     }
 
@@ -60,8 +64,17 @@ class MealRepository (private val mealDao: MealDao) {
      * @param date, LocalDate
      * @return  id, Int
      */
-    suspend fun getMealId(type: String, date: LocalDate): Int{
+    fun getMealId(type: String, date: LocalDate): Int{
         return mealDao.getMealId(type, date)
+    }
+
+    /**
+     * Retrieve the daily calories and macronutrient totals
+     *
+     * @return  AllMealsInDay
+     */
+    fun calcDailyTotal(): AllMealsInDay{
+        return mealDao.calcMealTotal()
     }
 
     /**
@@ -71,8 +84,8 @@ class MealRepository (private val mealDao: MealDao) {
      * @param name, String
      * @return LiveData<List<MealEntity>>
      */
-    suspend fun checkIfMealExists(name: String): Boolean {
-        var foundRecords = mealDao.getCount(name)
+    fun checkIfMealExists(name: String): Boolean {
+        val foundRecords = mealDao.getCount(name)
         var found = false
         if (foundRecords > 0)
         {
@@ -86,7 +99,7 @@ class MealRepository (private val mealDao: MealDao) {
      *
      * @return Int
      */
-    suspend fun getCount(): Int{
+    fun getCount(): Int{
         return mealDao.getCount()
     }
 
@@ -104,7 +117,7 @@ class MealRepository (private val mealDao: MealDao) {
     /**
      * Add a meal to the meal table
      *
-     *@param meal MealEntity
+     *@param meals List of MealEntity Objects
      * @return void
      */
     suspend fun insert(meals: List<MealEntity>){
@@ -114,13 +127,12 @@ class MealRepository (private val mealDao: MealDao) {
     /**
      * Add a meal to the meal table
      *
-     *@param meal MealEntity
+     *@param name name of the meal
      * @return void
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun insert(name: String){
         val date = LocalDate.now()
-        val meal: MealEntity = MealEntity(0, name, 0.0, 0.0, 0.0, 0.0,  date)
+        val meal = MealEntity(0, name, 0.0, 0.0, 0.0, 0.0,  date)
         return mealDao.insert(meal)
     }
 
@@ -135,59 +147,61 @@ class MealRepository (private val mealDao: MealDao) {
         return mealDao.update(meal)
     }
 
+    /**
+     * update a meal in the meal table
+     *
+     * @param meal MealEntity
+     * @return void
+     */
+    suspend fun emptyMeal(meal: MealEntity){
+        val newMeal = emptyMealEntity
+        newMeal.id = meal.id
+        return mealDao.update(newMeal)
+    }
+
 
     /**
      * Update the calories, carbs, protein, fat totals in a meal
      * in the meal table
      *
-     * @param name, String
-     * @param calories, in grams
-     * @param carbohydrates, in grams
-     * @param protein, in grams
-     * @param fat, in grams
+     * @param meal, MealEntity
+     * @param food, FoodTypeEntity to be added
+     * @param servings, number of servings
      * @return void
      */
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun addToMeal(name: String, calories: Double, carbohydrates: Double,
-                       protein: Double, fat: Double){
-        val date = LocalDate.now()
-        var found: List<MealEntity>? = mealDao.getByName(name).value
-        var meal: MealEntity = MealEntity(0, "", 0.0, 0.0, 0.0, 0.0, date)
-        if(found != null){
-            meal = found.elementAt(0)
-            meal.calories += calories
-            meal.carbohydrates += carbohydrates
-            meal.protein += protein
-            meal.fat += fat
-        }
-        return mealDao.update(meal)
+    @Transaction
+    suspend fun addToMeal(meal: MealEntity, food: FoodTypeEntity, servings: Double){
+        var newMeal = emptyMealEntity
+        newMeal.id = meal.id
+        newMeal.type = meal.type
+        newMeal.calories += food.calories
+        newMeal.carbohydrates += food.carbohydrates
+        newMeal.protein += food.protein
+        newMeal.fat += food.fat
+        newMeal.date = meal.date
+        mealDao.update(newMeal)
     }
 
     /**
      * Subtract the calories, carbs, protein, fat totals in a meal
      * in the meal table
      *
-     * @param name, String
-     * @param calories, in grams
-     * @param carbohydrates, in grams
-     * @param protein, in grams
-     * @param fat, in grams
+     * @param meal, MealEntity
+     * @param food, FoodTypeEntity to be added
+     * @param servings, number of servings
      * @return void
      */
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun subtractFromMeal(name: String, calories: Double, carbohydrates: Double,
-                          protein: Double, fat: Double){
-        val date = LocalDate.now()
-        var found: List<MealEntity>? = mealDao.getByName(name).value
-        var meal: MealEntity = MealEntity(0, "", 0.0, 0.0, 0.0, 0.0, date)
-        if(found != null){
-            meal = found.elementAt(0)
-            meal.calories -= calories
-            meal.carbohydrates -= carbohydrates
-            meal.protein -= protein
-            meal.fat -= fat
-        }
-        return mealDao.update(meal)
+    @Transaction
+    suspend fun subtractFromMeal(meal: MealEntity, food: FoodTypeEntity, servings: Double){
+        var newMeal = emptyMealEntity
+        newMeal.id = meal.id
+        newMeal.type = meal.type
+        newMeal.calories -= food.calories
+        newMeal.carbohydrates -= food.carbohydrates
+        newMeal.protein -= food.protein
+        newMeal.fat -= food.fat
+        newMeal.date = meal.date
+        mealDao.update(newMeal)
     }
 
 
@@ -195,7 +209,7 @@ class MealRepository (private val mealDao: MealDao) {
     /**
      * Delete a meal in the meal table
      *
-     *@param foods FoodTypeEntity
+     *@param meal, Meal Entity
      * @return void
      */
     suspend fun delete(meal: MealEntity){

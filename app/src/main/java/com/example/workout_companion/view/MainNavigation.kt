@@ -10,14 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import androidx.test.core.app.ActivityScenario.launch
-import com.example.workout_companion.view.exercise.WorkoutView
+import com.example.workout_companion.api.wger.entities.wgerExercise
+import com.example.workout_companion.api.wger.utility.muscleName
+import com.example.workout_companion.api.wger.utility.muscleNameConverter
+import com.example.workout_companion.entity.FoodTypeEntity
+import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
+import com.example.workout_companion.view.exercise.ExerciseView
+import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import kotlinx.coroutines.*
 
 
 @SuppressLint("NewApi")
@@ -40,6 +43,9 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
     val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
+    val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
+    val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
+    val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -61,7 +67,19 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            ExerciseOverview(navController, workoutState)
+            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
+            val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
+            runBlocking {
+                val JobE2: Job = launch(Dispatchers.IO){
+                    if(framework_type_id != null) {
+                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
+                    }
+                }
+            }
+            //Load the framework days
+            if(frameworkDays != null){
+                ExerciseOverview(navController, workoutState, frameworkDays!!, frameworkComponentViewModel)
+            }
         }
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,
@@ -74,8 +92,27 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("meal") { type = NavType.StringType }
             )
         ){ backStackEntry ->
-            FoundFoods(navController, backStackEntry.arguments?.getString("foodName"),
-                 backStackEntry.arguments?.getString("meal"),
+            val dbRecipes = recipeViewModel.foundRecipes.observeAsState(listOf()).value
+            val dbFoods = foodTypeViewModel.foodResults.observeAsState(listOf()).value
+            val food = backStackEntry.arguments?.getString("foodName")
+            val meal = backStackEntry.arguments?.getString("meal")
+            //get foods
+            if (food != null) {
+                runBlocking{
+                    val job1: Job = launch(Dispatchers.IO){
+                        foodTypeViewModel.getFood(food)
+                    }
+                    job1.join()
+                    val job2: Job = launch(Dispatchers.IO){
+                        recipeViewModel.getRecipe(food)
+                    }
+                    job2.join()
+                }
+
+            }
+            FoundFoods(navController, food,
+                 meal,
+                dbFoods, dbRecipes,
                 foodTypeViewModel, mealViewModel, foodInMealViewModel,
                 recipeViewModel, foodInRecipeViewModel, nutritionAPIViewModel
                     )
@@ -107,6 +144,25 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("meal") { type = NavType.StringType },
                 )
         ){ backStackEntry ->
+            val food: String = backStackEntry.arguments?.getString("foodName")!!
+            val servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
+            val calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
+            val carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
+            val protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
+            val fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
+            val foodType = FoodTypeEntity(
+                    0, food, "-1",
+                    servingSize, calories, carbohydrates,
+                    protein, fat
+                )
+            runBlocking{
+                val jobF1: Job = launch(context = Dispatchers.IO){
+                    foodTypeViewModel.addFoodType(foodType)
+                }
+                jobF1.join()
+            }
+
+
             FoodView(navController, backStackEntry.arguments?.getString("foodName"),
                 backStackEntry.arguments?.getString("servingSize")?.toDouble(),
                 backStackEntry.arguments?.getString("calories")?.toDouble(),
@@ -128,6 +184,23 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 navArgument("recipe") { type = NavType.StringType },
             )
         ){ backStackEntry ->
+            val food: String = backStackEntry.arguments?.getString("foodName")!!
+            val servingSize: Double = backStackEntry.arguments?.getString("servingSize")?.toDouble()!!
+            val calories: Double = backStackEntry.arguments?.getString("calories")?.toDouble()!!
+            val carbohydrates: Double = backStackEntry.arguments?.getString("carbohydrates")?.toDouble()!!
+            val protein: Double = backStackEntry.arguments?.getString("protein")?.toDouble()!!
+            val fat: Double = backStackEntry.arguments?.getString("fat")?.toDouble()!!
+            val foodType = FoodTypeEntity(
+                0, food, "-1",
+                servingSize, calories, carbohydrates,
+                protein, fat
+            )
+            runBlocking{
+                val jobF1: Job = launch(context = Dispatchers.IO){
+                    foodTypeViewModel.addFoodType(foodType)
+                }
+                jobF1.join()
+            }
             FoodView(navController, backStackEntry.arguments?.getString("foodName"),
                 backStackEntry.arguments?.getString("servingSize")?.toDouble(),
                 backStackEntry.arguments?.getString("calories")?.toDouble(),
@@ -147,7 +220,23 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 )
             ){ backStackEntry ->
             RecipeView(navController,
-                backStackEntry.arguments?.getString("name")
+                backStackEntry.arguments?.getString("name"),
+                recipeViewModel,
+                foodInRecipeViewModel
+            )
+        }
+        composable(route = "addRecipeFoods/{name}/{meal}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("meal") { type = NavType.StringType }
+
+            )
+        ){ backStackEntry ->
+            RecipeView(navController,
+                backStackEntry.arguments?.getString("name"),
+                backStackEntry.arguments?.getString("meal"),
+                recipeViewModel,
+                foodInRecipeViewModel
             )
         }
         composable (route = "UpdateGoals") {
@@ -164,6 +253,38 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable (route = "Landing") {
             LandingPage(navController)
+        }
+        composable (route = "searchExercise/{muscle}",
+                arguments = listOf(
+                    navArgument("muscle") { type = NavType.StringType },
+                )
+        ){ backStackEntry ->
+            val m  = backStackEntry.arguments?.getString("muscle")!!
+            FoundExerises(navController,
+                m,
+            wgerApiViewModel)
+        }
+
+        composable (route = "ExerciseView/{muscle}/{exerciseId}",
+            arguments = listOf(
+                navArgument("exerciseId") { type = NavType.StringType },
+                navArgument("muscle") { type = NavType.StringType },
+
+                )
+        ){ backStackEntry ->
+            val exerciseId  = backStackEntry.arguments?.getString("exerciseId")!!.toInt()
+            val muscleName  = backStackEntry.arguments?.getString("muscle")!!
+            var exerciseInfo = wgerApiViewModel.exerciseInfo
+            runBlocking{
+                val exerciseJob: Job = launch(Dispatchers.IO){
+                    wgerApiViewModel.getExericseInfo(exerciseId)
+                }
+                exerciseJob.join()
+                exerciseInfo = wgerApiViewModel.exerciseInfo
+            }
+            if(exerciseInfo.value != null) {
+                ExerciseView(navController, exerciseInfo.value, muscleName, exerciseId)
+            }
         }
         // Other routes go here
     }

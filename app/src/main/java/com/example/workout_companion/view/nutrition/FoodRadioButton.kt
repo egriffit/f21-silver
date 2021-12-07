@@ -94,7 +94,7 @@ fun FoodRadioButton(navController: NavController, meal: String, type: String, re
         Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp),
             verticalArrangement = Arrangement.Center){
             Button(onClick = {
-                navController.navigate("recipeView/${recipe.name}/${meal}")
+                navController.navigate("addRecipeFoods/${recipe.name}/${meal}")
             })
             {
                 Text(text = recipe.name)

@@ -16,14 +16,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NutritionAPIViewModel: ViewModel() {
     val foodResults = mutableStateListOf<ApiNinjaNutrition>()
 
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(base_url)
-            .build()
-    }
-
     fun findFood(food: String) {
         viewModelScope.launch {
             val call = nutritionApiNinjaApi()

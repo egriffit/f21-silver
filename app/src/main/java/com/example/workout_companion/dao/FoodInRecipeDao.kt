@@ -18,6 +18,7 @@ interface FoodInRecipeDao {
      *
      * @return LiveData<List<RecipeWithFoodsEntity> a list of RecipeWithFoodsEntity objects
      */
+    @Transaction
     @Query("""
         SELECT *
         FROM food_type
@@ -51,6 +52,7 @@ interface FoodInRecipeDao {
      * @param name, string
      * @return LiveData<List<RecipeWithFoodsEntity> a list of RecipeWithFoodsEntity objects
      */
+    @Transaction
     @Query("""
         SELECT *
         FROM food_type
@@ -61,7 +63,7 @@ interface FoodInRecipeDao {
         ON a.food_id = food_type.id
         WHERE a.name = :name
     """)
-    fun getFoodInRecipes(name: String): LiveData<List<RecipeWithFoodsEntity>>
+    fun getFoodInRecipes(name: String): List<RecipeWithFoodsEntity>
 
 
     /**

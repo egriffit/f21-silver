@@ -23,7 +23,7 @@ class FoodInRecipeRepository (private val foodInRecipeDao: FoodInRecipeDao) {
      * @param name, name of recipe
      * @return  Int total number of rows found
      */
-    fun getFoodInRecipe(name: String): LiveData<List<RecipeWithFoodsEntity>> {
+    fun getFoodInRecipe(name: String): List<RecipeWithFoodsEntity> {
         return foodInRecipeDao.getFoodInRecipes(name)
     }
 

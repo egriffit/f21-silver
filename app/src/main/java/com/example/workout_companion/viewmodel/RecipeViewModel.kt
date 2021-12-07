@@ -40,7 +40,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun getRecipe(name: String){
         viewModelScope.launch(Dispatchers.IO){
-            foundRecipes.postValue(repository.getRecipeByName(name).value)
+            foundRecipes.postValue(repository.getRecipeByName(name))
         }
     }
 

@@ -21,6 +21,11 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 
 /***
  * Composable form to add a meal
@@ -43,7 +48,8 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
                 mealViewModel: MealViewModel, foodInMealViewModel: FoodInMealViewModel,
                 nutritionAPIViewModel: NutritionAPIViewModel, recipeViewModel: RecipeViewModel
 ){
-    val foundMeals = mealViewModel.getAllMeals.observeAsState(listOf()).value
+    val foundMeals = mealViewModel.getTodaysMeals.observeAsState(listOf()).value
+    val currentTotal = 0;
     val confirmRemove = rememberMaterialDialogState()
     val showRecipeForm = remember { mutableStateOf(false)}
     val showAddMealForm = remember { mutableStateOf(false)}
@@ -123,9 +129,7 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
                 )
                 {
                     Button(onClick = {
-                        addFood(mealName, mealViewModel)
-                        //                    mealViewModel.insert(mealName.value)
-                        //                    mealName.value = ""
+                        addMeal(mealName, mealViewModel)
                     }) {
                         Text(
                             "Add meal",
@@ -187,7 +191,7 @@ fun AddMealForm(navController: NavController, foodTypeViewModel: FoodTypeViewMod
  *
  */
 @RequiresApi(Build.VERSION_CODES.O)
-fun addFood(mealName: MutableState<String>, mealViewModel: MealViewModel ){
+fun addMeal(mealName: MutableState<String>, mealViewModel: MealViewModel ){
     if(mealName.value != ""){
         mealViewModel.insert(mealName.value)
         mealName.value = ""

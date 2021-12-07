@@ -53,7 +53,6 @@ fun MealList(navController: NavController, meals: List<MealEntity>, foodTypeView
     ) {
         if (meals.isNotEmpty()) {
             for (meal in meals)
-            // Name
                 item {
                     Row(horizontalArrangement =  Arrangement.Center) {
                         MealButton(navController, meal.type, meal.calories, foodTypeViewModel, mealViewModel, foodInMealViewModel,

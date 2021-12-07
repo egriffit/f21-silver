@@ -53,7 +53,7 @@ class MealDaoTest : TestCase(){
         )
 
         dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getByDate(today).getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByDate(today)
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(0),))
     }
 
@@ -69,7 +69,7 @@ class MealDaoTest : TestCase(){
         )
 
         dao.insert(meals)
-        val foundMeal: List<MealEntity> = dao.getByName("breakfast").getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByName("breakfast")
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(1),))
     }
 
@@ -110,6 +110,25 @@ class MealDaoTest : TestCase(){
     }
 
     @Test
+    fun TestCalMealTotal() = runBlocking(){
+
+        val today = LocalDate.now()
+
+        val yesterday = LocalDate.of(2021, Month.OCTOBER, 23)
+        val meals = listOf(
+            MealEntity(1, "lunch", 500.0, 40.1, 20.1, 15.0, today),
+            MealEntity(2, "breakfast", 500.0, 40.1, 20.1, 15.0, today),
+            MealEntity(3, "breakfast", 500.0, 40.1, 20.1, 15.0, yesterday)
+        )
+
+        dao.insert(meals)
+        val totalForDay = dao.calcMealTotal()
+        MatcherAssert.assertThat(totalForDay.calories, CoreMatchers.equalTo(1000.0))
+        MatcherAssert.assertThat(totalForDay.carbohydrates, CoreMatchers.equalTo(80.2))
+        MatcherAssert.assertThat(totalForDay.protein, CoreMatchers.equalTo(40.2))
+        MatcherAssert.assertThat(totalForDay.fat, CoreMatchers.equalTo(30.0))
+    }
+    @Test
     fun TestUpdate() = runBlocking(){
         val today = LocalDate.now()
 
@@ -123,7 +142,7 @@ class MealDaoTest : TestCase(){
 
         dao.insert(meals)
         dao.update(updateMeal)
-        val foundMeal: List<MealEntity> = dao.getByName("breakfast").getOrAwaitValue()
+        val foundMeal: List<MealEntity> = dao.getByName("breakfast")
         MatcherAssert.assertThat(foundMeal.elementAt(0).calories, CoreMatchers.equalTo(updateMeal.calories))
     }
 

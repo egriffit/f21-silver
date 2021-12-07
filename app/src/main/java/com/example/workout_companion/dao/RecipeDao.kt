@@ -28,7 +28,7 @@ interface RecipeDao {
      * @return LiveData<List<MealEntity> a list of MealEntity objects
      */
     @Query("SELECT * FROM recipes WHERE name = :name")
-    fun getRecipe(name: String): LiveData<List<RecipeEntity>>
+    fun getRecipe(name: String): List<RecipeEntity>
 
     /**
      * Retrieves a List of recipeEntity objects from the recipe table

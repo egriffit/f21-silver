@@ -1,4 +1,4 @@
-package com.example.workout_companion.view.nutrition
+package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,22 +12,23 @@ import androidx.navigation.NavController
 
 
 /***
- * Composable with a textField and a button. The button can be pushed and will retrieve foods
- * from the NutritionAPI that match the string provided
+ * Composable with a textField and a button. The button can be pushed and will retrieve exercises
+ * from the wgerAPI that match the string provided
  *
  * It consists of:
  * a label
  * a textField,
- * a button to request data from the NutritionAPI
+ * a button to request data from the wgerAPI
  * a column of text labels with foods found from the API
  *
  *  @param navController, a NavController
- *  @param meal, name of meal
+ *  @param workout, name of workout
+ *   ^^ May need to be muscle group
  */
 @Composable
-fun FoodSearchBox(navController: NavController, meal: String){
-    val food = remember{ mutableStateOf("") }
-    val selectedFoodName = remember { mutableStateOf("")}
+fun ExerciseSearchBox(navController: NavController, workout: String){
+    val exercise = remember{ mutableStateOf("") }
+    val selectedExerciseName = remember { mutableStateOf("")}
 
     Column {
         Row(        modifier = Modifier.fillMaxWidth(),
@@ -38,11 +39,11 @@ fun FoodSearchBox(navController: NavController, meal: String){
             )
             {
                 Text(
-                    "Add Food:",
+                    "Add Exercise:",
                     fontSize = 15.sp
                 )
-                TextField(value = food.value,
-                    onValueChange = { food.value = it })
+                TextField(value = exercise.value,
+                    onValueChange = { exercise.value = it })
             }
             Row(
                 modifier = Modifier.width(200.dp)
@@ -50,7 +51,9 @@ fun FoodSearchBox(navController: NavController, meal: String){
             {
                 Button(onClick = {
 
-                    navController.navigate("searchFood/${food.value}/${meal}")
+                    navController.navigate("searchExercise/${exercise.value}/${workout}")
+                    // ^^ still to write, needs to look based on muscle group evidently
+                     // also, what is the route param coming from?
                 }) {
                     Text(
                         "Search",
@@ -62,7 +65,6 @@ fun FoodSearchBox(navController: NavController, meal: String){
         /*
         Testing State, delete in production
          */
-        Text(selectedFoodName.value)
+        Text(selectedExerciseName.value)
     }
 }
-

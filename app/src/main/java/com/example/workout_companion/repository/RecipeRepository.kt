@@ -24,7 +24,7 @@ class RecipeRepository (private val recipeDao: RecipeDao) {
      * @param name, LocalDate
      * @return LiveData<List<RecipeEntity>>
      */
-    fun getRecipeByName(name: String): LiveData<List<RecipeEntity>>{
+    fun getRecipeByName(name: String): List<RecipeEntity>{
         return recipeDao.getRecipe(name)
     }
 

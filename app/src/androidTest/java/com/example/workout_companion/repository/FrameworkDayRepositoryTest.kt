@@ -51,7 +51,7 @@ class FrameworkDayRepositoryTest : TestCase() {
     fun addSingleDayTest() = runBlocking {
         frameworkDayRepository.addFrameworkDay(TestDataGenerator.FRAMEWORK_0_DAYS[0])
 
-        val framework0DaysInDB = frameworkDayRepository.getAllFrameworkDays(0).getOrAwaitValue()
+        val framework0DaysInDB = frameworkDayRepository.getAllFrameworkDays(0)
         TestCase.assertEquals(framework0DaysInDB.size, 1)
         TestCase.assertTrue(framework0DaysInDB.contains(TestDataGenerator.FRAMEWORK_0_DAYS[0]))
     }
@@ -60,7 +60,7 @@ class FrameworkDayRepositoryTest : TestCase() {
     fun addCollectionOfDaysTest() = runBlocking {
         frameworkDayRepository.addFrameworkDays(TestDataGenerator.FRAMEWORK_1_DAYS)
 
-        val framework1DaysInDB = frameworkDayRepository.getAllFrameworkDays(1).getOrAwaitValue()
+        val framework1DaysInDB = frameworkDayRepository.getAllFrameworkDays(1)
         TestCase.assertEquals(framework1DaysInDB, TestDataGenerator.FRAMEWORK_1_DAYS)
     }
 
@@ -70,7 +70,7 @@ class FrameworkDayRepositoryTest : TestCase() {
             TestDataGenerator.FRAMEWORK_2_DAYS[0],
             TestDataGenerator.FRAMEWORK_2_DAYS[1])
 
-        val framework2DaysInDB = frameworkDayRepository.getAllFrameworkDays(2).getOrAwaitValue()
+        val framework2DaysInDB = frameworkDayRepository.getAllFrameworkDays(2)
         TestCase.assertEquals(framework2DaysInDB.size, 2)
         TestCase.assertTrue(framework2DaysInDB.contains(TestDataGenerator.FRAMEWORK_2_DAYS[0]))
         TestCase.assertTrue(framework2DaysInDB.contains(TestDataGenerator.FRAMEWORK_2_DAYS[1]))
@@ -86,7 +86,7 @@ class FrameworkDayRepositoryTest : TestCase() {
         frameworkDayRepository.addFrameworkDays(TestDataGenerator.FRAMEWORK_4_DAYS)
         frameworkDayRepository.deleteFrameworkDay(TestDataGenerator.FRAMEWORK_4_DAYS[1])
 
-        val framework4DaysInDB = frameworkDayRepository.getAllFrameworkDays(4).getOrAwaitValue()
+        val framework4DaysInDB = frameworkDayRepository.getAllFrameworkDays(4)
         TestCase.assertFalse(framework4DaysInDB.contains(TestDataGenerator.FRAMEWORK_4_DAYS[1]))
     }
 
@@ -95,7 +95,7 @@ class FrameworkDayRepositoryTest : TestCase() {
         frameworkDayRepository.addFrameworkDays(TestDataGenerator.FRAMEWORK_5_DAYS)
         frameworkDayRepository.deleteFrameworkDays(TestDataGenerator.FRAMEWORK_5_DAYS)
 
-        val framework5DaysInDB = frameworkDayRepository.getAllFrameworkDays(5).getOrAwaitValue()
+        val framework5DaysInDB = frameworkDayRepository.getAllFrameworkDays(5)
         for (day in TestDataGenerator.FRAMEWORK_5_DAYS) {
             TestCase.assertFalse(framework5DaysInDB.contains(day))
         }
@@ -108,7 +108,7 @@ class FrameworkDayRepositoryTest : TestCase() {
             TestDataGenerator.FRAMEWORK_0_DAYS[0],
             TestDataGenerator.FRAMEWORK_0_DAYS[2])
 
-        val framework0DaysInDB = frameworkDayRepository.getAllFrameworkDays(0).getOrAwaitValue()
+        val framework0DaysInDB = frameworkDayRepository.getAllFrameworkDays(0)
         TestCase.assertFalse(framework0DaysInDB.contains(TestDataGenerator.FRAMEWORK_0_DAYS[0]))
         TestCase.assertFalse(framework0DaysInDB.contains(TestDataGenerator.FRAMEWORK_0_DAYS[2]))
     }
@@ -116,10 +116,10 @@ class FrameworkDayRepositoryTest : TestCase() {
     @Test
     fun deleteNonExistentDayTest() = runBlocking {
         frameworkDayRepository.addFrameworkDays(TestDataGenerator.FRAMEWORK_0_DAYS)
-        val daysBeforeDelete = frameworkDayRepository.getAllFrameworkDays(0).getOrAwaitValue()
+        val daysBeforeDelete = frameworkDayRepository.getAllFrameworkDays(0)
 
         frameworkDayRepository.deleteFrameworkDay(FrameworkDayEntity(10, 10, "Bad Day"))
-        val daysAfterDelete = frameworkDayRepository.getAllFrameworkDays(0).getOrAwaitValue()
+        val daysAfterDelete = frameworkDayRepository.getAllFrameworkDays(0)
 
         TestCase.assertEquals(daysBeforeDelete, daysAfterDelete)
     }
@@ -132,7 +132,7 @@ class FrameworkDayRepositoryTest : TestCase() {
         day.name = "New Name"
         frameworkDayRepository.updateFrameworkDay(day)
 
-        val framework1DaysInDB = frameworkDayRepository.getAllFrameworkDays(1).getOrAwaitValue()
+        val framework1DaysInDB = frameworkDayRepository.getAllFrameworkDays(1)
         TestCase.assertEquals(framework1DaysInDB.size, 1)
         TestCase.assertEquals(framework1DaysInDB[0].name, "New Name")
     }
@@ -142,7 +142,7 @@ class FrameworkDayRepositoryTest : TestCase() {
         val day = FrameworkDayEntity(0, 1, "Test Day")
         frameworkDayRepository.updateFrameworkDay(day)
 
-        val framework1DaysInDB = frameworkDayRepository.getAllFrameworkDays(1).getOrAwaitValue()
+        val framework1DaysInDB = frameworkDayRepository.getAllFrameworkDays(1)
         TestCase.assertTrue(framework1DaysInDB.isEmpty())
     }
 }

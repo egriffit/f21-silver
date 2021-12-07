@@ -59,7 +59,7 @@ class MealRepositoryTest : TestCase() {
         )
 
         repository.insert(meals)
-        val foundMeal: List<MealEntity> = repository.getMealsByDate(today).getOrAwaitValue()
+        val foundMeal: List<MealEntity> = repository.getMealsByDate(today)
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(0),))
     }
 
@@ -75,7 +75,7 @@ class MealRepositoryTest : TestCase() {
         )
 
         repository.insert(meals)
-        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast").getOrAwaitValue()
+        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast")
         MatcherAssert.assertThat(foundMeal.elementAt(0), CoreMatchers.equalTo(meals.elementAt(1),))
     }
 
@@ -129,8 +129,23 @@ class MealRepositoryTest : TestCase() {
 
         repository.insert(meals)
         repository.update(updateMeal)
-        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast").getOrAwaitValue()
+        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast")
         MatcherAssert.assertThat(foundMeal.elementAt(0).calories, CoreMatchers.equalTo(updateMeal.calories))
+    }
+
+    @Test
+    fun TestAddToMeal() = runBlocking(){
+        val today = LocalDate.now()
+
+        val meals = listOf(
+            MealEntity(1, "breakfast", 0.0, 0.0, 0.0, 0.0, today),
+        )
+        val eggs = FoodTypeEntity(1, "eggs", "-1", 100.0, 144.3, 0.7, 12.6, 9.4)
+        repository.insert(meals)
+        repository.addToMeal(meals[0], eggs, 1.0)
+        val foundMeal: List<MealEntity> = repository.getMealByName("breakfast")
+        MatcherAssert.assertThat(foundMeal.elementAt(0).type, CoreMatchers.equalTo("breakfast"))
+        MatcherAssert.assertThat(foundMeal.elementAt(0).calories, CoreMatchers.equalTo(eggs.calories))
     }
 
     @Test
