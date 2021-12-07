@@ -2,113 +2,106 @@ package com.example.workout_companion.view.exercise
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.workout_companion.dao.FrameworkDayWithComponents
+import com.example.workout_companion.dao.FrameworkWithDays
 import com.example.workout_companion.dao.WorkoutWithComponents
-import com.example.workout_companion.entity.FrameworkDayEntity
-import com.example.workout_companion.viewmodel.FrameworkComponentViewModel
-import kotlinx.coroutines.Dispatchers
+import com.example.workout_companion.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlin.reflect.KFunction1
 
 @Composable
 fun WorkoutView(
     navController: NavController,
     workoutState: State<WorkoutWithComponents?>,
-    frameworkDays: List<FrameworkDayEntity>,
-    frameworkComponentViewModel: FrameworkComponentViewModel
+    frameworkWithDays: State<FrameworkWithDays?>,
+    workoutViewModel: WorkoutViewModel,
 ){
-    val frameworkComponents = frameworkComponentViewModel.components.observeAsState().value
-    var selectedDay by remember { mutableStateOf(0) }
-    Column(modifier = Modifier
-        .padding(top = 20.dp, start = 20.dp, end = 20.dp)
-        .fillMaxWidth()
-        .fillMaxHeight(),
-    )
-    {
-        if(selectedDay == 0) {
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //if (workoutState.value == null) {
-                var expanded by remember { mutableStateOf(false) }
-                OutlinedButton(
-                    onClick = { expanded = !expanded }
+    LazyColumn(
+        modifier = Modifier
+            .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        // If we have not done a workout today, we won't have one
+        if (workoutState.value == null) {
+            item {
+                FrameworkDaySelector(frameworkWithDays, workoutViewModel::createWorkout)
+            }
+        }
+        else {
+            items(workoutState.value!!.components) { component ->
+                    FrameworkComponentItem(navController, component)
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Start Workout")
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {}
-                ) {
-                    frameworkDays.forEach { it ->
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded = !expanded
-                                selectedDay = it.id
-                            }) {
-                            Text(text = "${it.name}")
-                        }
-                    }
-                }
-            }
-        }else{
-            runBlocking {
-                val job: Job = launch(Dispatchers.IO) {
-                    if (selectedDay != 0) {
-                        frameworkComponentViewModel.getAllComponentsOfDay(selectedDay)
-                    }
-                }
-            }
-            frameworkDays.forEach{it ->
-                if(it.id == selectedDay){
-                    Text("Selected Day: ${it.name}")
-                }
-            }
-            //} else {
-            // TODO: load the workout here
-            if(frameworkComponents != null) {
-                LazyColumn{
-                    frameworkComponents.forEach { m ->
-                       item{
-                           FrameworkComponentItem(navController, m.muscle_group.name)
-                       }
-                    }
-                }
-            }
-            OutlinedButton(
-                onClick = {
-                    val temp = "temp"
-                }) {
-                Text("Submit")
-            }
-            Spacer(modifier = Modifier.padding(end = 10.dp))
-            OutlinedButton(
-                onClick = {
-                    val temp = "temp"
-                    selectedDay = 0
-                }) {
-                    Text("Cancel")
+                    SubmitButton()
+                    CancelButton()
                 }
             }
         }
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun NoWorkoutViewPreview() {
+fun FrameworkDaySelector(
+    frameworkWithDays: State<FrameworkWithDays?>, createWorkout: KFunction1<FrameworkDayWithComponents, Job>,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    OutlinedButton(
+        onClick = { expanded = !expanded }
+    ) {
+        Text(text = "Start Workout")
+    }
+    // If this dude is null, we have issues elsewhere in our app
+    if (frameworkWithDays.value != null) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {},
+        ) {
+            for (dayWithComponents in frameworkWithDays.value!!.days) {
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = !expanded
+                        createWorkout (dayWithComponents)
+                    }
+                ) { Text(dayWithComponents.day.name) }
+            }
+        }
+    }
+}
 
-    val noWorkout: State<WorkoutWithComponents?> = derivedStateOf { null }
-    //WorkoutView(noWorkout, FRAMEWORK_DAYS)
+@Composable
+fun SubmitButton() {
+    OutlinedButton(
+        onClick = {
+            // TODO: Set the workout to complete
+            // TODO: Update the workout in the database
+        }
+    ) { Text("Submit") }
+}
+
+@Composable
+fun CancelButton() {
+    OutlinedButton(
+        onClick = {
+            // TODO: Delete the workout here
+        }
+    ) { Text("Cancel") }
 }

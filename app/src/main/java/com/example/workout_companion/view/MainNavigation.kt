@@ -10,11 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
-import com.example.workout_companion.api.wger.entities.wgerExercise
-import com.example.workout_companion.api.wger.utility.muscleName
-import com.example.workout_companion.api.wger.utility.muscleNameConverter
 import com.example.workout_companion.entity.FoodTypeEntity
-import com.example.workout_companion.enumeration.MuscleGroupConverter.toMuscleGroup
 import com.example.workout_companion.view.exercise.ExerciseView
 import com.example.workout_companion.view.exercise.FoundExerises
 import com.example.workout_companion.view.nutrition.*
@@ -43,9 +39,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val currentUserGoalViewModel by lazy { viewModelProvider.get(CurrentUserGoalViewModel::class.java) }
     val workoutViewModel by lazy { viewModelProvider.get(WorkoutViewModel::class.java) }
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
-    val frameworkDayViewModel by lazy { viewModelProvider.get(FrameworkDayViewModel::class.java) }
-    val frameworkComponentViewModel by lazy { viewModelProvider.get(FrameworkComponentViewModel::class.java)}
     val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
+    val completeFrameworkViewModel by lazy { viewModelProvider.get(CompleteFrameworkViewModel::class.java) }
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -54,6 +49,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     }
 
     val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
+    val userGoalState = currentUserGoalViewModel.currentGoal.observeAsState()
 
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
@@ -67,18 +63,11 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             LandingPage(navController)
         }
         composable (route = "ExerciseOverview") {
-            val framework_type_id = currentUserGoalViewModel.getCurrentGoalIds.observeAsState().value?.framework_type_id
-            val frameworkDays = frameworkDayViewModel.frameworkDays.observeAsState().value
-            runBlocking {
-                val JobE2: Job = launch(Dispatchers.IO){
-                    if(framework_type_id != null) {
-                        frameworkDayViewModel.getAllFrameworkDays(framework_type_id!!)
-                    }
-                }
-            }
-            //Load the framework days
-            if(frameworkDays != null){
-                ExerciseOverview(navController, workoutState, frameworkDays!!, frameworkComponentViewModel)
+            // Don't let the user get access to our overview unless they have a goal set
+            if (userGoalState.value != null) {
+                val frameworkId = userGoalState.value!!.framework_type_id
+                val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(frameworkId).observeAsState()
+                ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel)
             }
         }
         composable (route = "NutritionOverview") {

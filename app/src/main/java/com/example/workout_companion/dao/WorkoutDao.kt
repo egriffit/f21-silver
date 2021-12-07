@@ -2,20 +2,31 @@ package com.example.workout_companion.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.workout_companion.entity.FrameworkComponentEntity
 import com.example.workout_companion.entity.WorkoutComponentEntity
 import com.example.workout_companion.entity.WorkoutComponentSetEntity
 import com.example.workout_companion.entity.WorkoutEntity
+import com.example.workout_companion.enumeration.MuscleGroup
 import java.time.LocalDate
 
 /**
  * A class containing a workout component and its sets
  *
  * @property component The workout component
+ * @property muscleGroup The muscle group of the workout component
  * @property sets The sets belonging to the workout component
  */
 data class ComponentWithSets(
     @Embedded
     val component: WorkoutComponentEntity,
+
+    @Relation(
+        parentColumn = "component_id",
+        entityColumn = "id",
+        entity = FrameworkComponentEntity::class,
+        projection = [ "muscle_group" ]
+    )
+    val muscleGroup: MuscleGroup,
 
     @Relation(
         parentColumn = "id",

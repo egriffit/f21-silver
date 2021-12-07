@@ -62,6 +62,7 @@ class WorkoutRepositoryTest : TestCase() {
 
             assertEquals(frameworkComponent.id, workoutComponent.component.component_id)
             assertEquals(frameworkComponent.target_sets, workoutComponent.sets.size)
+            assertEquals(frameworkComponent.muscle_group, workoutComponent.muscleGroup)
 
             var totalReps = 0
             for (set in workoutComponent.sets) {

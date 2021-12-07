@@ -22,4 +22,4 @@ data class CurrentNutritionPlanAndFrameworkEntity (
         entityColumn = "id"
     )
     val FrameWorkWIthGoalEntity: FrameworkWithGoalEntity
-    )
+)

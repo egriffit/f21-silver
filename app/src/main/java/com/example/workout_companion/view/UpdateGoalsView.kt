@@ -51,7 +51,7 @@ fun UpdateGoalsView(navController: NavController,
         }
     }
 
-    val recommendedFrameworkId = remember { mutableStateOf(0) }
+    val recommendedFrameworkId = remember { mutableStateOf(1) }
     val currentProtein = remember { mutableStateOf(0) }
     val currentCarbohydrates = remember { mutableStateOf(0) }
     val currentFat = remember { mutableStateOf(0) }
@@ -156,34 +156,30 @@ fun UpdateGoalsView(navController: NavController,
                     // Submit Button
                     Button(onClick = {
                         runBlocking{
-                            var nutritionPlan = emptyNutritionPlanTypeEntity
-
-                            val job1: Job = launch(Dispatchers.IO){
-                                nutritionPlan = NutritionPlanTypeEntity(
-                                    1,
+                            val nutritionPlanTypeId = 1
+                            val nutritionPlan = NutritionPlanTypeEntity(
+                                    nutritionPlanTypeId,
                                     selectedGoalID.value,
                                     currentCalories.value.toDouble(),
                                     macronutrientStates.elementAt(0).value.toDouble(),
                                     macronutrientStates.elementAt(1).value.toDouble(),
                                     macronutrientStates.elementAt(2).value.toDouble()
-                                )
-                                nutritionPlanTypeViewModel.addPlan(nutritionPlan)
-                            }
-                            job1.join()
-                            val job2: Job = launch(Dispatchers.IO){
-                                val nutritionPlanTypeId: Int? =
-                                    withContext(Dispatchers.IO) {
-                                        nutritionPlanTypeViewModel.getPlanId(nutritionPlan)
-                                        nutritionPlanTypeViewModel.id.value
-                                    }
-                                if(nutritionPlanTypeId != null){
-                                    val userGoal = CurrentUserGoalEntity(1,
-                                        nutritionPlanTypeId,
-                                        recommendedFrameworkId.value )
-                                    currentUserGoalViewModel.addCurrentUserGoal(userGoal)
-                                }
-                            }
-                            job2.join()
+                            )
+                            val nutritionJob = nutritionPlanTypeViewModel.addPlan(nutritionPlan)
+
+                            // We need the nutrition plan stored before we can create the user goals
+                            nutritionJob.join()
+
+                            val userGoal = CurrentUserGoalEntity(1,
+                                    nutritionPlanTypeId,
+                                    recommendedFrameworkId.value
+                            )
+                            val userGoalJob = currentUserGoalViewModel.addCurrentUserGoal(userGoal)
+
+                            // For now, it might slow us down, but let's wait for our user goal
+                            // to be made before letting the user run amuck
+                            userGoalJob.join()
+
                             navController.navigate("Landing")
                         }
                     }) {
