@@ -11,27 +11,26 @@ import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.workout_companion.dao.ComponentWithSets
 
 @Composable
-fun FrameworkComponentItem(navController: NavController, componentWithSets: ComponentWithSets) {
+fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets) {
     Column (
         modifier = Modifier.fillMaxWidth(),
     ) {
         val expandedState = remember { mutableStateOf(false) }
-        FrameworkComponentHeader(navController, componentWithSets, expandedState)
+        WorkoutComponentHeader(navController, componentWithSets, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
-                FrameworkComponentSetRow(set)
+                WorkoutComponentSetView(set)
             }
         }
     }
 }
 
 @Composable
-fun FrameworkComponentHeader(navController: NavController, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
+fun WorkoutComponentHeader(navController: NavController, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
 
     val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
     val exerciseState by remember { mutableStateOf("Pick an Exercise") }
