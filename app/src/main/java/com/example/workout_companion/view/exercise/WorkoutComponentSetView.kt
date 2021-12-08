@@ -22,7 +22,7 @@ import com.example.workout_companion.entity.WorkoutComponentSetEntity
 import com.example.workout_companion.enumeration.Progress
 
 @Composable
-fun FrameworkComponentSetRow(set: WorkoutComponentSetEntity) {
+fun WorkoutComponentSetView(set: WorkoutComponentSetEntity) {
 
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
