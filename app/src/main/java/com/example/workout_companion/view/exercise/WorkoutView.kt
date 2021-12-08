@@ -52,7 +52,7 @@ fun WorkoutView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SubmitButton()
-                    CancelButton()
+                    CancelButton(workoutState.value!!, workoutViewModel)
                 }
             }
         }
@@ -98,10 +98,10 @@ fun SubmitButton() {
 }
 
 @Composable
-fun CancelButton() {
+fun CancelButton(workout: WorkoutWithComponents, workoutViewModel: WorkoutViewModel) {
     OutlinedButton(
         onClick = {
-            // TODO: Delete the workout here
+            workoutViewModel.deleteWorkout(workout.workout)
         }
     ) { Text("Cancel") }
 }
