@@ -25,11 +25,6 @@ class CurrentUserGoalRepository (private val currentUserGoalDao: CurrentUserGoal
     val getCurrentUserGoals: LiveData<CurrentNutritionPlanAndFrameworkEntity> = currentUserGoalDao.getCurrentGoals()
 
     /**
-     * A LiveData object containing the user's current goal ids.
-     */
-    val currentGoal: LiveData<CurrentUserGoalEntity> = currentUserGoalDao.getCurrentGoal()
-
-    /**
      * Check if there is a record in the current_user_goals table with an id of 1
      *
      * @return Boolean
