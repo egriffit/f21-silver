@@ -1,20 +1,16 @@
 package com.example.workout_companion.viewmodel
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.example.workout_companion.database.WCDatabase
-import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.entity.NutritionStatusEntity
-import com.example.workout_companion.entity.WorkoutEntity
 import com.example.workout_companion.enumeration.NutritionStatusEnum
 import com.example.workout_companion.repository.NutritionStatusRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 /**
  * A View Model for the NutritionStatusEntity table
@@ -73,15 +69,17 @@ class NutritionStatusViewModel (application: Application) : AndroidViewModel(app
      * with the status provided
      * @param status, string
      */
-    fun insert(status: String, date: LocalDate){
+    fun insert(status: NutritionStatusEnum, date: LocalDate){
         viewModelScope.launch(Dispatchers.IO){
             // If status does not exist, insert. Otherwise, update.
+            val statusUpdate = NutritionStatusEntity(0, status, date)
+
             if(repository.getCount(status, date) > 0){
+
                 /** TODO: Fix this line so that a new NutritionStatusEntity object is initialized. */
-//                val statusUpdate: NutrititionStatusEntity(status, date)
-//                repository.insert(statusUpdate)
+                repository.insert(statusUpdate)
             }else{
-//                repository.update(statusUpdate)
+                repository.update(statusUpdate)
             }
         }
     }

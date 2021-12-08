@@ -10,7 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.workout_companion.entity.AllMealsInDay
+import com.example.workout_companion.entity.NutritionStatusEntity
+import com.example.workout_companion.enumeration.NutritionStatusEnum
 import com.example.workout_companion.viewmodel.MealViewModel
+import com.example.workout_companion.viewmodel.NutritionStatusViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -22,9 +25,12 @@ import java.text.DecimalFormat
 fun NutritionStatus(
     currentUserGoalViewModel: CurrentUserGoalViewModel,
     mealViewModel: MealViewModel,
+    nutritionStatusViewModel: NutritionStatusViewModel
 ) {
     val currentGoals = currentUserGoalViewModel.getCurrentGoals.observeAsState().value
     val foundMeals = mealViewModel.getTodaysMeals.observeAsState(listOf()).value
+    val currentNutritionStatus = nutritionStatusViewModel.currentStatus.observeAsState().value
+    val planStatus = remember{ mutableStateOf(NutritionStatusEnum.ON_TRACK)}
     var currentCal = 0.0
     var currentProtein = 0.0
     var currentCarbs =  0.0
@@ -38,6 +44,7 @@ fun NutritionStatus(
     runBlocking {
         launch(Dispatchers.IO){
             dailyTotals = mealViewModel.calcDailyTotal()
+            nutritionStatusViewModel.getStatusByDate(LocalDate.now())
         }
     }
     if(dailyTotals != null) {
@@ -52,7 +59,13 @@ fun NutritionStatus(
             ) {
                 Text("Status:   ")
                 if (currentGoals != null) {
-                    if (currentCal > currentGoals?.nutritionPlanType?.calorie!!) {
+                    if (dailyTotals.calories.toInt() > currentGoals?.nutritionPlanType?.calorie!!) {
+                        planStatus.value = NutritionStatusEnum.ABOVE_TARGET
+                        if (currentNutritionStatus?.status != planStatus.value) {
+                            nutritionStatusViewModel.insert(planStatus.value, LocalDate.now())
+                        }
+                    }
+                    if(planStatus.value == NutritionStatusEnum.ABOVE_TARGET){
                         Text("Not Meeting Calorie Goal")
                     } else {
                         Text("On Track")

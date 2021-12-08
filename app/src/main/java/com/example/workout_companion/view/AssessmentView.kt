@@ -17,18 +17,28 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.toLowerCase
 import com.example.workout_companion.entity.CurrentNutritionPlanAndFrameworkEntity
 import com.example.workout_companion.entity.CurrentUserGoalEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import com.example.workout_companion.viewmodel.NutritionStatusViewModel
+import com.example.workout_companion.viewmodel.WorkoutViewModel
+import kotlinx.coroutines.*
+import java.time.LocalDate
 
 @Composable
 fun AssessmentView(navController: NavController,
                     currentUserGoalViewModel: CurrentUserGoalViewModel,
-                   adviceAPIViewModel: AdviceAPIViewModel
+                   adviceAPIViewModel: AdviceAPIViewModel,
+                   nutritionStatusViewModel: NutritionStatusViewModel,
+                   workoutViewModel: WorkoutViewModel
                    ){
     var workoutGoal = ""
     val currentGoals = currentUserGoalViewModel.getCurrentGoals.observeAsState().value
+    val nutritionStatus = nutritionStatusViewModel.currentStatus.observeAsState().value
+    val workoutStatus = workoutViewModel.getWorkoutOnDate(LocalDate.now()).observeAsState().value
+    runBlocking{
+        launch(Dispatchers.IO){
+            nutritionStatusViewModel.getStatusByDate(LocalDate.now())
+        }
+
+    }
     if(currentGoals?.FrameWorkWIthGoalEntity?.goal != null){
         workoutGoal = currentGoals.FrameWorkWIthGoalEntity.goal
     }
@@ -46,6 +56,24 @@ fun AssessmentView(navController: NavController,
                 }
                 Spacer(modifier = Modifier.padding(top=30.dp))
                     DeloadRecommender(currentUserGoalViewModel)
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)){
+                        Row(modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center){
+                            Text("Nutrition Status: ")
+                            if(nutritionStatus != null){
+                                Text("${nutritionStatus.status.descName!!}")
+                            }
+                        }
+                        Row(modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center){
+                            Text("Workout Status: ")
+                            if(workoutStatus != null){
+                                Text("${workoutStatus?.status?.descName!!}")
+                            }
+                        }
+                    }
                     AdviceList(workoutGoal, adviceAPIViewModel)
                 }
         }

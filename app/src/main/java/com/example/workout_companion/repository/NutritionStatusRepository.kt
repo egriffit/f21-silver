@@ -2,9 +2,8 @@ package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
 import com.example.workout_companion.dao.NutritionStatusDao
-import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.entity.NutritionStatusEntity
-import com.example.workout_companion.entity.WorkoutEntity
+import com.example.workout_companion.enumeration.NutritionStatusEnum
 import java.time.LocalDate
 
 /**
@@ -52,8 +51,8 @@ class NutritionStatusRepository(private val nutritionStatusDao: NutritionStatusD
      *
      * @return Int
      */
-    suspend fun getCount(status: String, date: LocalDate): Int{
-        return nutritionStatusDao.getCount(status, date)
+    suspend fun getCount(status: NutritionStatusEnum, date: LocalDate): Int{
+        return nutritionStatusDao.getCount(status.descName, date)
     }
 
     /**

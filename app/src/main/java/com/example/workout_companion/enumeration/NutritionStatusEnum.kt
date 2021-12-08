@@ -9,7 +9,7 @@ import java.lang.IllegalArgumentException
  * @property descName The descriptive name of the nutritional status
  */
 enum class NutritionStatusEnum(val descName: String) {
-    ON_TRACK("One Track"),
+    ON_TRACK("On Track"),
     BELOW_TARGET("Below Target"),
     ABOVE_TARGET("Above Target"),
 }

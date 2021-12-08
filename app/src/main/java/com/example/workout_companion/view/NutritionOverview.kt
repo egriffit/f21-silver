@@ -26,6 +26,7 @@ import com.example.workout_companion.viewmodel.*
  * @param nutritionAPIViewModel, a view model to work with the NutritionAPI by API Ninja
  * @param recipeViewModel, a view to work with recipe table
  * @param currentUserGoalViewModel, a view to work with the current_user_goals table
+ * @param nutritionStatusViewModel ,a view model to work with the nutrition_status table
  */
 @Composable
 fun NutritionOverview(navController: NavController,
@@ -33,7 +34,8 @@ fun NutritionOverview(navController: NavController,
                       foodInMealViewModel: FoodInMealViewModel,
                       nutritionAPIViewModel: NutritionAPIViewModel,
                       recipeViewModel: RecipeViewModel,
-                      currentUserGoalViewModel: CurrentUserGoalViewModel){
+                      currentUserGoalViewModel: CurrentUserGoalViewModel,
+                      nutritionStatusViewModel: NutritionStatusViewModel){
     Scaffold(
         topBar = { TopNavigation(navController) },
         bottomBar = {},
@@ -49,7 +51,7 @@ fun NutritionOverview(navController: NavController,
                     horizontalArrangement = Arrangement.Center){
                     Text("Nutrition Overview Page")
                 }
-                NutritionStatus(currentUserGoalViewModel, mealViewModel)
+                NutritionStatus(currentUserGoalViewModel, mealViewModel, nutritionStatusViewModel)
                 AddMealForm(navController, foodTypeViewModel, mealViewModel,
                     foodInMealViewModel, nutritionAPIViewModel, recipeViewModel)
             }

@@ -41,6 +41,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     val adviceAPIViewModel: AdviceAPIViewModel =  viewModel()
     val wgerApiViewModel by lazy {viewModelProvider.get(WgerAPIViewModel::class.java)}
     val completeFrameworkViewModel by lazy { viewModelProvider.get(CompleteFrameworkViewModel::class.java) }
+    val nutritionStatusViewModel by lazy { viewModelProvider.get(NutritionStatusViewModel::class.java) }
 
     LaunchedEffect(coroutineScope) {
         val job = goalTypeViewModel.loadGoals()
@@ -73,7 +74,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         composable (route = "NutritionOverview") {
             NutritionOverview(navController, foodTypeViewModel, mealViewModel,
                 foodInMealViewModel, nutritionAPIViewModel, recipeViewModel,
-                currentUserGoalViewModel)
+                currentUserGoalViewModel, nutritionStatusViewModel)
         }
         composable (route = "searchFood/{foodName}/{meal}",
             arguments = listOf(
@@ -238,7 +239,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             )
         }
         composable (route = "Assessment") {
-            AssessmentView(navController, currentUserGoalViewModel, adviceAPIViewModel)
+            AssessmentView(navController, currentUserGoalViewModel, adviceAPIViewModel, nutritionStatusViewModel, workoutViewModel)
         }
         composable (route = "Landing") {
             LandingPage(navController)
