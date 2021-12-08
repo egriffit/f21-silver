@@ -295,6 +295,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                             state.weight = newValue
                         }
                     },
+                    singleLine = true,
                     label = { Text(text = "Weight? (In pounds)") },
                     modifier = Modifier.weight(2f),
                     keyboardOptions = KeyboardOptions(
@@ -473,6 +474,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                     onValueChange = { newValue ->
                         state.maxWorkouts = newValue.filter { it.isDigit() }
                     },
+                    singleLine = true,
                     label = { Text(text = "Max Number of Workouts/Week?") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
