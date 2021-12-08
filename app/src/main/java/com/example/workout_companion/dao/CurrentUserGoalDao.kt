@@ -31,7 +31,6 @@ interface CurrentUserGoalDao {
         current_user_goal WHERE id = 1) """)
     suspend fun currentGoalExists(): Boolean
 
-
     /**
      * Retrieves a CurrentNutritionPlanAndFrameworkEntity object joining all fields in the goal_type,
      * framework_type, nutrition_plan_Type and current_goal_type tables.
@@ -41,14 +40,6 @@ interface CurrentUserGoalDao {
     @Transaction
     @Query("SELECT * FROM current_user_goal WHERE id = 1")
     fun getCurrentGoals(): LiveData<CurrentNutritionPlanAndFrameworkEntity>
-
-    /**
-     * Retrieves the user goal entity in the database. There is only every one entry, so the first is collected.
-     *
-     * @return A LiveData object of the CurrentUserGoalEntity
-     */
-    @Query("SELECT * FROM current_user_goal WHERE id = 1")
-    fun getCurrentGoal(): LiveData<CurrentUserGoalEntity>
 
     /**
      * Adds a CurrentUserGoalEntity to the current_user_goal table

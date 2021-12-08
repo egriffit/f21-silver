@@ -12,11 +12,7 @@ import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.AdviceAPIViewModel
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
 import androidx.compose.material.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.text.toLowerCase
-import com.example.workout_companion.entity.CurrentNutritionPlanAndFrameworkEntity
-import com.example.workout_companion.entity.CurrentUserGoalEntity
 import com.example.workout_companion.viewmodel.NutritionStatusViewModel
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.*
@@ -39,8 +35,8 @@ fun AssessmentView(navController: NavController,
         }
 
     }
-    if(currentGoals?.FrameWorkWIthGoalEntity?.goal != null){
-        workoutGoal = currentGoals.FrameWorkWIthGoalEntity.goal
+    if(currentGoals?.FrameWorkWithGoalEntity?.goal != null){
+        workoutGoal = currentGoals.FrameWorkWithGoalEntity.goal
     }
 
 

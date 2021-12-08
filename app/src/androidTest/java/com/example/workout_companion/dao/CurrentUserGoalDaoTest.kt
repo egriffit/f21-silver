@@ -69,8 +69,8 @@ class CurrentUserGoalDaoTest : TestCase() {
         dao.addCurrentUserGoal(currentGoal)
         val result: CurrentNutritionPlanAndFrameworkEntity =
             dao.getCurrentGoals().getOrAwaitValue()
-        val currentFrameworkName: String? = result?.FrameWorkWIthGoalEntity?.name
-        val currentGoalName: String? = result?.FrameWorkWIthGoalEntity?.goal
+        val currentFrameworkName: String? = result?.FrameWorkWithGoalEntity?.name
+        val currentGoalName: String? = result?.FrameWorkWithGoalEntity?.goal
         MatcherAssert.assertThat(currentFrameworkName, CoreMatchers.equalTo("framework_4"))
         MatcherAssert.assertThat(currentGoalName, CoreMatchers.equalTo("Lose Weight"))
     }

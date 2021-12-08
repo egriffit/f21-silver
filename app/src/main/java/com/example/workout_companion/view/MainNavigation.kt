@@ -50,7 +50,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     }
 
     val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
-    val userGoalState = currentUserGoalViewModel.currentGoal.observeAsState()
+    val userGoalState = currentUserGoalViewModel.getCurrentGoals.observeAsState()
 
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
@@ -66,7 +66,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         composable (route = "ExerciseOverview") {
             // Don't let the user get access to our overview unless they have a goal set
             if (userGoalState.value != null) {
-                val frameworkId = userGoalState.value!!.framework_type_id
+                val frameworkId = userGoalState.value!!.FrameWorkWithGoalEntity.id
                 val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(frameworkId).observeAsState()
                 ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel)
             }

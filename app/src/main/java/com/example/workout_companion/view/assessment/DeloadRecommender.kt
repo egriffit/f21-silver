@@ -15,7 +15,7 @@ fun DeloadRecommender(currentUserGoalViewModel: CurrentUserGoalViewModel){
     val showCalAdvice = remember{ mutableStateOf(true) }
     var workoutGoal = ""
     if(currentGoals != null) {
-        workoutGoal = currentGoals.FrameWorkWIthGoalEntity.goal
+        workoutGoal = currentGoals.FrameWorkWithGoalEntity.goal
     }
     if (workoutGoal === "gain strength") {
             //check if progress being made using view models that do not exist yet
@@ -32,7 +32,7 @@ fun DeloadRecommender(currentUserGoalViewModel: CurrentUserGoalViewModel){
                         Row() {
                             Button(onClick = {
                                 currentUserGoalViewModel.updateNutritionPlanAndFramework(
-                                    currentGoals.FrameWorkWIthGoalEntity.name,
+                                    currentGoals.FrameWorkWithGoalEntity.name,
                                     currentGoals.nutritionPlanType.calorie + 100.0,
                                     currentGoals.nutritionPlanType.carbohydrate,
                                     currentGoals.nutritionPlanType.protein,

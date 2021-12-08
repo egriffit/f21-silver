@@ -8,7 +8,7 @@ import androidx.room.Relation
  *
  * @property currentUserGoalEntity      Entity for the current_user_goal table
  * @property nutritionPlanType          Entity for the nutrition_plan_type table
- * @property FrameWorkWIthGoalEntity    Entity for the FrameworkWithGoalEntity view
+ * @property FrameWorkWithGoalEntity    Entity for the FrameworkWithGoalEntity view
  */
 data class CurrentNutritionPlanAndFrameworkEntity (
     @Embedded val currentUserGoalEntity: CurrentUserGoalEntity,
@@ -21,5 +21,5 @@ data class CurrentNutritionPlanAndFrameworkEntity (
         parentColumn = "framework_type_id",
         entityColumn = "id"
     )
-    val FrameWorkWIthGoalEntity: FrameworkWithGoalEntity
+    val FrameWorkWithGoalEntity: FrameworkWithGoalEntity
 )
