@@ -100,7 +100,6 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
 
     LazyColumn(
         Modifier
-            .background(Color(0xFFEDEAE0))
             .fillMaxSize()
             .padding(32.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
