@@ -54,7 +54,7 @@ fun WorkoutView(
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    SubmitButton()
+                    SubmitButton(workoutState.value!!, workoutViewModel)
                     CancelButton(workoutState.value!!, workoutViewModel)
                 }
             }
@@ -108,11 +108,14 @@ fun FrameworkDaySelector(
 }
 
 @Composable
-fun SubmitButton() {
+fun SubmitButton(workout: WorkoutWithComponents, workoutViewModel: WorkoutViewModel) {
     OutlinedButton(
         onClick = {
             // TODO: Set the workout to complete
             // TODO: Update the workout in the database
+            // WorkoutProgress(Progress.COMPLETE)
+            workout.workout.status = Progress.COMPLETE
+            workoutViewModel.updateWorkout(workout.workout)
         }
     ) { Text("Submit") }
 }
