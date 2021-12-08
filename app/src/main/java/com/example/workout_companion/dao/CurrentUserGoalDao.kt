@@ -39,17 +39,7 @@ interface CurrentUserGoalDao {
      * @return CurrentNutritionPlanAndFrameworkEntity objects
      */
     @Transaction
-    @Query("""SELECT current_user_goal.id, nutrition_plan_type_id, calorie, carbohydrate, 
-                    protein, fat, framework_type_id,name, workouts_per_week,
-                    framework_type.goal_id, goal
-                    FROM current_user_goal 
-                    INNER JOIN (SELECT * FROM nutrition_plan_type
-                        INNER JOIN goal_type
-                        ON nutrition_plan_type.goal_id = goal_type.id) a,
-                        framework_type
-                    ON current_user_goal.nutrition_plan_type_id = a.id
-                    AND framework_type.id = current_user_goal.framework_type_id
-                    WHERE current_user_goal.id = 1""")
+    @Query("SELECT * FROM current_user_goal WHERE id = 1")
     fun getCurrentGoals(): LiveData<CurrentNutritionPlanAndFrameworkEntity>
 
     /**
