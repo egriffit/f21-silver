@@ -51,26 +51,8 @@ function CreateSourceForm(props){
               {
                 setMessage(response.data.message)
               }
-
-              //setUserSession(response.data.success, formData.username.value);
-              //setSubmitting(false)
             }) 
     }
-
-    // const validateArticleFields = ()=>{
-    //     if((formData.title != "") && (formData.title != null)) &&
-    //       ((formData.journal != "")&& (formData.journal != null)) &&
-    //       ((formData.issue != "")&& (formData.issue != null)) &&
-    //       ((formData.volume != "")&& (formData.volume != null)) &&
-    //       ((formData.author_1 != "")&& (formData.author_1 != null)) &&
-
-    //       ((formData.journal != "")&& (formData.journal != null)) &&
-
-    //     ){
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
     const validateArticleFields = ()=>{
         console.log()
@@ -85,6 +67,9 @@ function CreateSourceForm(props){
     }
    
     const handleChange = event=>{
+        if(event.target.value === ""){
+            event.target.value = " ";
+        }
         setFormData({
             name: event.target.name,
             value: event.target.value,
@@ -97,27 +82,10 @@ function CreateSourceForm(props){
             <br />
             <h1>Create Source Form</h1>
             
-            {formData &&
-                <div>
-                    <h1>Current Form Variables</h1>
-                    <ul>
-                        <li>Source Type: {formData.sourceType}</li>
-                        <li>Title: {formData.title}</li>
-                        <li>Year: {formData.year}</li>
-                        <li>Journal: {formData.journal}</li>
-                        <li>Volume: {formData.volume}</li>
-                        <li>Issue: {formData.issue}</li>
-                        <li>Publisher: {formData.publisher}</li>
-                        <li>Publisher Location: {formData.publisherLocation}</li>
-                        <li>Webpage: {formData.Webpage}</li>
-
-                    </ul>
-                </div>
-             }
              <form id='sourceForm' onSubmit={handleSubmit}>
                 <fieldset>
                 <label>
-                    <p>Advice Type:</p>
+                    <p>Source Type:</p>
                 </label>
                 <select name='sourceType' 
                 onChange={handleChange}>

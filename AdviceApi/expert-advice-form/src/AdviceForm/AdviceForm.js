@@ -75,18 +75,6 @@ function AdviceForm(){
 
     return(
         <div>
-            {formData &&
-                <div>
-                    <ul>
-                        <li>Advice Type: {formData.adviceType}</li>
-                        <li>Advice: {formData.advice}</li>
-                        <li>Source ID: {formData.source}</li>
-                    </ul>
-                    <ul>
-                        <li>Show Source Form: {showSourceForm ? "true" : "false"}</li>
-                    </ul>
-                </div>
-            }
             {sources &&
             <datalist id='sources'>
                 {/* loop over the books */}
@@ -103,8 +91,8 @@ function AdviceForm(){
                 <select name='adviceType' 
                 onChange={handleChange}>
                      <option key='1'></option>
-                    <option key='2'>Add Strength</option>
-                    <option key='3'>Weight Loss</option>
+                    <option key='2'>Build Muscle</option>
+                    <option key='3'>Lose Weight</option>
                     <option key='4'>Gain Strength</option>
                     <option key='5'>Safety</option>
                 </select><br />

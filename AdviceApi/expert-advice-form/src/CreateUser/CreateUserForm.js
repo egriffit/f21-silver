@@ -25,20 +25,29 @@ function CreateUserForm(){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(formData.password === formData.password2)
+        if(formData.password.trim() === formData.password2.trim())
         {
-            setSubmitting(true)
-            axios.post(api + '/createUser', { username: formData.username, password: formData.password })
-            .then(response => {
-              setSubmitting(false);
-              setResponse(response.data)
-              if(response.data.success)
-              {
-                setMessage(formData.username + "was succcessfully created.")
-              }
-              //setUserSession(response.data.success, formData.username.value);
-              //setSubmitting(false)
-            })
+            if(formData.password.length > 7){
+                setSubmitting(true)
+                axios.post(api + '/createUser', { username: formData.username, password: formData.password })
+                .then(response => {
+                  setSubmitting(false);
+                  setResponse(response.data)
+                  if(response.data.success)
+                  {
+                    setMessage(formData.username + "was succcessfully created.")
+                  }
+                  else{
+                      setMessage(response.data.message)
+                  }
+                  //setUserSession(response.data.success, formData.username.value);
+                  //setSubmitting(false)
+                })
+            }else{
+                setMessage("Please pick a password that is 7 or more characters long")
+
+            }
+           
         }else
         {
             setMessage("The passwords provided do no match. Plese try again.")
@@ -60,12 +69,12 @@ function CreateUserForm(){
                 <label>
                     <p>Password:</p>
                 </label>
-                <input name='password' onChange={handleChange}/><br/>
+                <input type='password' name='password' onChange={handleChange}/><br/>
 
                 <label>
                     <p>Verify Password:</p>
                 </label>
-                <input name='password2' onChange={handleChange}/>
+                <input type='password' name='password2' onChange={handleChange}/>
             </fieldset>
                 <button type='submit' onChange={setFormData}>Log in</button>
             </form>

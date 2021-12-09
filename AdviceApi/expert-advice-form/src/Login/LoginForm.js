@@ -66,28 +66,7 @@ function LoginForm(){
 		<br/>
 		<br />
 		<h1>Login Form</h1>
-		{formData &&
- 		<div>
-		Logging in... You are submitting 
-		<ul> 
-			{Object.entries(formData).map(([name, value]) => (
- 	   			 <li key={name}><strong>{name}</strong>:{value.toString()}</li>
-      			 )
-			)}
-                </ul>
-                Response 
-                <ul>
-                <li> Username: {formData.username} </li> 
-                {Object.entries(response).map(([name, value]) => (
-                        <li key={name}><strong>{name}</strong>:{value.toString()}</li>
-    		 )
-    	)}
-		 </ul>
-		<ul>
-			<li>{apiString}</li>
-		</ul>
-                </div>
-            }
+		
             <form onSubmit={handleSubmit}>
                 <fieldset>
                 <label>
