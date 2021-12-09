@@ -169,29 +169,26 @@ fun FoodView(
                                 }
                                 jobF1.join()
                                 //add food to food_in_meal table
-                                val jobF2: Job = launch(context = Dispatchers.IO) {
-                                    //create a food_inMeal_object and add to database
-                                    if (mealId != null && foodId != null) {
-                                        if ((mealId != 0) && (foodId != 0)) {
-                                            val foodInMeal = FoodInMealEntity(mealId, foodId, servingState.value)
-                                            if(servingState.value != 0.0){
-                                                foodInMealViewModel.insert(foodInMeal)
-                                            }else{
-                                                foodInMealViewModel.delete(foodInMeal)
-                                            }
-//                                            if (meal != null && foundMeal.isNotEmpty()) {
-//                                             foodInMealViewModel.calcDailyTotal(mealId)
-//                                            }
+                                //create a food_inMeal_object and add to database
+                                if (mealId != null && foodId != null) {
+                                    if ((mealId != 0) && (foodId != 0)) {
+                                        val foodInMeal = FoodInMealEntity(mealId, foodId, servingState.value)
+                                        if(servingState.value != 0.0){
+                                            val insertJob = foodInMealViewModel.insert(foodInMeal)
+                                            insertJob.join()
+                                        }else{
+                                            val deleteJob = foodInMealViewModel.delete(foodInMeal)
+                                            deleteJob.join()
                                         }
                                     }
                                 }
 
                                 //Wait for record to be inserted before navigating
                                 //To Nutrition Overview
-                                jobF2.join()
-                                launch(Dispatchers.IO) {
+                                val updateMealJob = launch(Dispatchers.IO) {
                                     foodInMealViewModel.calcDailyTotal(mealId!!)
                                 }
+                                updateMealJob.join()
                                 navController.navigate("NutritionOverview")
                             }
                         }) {
