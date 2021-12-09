@@ -33,11 +33,13 @@ fun NutritionStatus(
     var dailyTotals = AllMealsInDay(0.0, 0.0, 0.0, 0.0, LocalDate.now())
 
     runBlocking {
+        var totalsInDb: AllMealsInDay? = null
         val job1: Job = launch(Dispatchers.IO) {
-            dailyTotals = mealViewModel.calcDailyTotal()
+            totalsInDb = mealViewModel.calcDailyTotal()
         }
         job1.join()
-        if(dailyTotals != null) {
+        if(totalsInDb != null) {
+            dailyTotals = totalsInDb!!
             launch(Dispatchers.IO) {
                 nutritionStatusViewModel.getStatusByDate(LocalDate.now())
                 if (currentNutritionStatus != null) {
