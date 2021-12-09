@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 //find advice by advice type
 exports.getAdviceByType = function(req, res){
-    advice.find({"adviceType": req.query.adviceType}, function(err, advice){
+    advice.find({"adviceType": req.query.adviceType.toLowerCase().trim()}, function(err, advice){
         if(err)
         {
             res.send(err);
@@ -16,7 +16,7 @@ exports.getAdviceByType = function(req, res){
 exports.createAdvice = async function(req, res){
     result = await advice.findOne({"advice": req.body.advice}) 
     if(!result){
-        var new_advice = new advice(req.body);
+        var new_advice = new advice({adviceType: req.body.advice.toLowerCase().trim(), advice: req.body.advice.toLowerCase().trim(),sourceId: req.body.sourceId});
         new_advice.save(function(err, task){
             if(err){
                 res.send(err);
