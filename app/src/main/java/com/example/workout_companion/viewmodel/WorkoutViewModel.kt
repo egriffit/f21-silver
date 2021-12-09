@@ -72,7 +72,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun completeWorkoutSet(set: WorkoutComponentSetEntity) = viewModelScope.launch(Dispatchers.IO) {
-
+        repository.completeWorkoutSet(set)
     }
 
     /**

@@ -20,9 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.workout_companion.entity.WorkoutComponentSetEntity
 import com.example.workout_companion.enumeration.Progress
+import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 @Composable
-fun WorkoutComponentSetView(set: WorkoutComponentSetEntity) {
+fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: WorkoutViewModel) {
 
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
@@ -40,9 +41,15 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity) {
         // Progress state check box
         Checkbox(
             checked = checkState,
-            // TODO: write all values to the model here
             onCheckedChange = {
                 checkState = it
+                if (repState.toIntOrNull() != null) {
+                    set.reps = repState.toInt()
+                }
+                if (weightState.toDoubleOrNull() != null) {
+                    set.weight = weightState.toDouble()
+                }
+                workoutViewModel.completeWorkoutSet(set)
                 focusManager.clearFocus()
             },
             modifier = Modifier.weight(1f)
