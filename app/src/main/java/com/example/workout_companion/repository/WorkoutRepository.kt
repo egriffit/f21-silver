@@ -91,6 +91,11 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
         setDao.updateSet(set)
     }
 
+    suspend fun unlockWorkoutSet(set: WorkoutComponentSetEntity) {
+        set.status = Progress.IN_PROGRESS
+        setDao.updateSet(set)
+    }
+
     /**
      * Deletes a workout from the database
      *

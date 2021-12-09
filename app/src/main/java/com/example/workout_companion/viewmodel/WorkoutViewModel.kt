@@ -75,6 +75,10 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         repository.completeWorkoutSet(set)
     }
 
+    fun unlockWorkoutSet(set: WorkoutComponentSetEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.unlockWorkoutSet(set)
+    }
+
     /**
      * Delete a workout from the database
      *

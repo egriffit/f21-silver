@@ -43,13 +43,16 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: Wo
             checked = checkState,
             onCheckedChange = {
                 checkState = it
-                if (repState.toIntOrNull() != null) {
-                    set.reps = repState.toInt()
+
+                if (checkState) {
+                    if (repState.toIntOrNull() != null) {
+                        set.reps = repState.toInt()
+                    }
+                    if (weightState.toDoubleOrNull() != null) {
+                        set.weight = weightState.toDouble()
+                    }
+                    workoutViewModel.completeWorkoutSet(set)
                 }
-                if (weightState.toDoubleOrNull() != null) {
-                    set.weight = weightState.toDouble()
-                }
-                workoutViewModel.completeWorkoutSet(set)
                 focusManager.clearFocus()
             },
             modifier = Modifier.weight(1f)

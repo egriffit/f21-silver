@@ -123,6 +123,19 @@ class WorkoutRepositoryTest : TestCase() {
     }
 
     @Test
+    fun unlockSetTest() = runBlocking {
+        val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
+        repository.createWorkout(frameworkDay1)
+
+        val workout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+
+        repository.completeWorkoutSet(workout.components[0].sets[0])
+        repository.unlockWorkoutSet(workout.components[0].sets[0])
+
+        assertEquals(Progress.IN_PROGRESS, workout.components[0].sets[0].status)
+    }
+
+    @Test
     fun deleteWorkoutTest() = runBlocking {
         val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
         repository.createWorkout(frameworkDay1)
