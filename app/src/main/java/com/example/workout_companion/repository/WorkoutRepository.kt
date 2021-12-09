@@ -86,11 +86,21 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
         workoutDao.updateWorkout(workout)
     }
 
+    /**
+     * Update a set's status to complete
+     *
+     * @param set The set to update.
+     */
     suspend fun completeWorkoutSet(set: WorkoutComponentSetEntity) {
         set.status = Progress.COMPLETE
         setDao.updateSet(set)
     }
 
+    /**
+     * Update a set's status back to in progress
+     *
+     * @param set The set to update.
+     */
     suspend fun unlockWorkoutSet(set: WorkoutComponentSetEntity) {
         set.status = Progress.IN_PROGRESS
         setDao.updateSet(set)

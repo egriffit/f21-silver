@@ -71,10 +71,20 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         repository.updateWorkout(workout)
     }
 
+    /**
+     * Update a set to complete
+     *
+     * @param set The set to update.
+     */
     fun completeWorkoutSet(set: WorkoutComponentSetEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.completeWorkoutSet(set)
     }
 
+    /**
+     * Unlock a set back to in progress
+     *
+     * @param set The set to unlock.
+     */
     fun unlockWorkoutSet(set: WorkoutComponentSetEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.unlockWorkoutSet(set)
     }
