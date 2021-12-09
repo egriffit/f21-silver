@@ -14,9 +14,9 @@ exports.getAdviceByType = function(req, res){
 
 //create advice
 exports.createAdvice = async function(req, res){
-    result = await advice.findOne({"advice": req.body.advice}) 
+    result = await advice.findOne({"advice": req.body.advice.toLowerCase().trim()}) 
     if(!result){
-        var new_advice = new advice({adviceType: req.body.advice.toLowerCase().trim(), advice: req.body.advice.toLowerCase().trim(),sourceId: req.body.sourceId});
+        var new_advice = new advice({adviceType: req.body.advice.toLowerCase().trim(), advice: req.body.advice.toLowerCase().trim(), sourceId: req.body.sourceId});
         new_advice.save(function(err, task){
             if(err){
                 res.send(err);
