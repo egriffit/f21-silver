@@ -12,7 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
 import com.example.workout_companion.entity.FoodTypeEntity
 import com.example.workout_companion.view.exercise.ExerciseView
-import com.example.workout_companion.view.exercise.FoundExerises
+import com.example.workout_companion.view.exercise.FoundExercises
 import com.example.workout_companion.view.nutrition.*
 import com.example.workout_companion.viewmodel.*
 import kotlinx.coroutines.launch
@@ -250,7 +250,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 )
         ){ backStackEntry ->
             val m  = backStackEntry.arguments?.getString("muscle")!!
-            FoundExerises(navController,
+            FoundExercises(navController,
                 m,
             wgerApiViewModel)
         }
@@ -267,7 +267,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             var exerciseInfo = wgerApiViewModel.exerciseInfo
             runBlocking{
                 val exerciseJob: Job = launch(Dispatchers.IO){
-                    wgerApiViewModel.getExericseInfo(exerciseId)
+                    wgerApiViewModel.getExerciseInfo(exerciseId)
                 }
                 exerciseJob.join()
                 exerciseInfo = wgerApiViewModel.exerciseInfo

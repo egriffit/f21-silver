@@ -16,7 +16,7 @@ import com.example.workout_companion.viewmodel.WgerAPIViewModel
 
 //Displays exercises found from WGER
 @Composable
-fun FoundExerises(
+fun FoundExercises(
     navController: NavController,
     muscle: String?,
     wgerAPi: WgerAPIViewModel

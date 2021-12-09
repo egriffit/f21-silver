@@ -40,7 +40,7 @@ class WgerAPIViewModel: ViewModel() {
 
     }
 
-    fun getExericseInfo(exerciseId: Int) {
+    fun getExerciseInfo(exerciseId: Int) {
         viewModelScope.launch {
             val call = wgerApi()
                 .create(WgerApi::class.java)

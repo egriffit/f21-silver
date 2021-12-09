@@ -113,7 +113,6 @@ fun SubmitButton(workout: WorkoutWithComponents, workoutViewModel: WorkoutViewMo
         onClick = {
             // TODO: Set the workout to complete
             // TODO: Update the workout in the database
-            // WorkoutProgress(Progress.COMPLETE)
             workout.workout.status = Progress.COMPLETE
             workoutViewModel.updateWorkout(workout.workout)
         }
