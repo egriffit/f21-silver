@@ -41,10 +41,9 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: Wo
         // Progress state check box
         Checkbox(
             checked = checkState,
-            onCheckedChange = {
-                checkState = it
-
-                if (checkState) {
+            onCheckedChange = { checked ->
+                checkState = checked
+                if (checked) {
                     if (repState.toIntOrNull() != null) {
                         set.reps = repState.toInt()
                     }
@@ -53,6 +52,10 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: Wo
                     }
                     workoutViewModel.completeWorkoutSet(set)
                 }
+                else {
+                    workoutViewModel.unlockWorkoutSet(set)
+                }
+
                 focusManager.clearFocus()
             },
             modifier = Modifier.weight(1f)
