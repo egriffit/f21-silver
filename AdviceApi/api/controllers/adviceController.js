@@ -13,14 +13,32 @@ exports.getAdviceByType = function(req, res){
 };
 
 //create advice
-exports.createAdvice = function(req, res){
-    var new_advice = new advice(req.body);
-    new_advice.save(function(err, task){
-        if(err){
-            res.send(err);
-        }else{
-            res.json({success: true,
-                response: "Advice successfully added"})
-        }
-    });
+exports.createAdvice = async function(req, res){
+    result = await advice.findOne({"advice": req.body.advice}) 
+    if(!result){
+        var new_advice = new advice(req.body);
+        new_advice.save(function(err, task){
+            if(err){
+                res.send(err);
+            }else{
+                res.json({success: true,
+                    response: "Advice successfully added"})
+            }
+        });
+    }else{
+        res.json({success: false,
+            response: "Advice '" + req.body.advice + "' Already Exists"})
+    }
 };
+
+exports.removeAllAdvice = function(req, res){
+    if(req.body.key === ")qbBKar2?9gY7aeP9S^,Q9!#y)2hC)S;wC)>>=gm")
+    {
+        advice.collection.drop();
+        res.json({
+            message: "All advice has been deleted"
+        })
+    }else{
+        res.json({message: "You are not allowed to delete the advice"})
+    }
+}

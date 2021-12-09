@@ -26,15 +26,34 @@ exports.getUser = function(req, res){
 };
 
 //create user
-exports.createUser = function(req, res){
+exports.createUser = async function(req, res){
     var new_user = new user(req.body);
-    new_user.save(function(err, task){
-        if(err){
-            res.send(err);
-        }
-        else{
-            res.json({success: true,
-                message: "User " + new_user.username + " was created"})
-        }
-    });
+    var result = await user.findOne({"username": req.body.username})
+    if(!result){
+        new_user.save(function(err, task){
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.json({success: true,
+                    message: "User " + new_user.username + " was created"})
+            }
+        });
+    }else{
+        res.json({success: false,
+            message: "User " + new_user.username + " already exists"})
+    }
 };
+
+exports.removeAllUsers = function(req, res){
+    if(req.body.key === ")qbBKar2?9gY7aeP9S^,Q9!#y)2hC)S;wC)>>=gm")
+    {
+        user.collection.drop();
+        res.json({
+            message: "All User Accounts have been deleted"
+        })
+    }else{
+        res.json({message: "You are not allowed to delete the ysers"})
+    }
+
+}
