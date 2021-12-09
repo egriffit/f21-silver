@@ -25,35 +25,41 @@ fun FoundExercises(
     val selectedIndex = remember { mutableStateOf(0) }
 
     Column() {
-        Row() {
+        Row(modifier = Modifier.padding(20.dp),
+        horizontalArrangement = Arrangement.Center) {
             Text("Found Exercises for ${muscle}")
         }
         val muscleGroup = MuscleGroupConverter.toMuscleGroup(muscle!!)
         val muscleId = muscleGroup.wgerMuscles.elementAt(0).id
-        Text("${muscleId} - ${muscleGroup.wgerMuscles.elementAt(0).descName}")
         LaunchedEffect(key1 = Unit, block = {
             wgerAPi.getExercisesByMuscleGroup(muscleId)
         })
         val found = wgerAPi.exerciseInMuscles
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
+                .height(500.dp)
                 .padding(start = 20.dp)
         ) {
             item {
                 if (found.value.results.isNotEmpty()) {
-                    ExerciseRadioButtons(navController, found.value, muscle!!, selectedIndex, selectedId)
+                    ExerciseRadioButtons(
+                        navController,
+                        found.value,
+                        muscle!!,
+                        selectedIndex,
+                        selectedId
+                    )
                 }
             }
-            item {
-                Row() {
-                    Button(onClick = { navController.navigate("ExerciseOverview") }) {
-                        Text("Submit")
-                    }
-                    Spacer(modifier = Modifier.padding(start = 20.dp))
-                    Button(onClick = { navController.navigate("ExerciseOverview") }) {
-                        Text("Cancel")
-                    }
-                }
+        }
+        Row(modifier = Modifier.padding(20.dp),
+            horizontalArrangement = Arrangement.Center) {
+            Button(onClick = { navController.navigate("ExerciseOverview") }) {
+                Text("Submit")
+            }
+            Spacer(modifier = Modifier.padding(start = 20.dp))
+            Button(onClick = { navController.navigate("ExerciseOverview") }) {
+                Text("Cancel")
             }
         }
     }

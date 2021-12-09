@@ -4,13 +4,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import com.example.workout_companion.viewmodel.CurrentUserGoalViewModel
 import androidx.compose.material.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.test.core.app.ActivityScenario.launch
 import com.example.workout_companion.entity.AllMealsInDay
-import com.example.workout_companion.entity.NutritionStatusEntity
 import com.example.workout_companion.enumeration.NutritionStatusEnum
 import com.example.workout_companion.viewmodel.MealViewModel
 import com.example.workout_companion.viewmodel.NutritionStatusViewModel
@@ -19,7 +20,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
-import java.text.DecimalFormat
 
 @Composable
 fun NutritionStatus(
@@ -28,49 +28,43 @@ fun NutritionStatus(
     nutritionStatusViewModel: NutritionStatusViewModel
 ) {
     val currentGoals = currentUserGoalViewModel.getCurrentGoals.observeAsState().value
-    val foundMeals = mealViewModel.getTodaysMeals.observeAsState(listOf()).value
     val currentNutritionStatus = nutritionStatusViewModel.currentStatus.observeAsState().value
-    val planStatus = remember{ mutableStateOf(NutritionStatusEnum.ON_TRACK)}
-    var currentCal = 0.0
-    var currentProtein = 0.0
-    var currentCarbs =  0.0
-    var currentFat =  0.0
-    var gramsOfFood = 0.0
-    var proteinPercentage = "0.0"
-    var carbPercentage = "0.0"
-    var fatPercentage = "0.0"
-    var df: DecimalFormat = DecimalFormat("##.##%")
+    val planStatus = remember { mutableStateOf(NutritionStatusEnum.ON_TRACK) }
     var dailyTotals = AllMealsInDay(0.0, 0.0, 0.0, 0.0, LocalDate.now())
+
     runBlocking {
-        launch(Dispatchers.IO){
+        val job1: Job = launch(Dispatchers.IO) {
             dailyTotals = mealViewModel.calcDailyTotal()
-            nutritionStatusViewModel.getStatusByDate(LocalDate.now())
+        }
+        job1.join()
+        if(dailyTotals != null) {
+            launch(Dispatchers.IO) {
+                nutritionStatusViewModel.getStatusByDate(LocalDate.now())
+                if (currentNutritionStatus != null) {
+                    planStatus.value = currentNutritionStatus.status
+                }
+            }
         }
     }
-    if(dailyTotals != null) {
-        gramsOfFood = dailyTotals.carbohydrates + dailyTotals.protein + dailyTotals.fat
-        carbPercentage = df.format(dailyTotals.carbohydrates / gramsOfFood)
-        proteinPercentage = df.format(dailyTotals.protein / gramsOfFood)
-        fatPercentage = df.format(dailyTotals.fat / gramsOfFood)
+    if(currentGoals != null) {
+        if (dailyTotals.calories.toInt() > currentGoals.nutritionPlanType.calorie) {
+            planStatus.value = NutritionStatusEnum.ABOVE_TARGET
+            nutritionStatusViewModel.insert(
+                        NutritionStatusEnum.ABOVE_TARGET,
+                        LocalDate.now()
+                    )
+        }else{
+            nutritionStatusViewModel.insert(NutritionStatusEnum.ON_TRACK, LocalDate.now())
+        }
+    }
+
+    if (dailyTotals != null) {
         Column(modifier = Modifier.padding(bottom = 30.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("Status:   ")
-                if (currentGoals != null) {
-                    if (dailyTotals.calories.toInt() > currentGoals?.nutritionPlanType?.calorie!!) {
-                        planStatus.value = NutritionStatusEnum.ABOVE_TARGET
-                        if (currentNutritionStatus?.status != planStatus.value) {
-                            nutritionStatusViewModel.insert(planStatus.value, LocalDate.now())
-                        }
-                    }
-                    if(planStatus.value == NutritionStatusEnum.ABOVE_TARGET){
-                        Text("Not Meeting Calorie Goal")
-                    } else {
-                        Text("On Track")
-                    }
-                }
+                Text("Status:${planStatus.value.descName}")
             }
             Spacer(modifier = Modifier.padding(top = 20.dp))
             Row(
@@ -92,9 +86,9 @@ fun NutritionStatus(
                 Text("Carbohydrates:   ")
                 Text("${dailyTotals.carbohydrates.toInt()} g / ")
                 if (currentGoals?.nutritionPlanType?.carbohydrate != null) {
-                    var targetCarbGrams =
-                        (currentGoals?.nutritionPlanType?.calorie!! * (currentGoals?.nutritionPlanType?.carbohydrate!! / 100)).toInt() / 4.0
-                    Text("${targetCarbGrams} g ")
+                    val targetCarbGrams =
+                        (currentGoals.nutritionPlanType.calorie * (currentGoals.nutritionPlanType.carbohydrate / 100)).toInt() / 4.0
+                    Text("$targetCarbGrams g ")
                     //Text("(${df.format(currentGoals?.nutritionPlanType?.carbohydrate!! /100)})")
                 } else {
                     Text("--- g")
@@ -108,8 +102,8 @@ fun NutritionStatus(
                 Text("${dailyTotals.protein.toInt()} g / ")
                 //goal target
                 if (currentGoals?.nutritionPlanType?.protein != null) {
-                    var targetProteinGrams =
-                        (currentGoals?.nutritionPlanType?.calorie!! * (currentGoals?.nutritionPlanType?.protein!! / 100)).toInt() / 4.0
+                    val targetProteinGrams =
+                        (currentGoals.nutritionPlanType.calorie * (currentGoals.nutritionPlanType.protein / 100)).toInt() / 4.0
                     Text("${targetProteinGrams.toInt()} g")
                     //Text("(${df.format(currentGoals?.nutritionPlanType?.protein!! /100)})")
 
@@ -124,8 +118,8 @@ fun NutritionStatus(
                 Text("Fat:   ")
                 Text("${dailyTotals.fat.toInt()} g/")
                 if (currentGoals?.nutritionPlanType?.fat != null) {
-                    var targetFatGrams =
-                        (currentGoals?.nutritionPlanType?.calorie!! * (currentGoals?.nutritionPlanType?.fat!! / 100)).toInt() / 9.0
+                    val targetFatGrams =
+                        (currentGoals.nutritionPlanType.calorie * (currentGoals.nutritionPlanType.fat / 100)).toInt() / 9.0
                     Text(" ${targetFatGrams.toInt()} g")
                     //Text("(${df.format(currentGoals?.nutritionPlanType?.fat!!/100)})")
                 } else {

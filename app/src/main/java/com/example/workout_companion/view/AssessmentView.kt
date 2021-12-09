@@ -27,14 +27,9 @@ fun AssessmentView(navController: NavController,
                    ){
     var workoutGoal = ""
     val currentGoals = currentUserGoalViewModel.getCurrentGoals.observeAsState().value
-    val nutritionStatus = nutritionStatusViewModel.currentStatus.observeAsState().value
+    val nutritionStatus = nutritionStatusViewModel.getStatusByDate(LocalDate.now()).observeAsState().value
     val workoutStatus = workoutViewModel.getWorkoutOnDate(LocalDate.now()).observeAsState().value
-    runBlocking{
-        launch(Dispatchers.IO){
-            nutritionStatusViewModel.getStatusByDate(LocalDate.now())
-        }
 
-    }
     if(currentGoals?.FrameWorkWithGoalEntity?.goal != null){
         workoutGoal = currentGoals.FrameWorkWithGoalEntity.goal
     }
@@ -57,16 +52,18 @@ fun AssessmentView(navController: NavController,
                         .padding(10.dp)){
                         Row(modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center){
-                            Text("Nutrition Status: ")
+                            Text("Today's Nutrition Status: ")
                             if(nutritionStatus != null){
-                                Text("${nutritionStatus.status.descName!!}")
+                                Text("${nutritionStatus.status.descName}")
                             }
                         }
                         Row(modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center){
-                            Text("Workout Status: ")
+                            Text("Today's Workout Status: ")
                             if(workoutStatus != null){
-                                Text("${workoutStatus?.status?.descName!!}")
+                                Text("${workoutStatus.status.descName}")
+                            }else{
+                                Text("Not Started")
                             }
                         }
                     }

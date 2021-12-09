@@ -29,7 +29,7 @@ class NutritionStatusViewModel (application: Application) : AndroidViewModel(app
     /**
      * A LiveData object containing a nutrition statuses from the database.
      */
-    val currentStatus: LiveData<NutritionStatusEntity>
+    val currentStatus = MutableLiveData<NutritionStatusEntity>()
 
     private val repository: NutritionStatusRepository
 
@@ -37,7 +37,6 @@ class NutritionStatusViewModel (application: Application) : AndroidViewModel(app
         val nutritionStatusDao = WCDatabase.getInstance(application).nutritionStatusDao()
         repository = NutritionStatusRepository(nutritionStatusDao)
         allNutritionStatuses = repository.getAllStatuses
-        currentStatus = repository.getCurrentStatus(1)
     }
 
     /**
@@ -52,6 +51,10 @@ class NutritionStatusViewModel (application: Application) : AndroidViewModel(app
         return repository.getStatusByDate(date)
     }
 
+
+    fun getTodaysStatus(date: LocalDate) = viewModelScope.launch(Dispatchers.IO){
+        currentStatus.postValue(repository.getTodaysNutritionStatus())
+    }
     /**
      * Function to initialize a coroutine to retrieve nutrition status
      * from nutrition status table where the id is the same as the
@@ -69,19 +72,10 @@ class NutritionStatusViewModel (application: Application) : AndroidViewModel(app
      * with the status provided
      * @param status, string
      */
-    fun insert(status: NutritionStatusEnum, date: LocalDate){
-        viewModelScope.launch(Dispatchers.IO){
+    fun insert(status: NutritionStatusEnum, date: LocalDate) = viewModelScope.launch(Dispatchers.IO){
             // If status does not exist, insert. Otherwise, update.
-            val statusUpdate = NutritionStatusEntity(0, status, date)
-
-            if(repository.getCount(status, date) > 0){
-
-                /** TODO: Fix this line so that a new NutritionStatusEntity object is initialized. */
-                repository.insert(statusUpdate)
-            }else{
-                repository.update(statusUpdate)
-            }
-        }
+        val statusUpdate = NutritionStatusEntity(0, status, date)
+        repository.insert(statusUpdate)
     }
 
     /**

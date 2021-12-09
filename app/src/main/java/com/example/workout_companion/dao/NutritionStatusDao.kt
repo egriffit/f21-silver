@@ -5,6 +5,7 @@ import androidx.room.*
 import com.example.workout_companion.entity.MealEntity
 import com.example.workout_companion.entity.NutritionStatusEntity
 import com.example.workout_companion.entity.WorkoutEntity
+import com.example.workout_companion.enumeration.NutritionStatusEnum
 import java.time.LocalDate
 
 /**
@@ -21,6 +22,10 @@ interface NutritionStatusDao {
      */
     @Query("SELECT * FROM nutrition_status")
     fun getAllStatuses(): LiveData<List<NutritionStatusEntity>>
+
+
+    @Query("SELECT * FROM nutrition_status WHERE date = strftime('%Y-%m-%d', DATE('now', 'localtime')) LIMIT 1")
+    suspend fun getTodaysStatus(): NutritionStatusEntity
 
     /**
      * Retrieves a NutritionStatusEntity object from the nutrition status table
@@ -49,6 +54,8 @@ interface NutritionStatusDao {
     @Update
     suspend fun update(item: NutritionStatusEntity)
 
+    @Query("UPDATE nutrition_status SET status = :status WHERE date = :date")
+    suspend fun update2(status: NutritionStatusEnum, date: LocalDate)
     /**
      * Insert a NutritionStatusEntity object into the nutrition status table
      *
@@ -64,6 +71,6 @@ interface NutritionStatusDao {
      *
      * @return  Int total number of rows found
      */
-    @Query("SELECT COUNT(*) FROM nutrition_status WHERE status = :status AND date = :date")
-    fun getCount(status: String, date: LocalDate): Int
+    @Query("SELECT COUNT(*) FROM nutrition_status WHERE date = :date")
+    fun getCount(date: LocalDate): Int
 }

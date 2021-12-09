@@ -1,6 +1,7 @@
 package com.example.workout_companion.repository
 
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import com.example.workout_companion.dao.NutritionStatusDao
 import com.example.workout_companion.entity.NutritionStatusEntity
 import com.example.workout_companion.enumeration.NutritionStatusEnum
@@ -20,6 +21,10 @@ class NutritionStatusRepository(private val nutritionStatusDao: NutritionStatusD
         return nutritionStatusDao.getStatusByDate(date)
     }
 
+    @Transaction
+    suspend fun getTodaysNutritionStatus(): NutritionStatusEntity{
+        return nutritionStatusDao.getTodaysStatus()
+    }
     /**
      * Retrieves all nutrition status from nutrition status table
      *
@@ -42,8 +47,13 @@ class NutritionStatusRepository(private val nutritionStatusDao: NutritionStatusD
      *@param item NutritionStatusEntity
      * @return void
      */
+    @Transaction
     suspend fun insert(item: NutritionStatusEntity){
-        return nutritionStatusDao.insert(item)
+        if(nutritionStatusDao.getCount(item.date) > 0){
+            nutritionStatusDao.update2(item.status, item.date)
+        }else{
+            nutritionStatusDao.insert(item)
+        }
     }
 
     /**
@@ -51,8 +61,8 @@ class NutritionStatusRepository(private val nutritionStatusDao: NutritionStatusD
      *
      * @return Int
      */
-    suspend fun getCount(status: NutritionStatusEnum, date: LocalDate): Int{
-        return nutritionStatusDao.getCount(status.descName, date)
+    suspend fun getCount( date: LocalDate): Int{
+        return nutritionStatusDao.getCount(date)
     }
 
     /**

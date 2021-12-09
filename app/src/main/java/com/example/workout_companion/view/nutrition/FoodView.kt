@@ -189,10 +189,9 @@ fun FoodView(
                                 //Wait for record to be inserted before navigating
                                 //To Nutrition Overview
                                 jobF2.join()
-                                val jobF3: Job = launch(Dispatchers.IO){
+                                launch(Dispatchers.IO) {
                                     foodInMealViewModel.calcDailyTotal(mealId!!)
                                 }
-                                jobF3.join()
                                 navController.navigate("NutritionOverview")
                             }
                         }) {
