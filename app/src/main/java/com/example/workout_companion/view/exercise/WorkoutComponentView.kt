@@ -13,9 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.workout_companion.dao.ComponentWithSets
+import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 @Composable
-fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets) {
+fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutViewModel: WorkoutViewModel) {
     Column (
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -23,7 +24,7 @@ fun WorkoutComponentView(navController: NavController, componentWithSets: Compon
         WorkoutComponentHeader(navController, componentWithSets, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
-                WorkoutComponentSetView(set)
+                WorkoutComponentSetView(set, workoutViewModel)
             }
         }
     }

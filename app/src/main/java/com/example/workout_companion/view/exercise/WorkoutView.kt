@@ -43,7 +43,7 @@ fun WorkoutView(
         else {
             item { WorkoutProgress(workoutState.value!!.workout.status) }
             items(workoutState.value!!.components) { component ->
-                    WorkoutComponentView(navController, component)
+                    WorkoutComponentView(navController, component, workoutViewModel)
             }
 
             item {
