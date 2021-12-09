@@ -9,9 +9,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.navigation.NavController
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.workout_companion.dao.FrameworkDayWithComponents
 import com.example.workout_companion.dao.FrameworkWithDays
 import com.example.workout_companion.dao.WorkoutWithComponents
@@ -43,7 +43,7 @@ fun WorkoutView(
         else {
             item { WorkoutProgress(workoutState.value!!.workout.status) }
             items(workoutState.value!!.components) { component ->
-                    WorkoutComponentView(navController, component)
+                    WorkoutComponentView(navController, component, workoutViewModel)
             }
 
             item {
@@ -54,7 +54,7 @@ fun WorkoutView(
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    SubmitButton(workoutState.value!!, workoutViewModel)
+                    SubmitButton(navController, workoutState.value!!, workoutViewModel)
                     CancelButton(workoutState.value!!, workoutViewModel)
                 }
             }
@@ -108,13 +108,12 @@ fun FrameworkDaySelector(
 }
 
 @Composable
-fun SubmitButton(workout: WorkoutWithComponents, workoutViewModel: WorkoutViewModel) {
+fun SubmitButton(navController: NavController, workout: WorkoutWithComponents, workoutViewModel: WorkoutViewModel) {
     OutlinedButton(
         onClick = {
-            // TODO: Set the workout to complete
-            // TODO: Update the workout in the database
             workout.workout.status = Progress.COMPLETE
             workoutViewModel.updateWorkout(workout.workout)
+            navController.navigate("Landing")
         }
     ) { Text("Submit") }
 }
