@@ -142,66 +142,54 @@ class FoodInMealViewModel(application: Application) : AndroidViewModel(applicati
      * Function to initialize a coroutine to add a FoodInMealEntity object to the database
      * @param item, a FoodInMealEntity
      */
-    fun insert(item: FoodInMealEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.insert(item)
-        }
+    fun insert(item: FoodInMealEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(item)
     }
+
     /**
      * Function to initialize a coroutine to add a list of FoodInMealEntity objects to the database
      * @param item, a List<FoodInMealEntity>
      */
-    fun insert(item: List<FoodInMealEntity>){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.insert(item)
-        }
+    fun insert(item: List<FoodInMealEntity>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(item)
     }
-
 
     /**
      * Function to initialize a coroutine to update a the food_in_meal record with the
      * FoodInMealEntity
      * @param item, a FoodInMealEntity
-     * @return void
+     * @return The update job
      */
-    fun update(item: FoodInMealEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.update(item)
-        }
+    fun update(item: FoodInMealEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.update(item)
     }
 
     /**
      * Function to initialize a coroutine to delete the food_in_meal record with the
      * meal_id equal to the integer provided
      * @param meal_id, an Integer
-     * @return void
+     * @return The delete job
      */
-    fun delete(meal_id: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.delete(meal_id)
-        }
+    fun delete(meal_id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete(meal_id)
     }
 
     /**
      * Function to initialize a coroutine to delete the food_in_meal record equal to the food_in_meal
      * object provided
      * @param item, an FoodInMealEntity
-     * @return void
+     * @return The delete job
      */
-    fun delete(item: FoodInMealEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.delete(item)
-        }
+    fun delete(item: FoodInMealEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete(item)
     }
 
 
     /**
      * Function to initialize a coroutine to delete all food_in_meal records
-     * @return void
+     * @return The delete job
      */
-    fun deleteAll(){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.deleteAll()
-        }
+    fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteAll()
     }
 }
