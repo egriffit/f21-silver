@@ -111,6 +111,18 @@ class WorkoutRepositoryTest : TestCase() {
     }
 
     @Test
+    fun completeSetTest() = runBlocking {
+        val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
+        repository.createWorkout(frameworkDay1)
+
+        val workout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+
+        repository.completeWorkoutSet(workout.components[0].sets[0])
+
+        assertEquals(Progress.COMPLETE, workout.components[0].sets[0].status)
+    }
+
+    @Test
     fun deleteWorkoutTest() = runBlocking {
         val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
         repository.createWorkout(frameworkDay1)

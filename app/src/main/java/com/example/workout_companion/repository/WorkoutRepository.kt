@@ -86,6 +86,11 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
         workoutDao.updateWorkout(workout)
     }
 
+    suspend fun completeWorkoutSet(set: WorkoutComponentSetEntity) {
+        set.status = Progress.COMPLETE
+        setDao.updateSet(set)
+    }
+
     /**
      * Deletes a workout from the database
      *
