@@ -112,7 +112,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                 OutlinedTextField(
                     value = state.name,
                     onValueChange = { state.name = it },
-                    label = { Text(text = "Name?") },
+                    label = { Text(text = "Name") },
                     singleLine = true,
                     // Since our name is our primary key, existing user names can't be changed
                     readOnly = userWithGoalInDB.value != null,
@@ -137,7 +137,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                         state.feet = newValue.filter { it.isDigit() }
                     },
                     singleLine = true,
-                    label = { Text(text = "Feet?") },
+                    label = { Text(text = "Height (Feet)") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -153,7 +153,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                         state.inches = newValue.filter { it.isDigit() }
                     },
                     singleLine = true,
-                    label = { Text(text = "Inches?") },
+                    label = { Text(text = "Height (Inches)") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -297,7 +297,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                         }
                     },
                     singleLine = true,
-                    label = { Text(text = "Weight? (In pounds)") },
+                    label = { Text(text = "Weight (In pounds)") },
                     modifier = Modifier.weight(2f),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -476,7 +476,7 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
                         state.maxWorkouts = newValue.filter { it.isDigit() }
                     },
                     singleLine = true,
-                    label = { Text(text = "Max Number of Workouts/Week?") },
+                    label = { Text(text = "Max Number of Workouts/Week") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
