@@ -42,20 +42,16 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
      * Function to initialize a coroutine to add a userEntity to the database
      * @param item, a UserEntityUserViewModel.kt
      */
-    fun addUser(item: UserEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.addUser(item = item)
-        }
+    fun addUser(item: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addUser(item = item)
     }
 
     /**
      * Function to initialize a coroutine to update a user in the users table with the values in the provided UserEntity
      * @param item, a UserEntity
      */
-    fun updateUser(item: UserEntity){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateUser(item = item)
-        }
+    fun updateUser(item: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateUser(item = item)
     }
 
     /**
