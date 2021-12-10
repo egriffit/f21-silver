@@ -267,15 +267,16 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 n)
         }
 
-        composable (route = "ExerciseView/{muscle}/{exerciseId}",
+        composable (route = "ExerciseView/{muscle}/{exerciseId}/{componentId}",
             arguments = listOf(
                 navArgument("exerciseId") { type = NavType.StringType },
                 navArgument("muscle") { type = NavType.StringType },
-
+                navArgument("componentId") { type = NavType.IntType },
                 )
         ){ backStackEntry ->
             val exerciseId  = backStackEntry.arguments?.getString("exerciseId")!!.toInt()
             val muscleName  = backStackEntry.arguments?.getString("muscle")!!
+            val componentId = backStackEntry.arguments?.getInt("componentId")!!
             var exerciseInfo = wgerApiViewModel.exerciseInfo
             runBlocking{
                 val exerciseJob: Job = launch(Dispatchers.IO){
@@ -285,7 +286,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                 exerciseInfo = wgerApiViewModel.exerciseInfo
             }
             if(exerciseInfo.value != null) {
-                ExerciseView(navController, exerciseInfo.value, muscleName, exerciseId)
+                ExerciseView(navController, exerciseInfo.value, muscleName, exerciseId, componentId)
             }
         }
         // Other routes go here

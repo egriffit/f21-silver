@@ -49,6 +49,7 @@ fun FoundExercises(
                         navController,
                         found.value,
                         muscle!!,
+                        componentid,
                         selectedIndex,
                         selectedId
                     )
