@@ -7,24 +7,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.workout_companion.entity.FrameworkTypeEntity
 import com.example.workout_companion.entity.FrameworkWithGoalEntity
 import com.example.workout_companion.viewmodel.FrameworkTypeViewModel
 
 
 @Composable
 fun RecommendFrameworkView(
-    RecommendedFrameworks: List<FrameworkWithGoalEntity>,
-    currentRecommendedFramework: MutableState<Int>,
-    frameworkTypeViewModel: FrameworkTypeViewModel,
-    goal: String,
-    max_workouts: Int)
+    frameworks: List<FrameworkTypeEntity>,
+    recommendedFrameworkId: MutableState<Int>)
 {
     Column(
         modifier = Modifier
@@ -35,9 +32,8 @@ fun RecommendFrameworkView(
         Spacer(modifier=Modifier.height(20.dp))
         Text("Recommended Frameworks:",
             fontWeight = FontWeight.Bold)
-        if(RecommendedFrameworks.isNotEmpty()){
-            FrameworkViewDropdown(RecommendedFrameworks, currentRecommendedFramework,
-                frameworkTypeViewModel, goal, max_workouts)
+        if(frameworks.isNotEmpty()){
+            FrameworkViewDropdown(frameworks, recommendedFrameworkId)
         }
         else{
             Text("No frameworks were found")
@@ -48,17 +44,22 @@ fun RecommendFrameworkView(
 
 
 @Composable
-fun FrameworkViewDropdown(RecommendedFrameworks: List<FrameworkWithGoalEntity>,
-                          currentRecommendedFramework: MutableState<Int>,
-                          frameworkTypeViewModel: FrameworkTypeViewModel,
-                          goal: String,
-                          max_workouts: Int){
+fun FrameworkViewDropdown(frameworks: List<FrameworkTypeEntity>,
+                          recommendedFrameworkId: MutableState<Int>
+) {
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
+
+    var selectedFramework = frameworks[0]
+    val foundFramework = frameworks.find { it.id == recommendedFrameworkId.value }
+    if (foundFramework != null) {
+        selectedFramework = foundFramework
+    }
+
     Box(modifier = Modifier
         .wrapContentSize(Alignment.TopStart)
     ) {
-        Text(RecommendedFrameworks[selectedIndex].name,
+        Text(selectedFramework.name,
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,11 +74,12 @@ fun FrameworkViewDropdown(RecommendedFrameworks: List<FrameworkWithGoalEntity>,
                 .fillMaxWidth()
                 .background(Color.LightGray)
         ) {
-            RecommendedFrameworks.forEachIndexed { index, s ->
+            frameworks.forEachIndexed { index, s ->
                 DropdownMenuItem(onClick = {
                     selectedIndex = index
+                    selectedFramework = s
                     expanded = false
-                    currentRecommendedFramework.value = s.id
+                    recommendedFrameworkId.value = s.id
                 }) {
                     Text(text = "${s.name} (${s.workouts_per_week} workouts per week)")
                 }

@@ -25,10 +25,18 @@ fun GoalDropdown(goals: List<GoalTypeEntity>,
                  currentGoal: MutableState<Int>){
     var expanded = remember { mutableStateOf(false) }
     var selectedIndex =  remember { mutableStateOf(0) }
+
+    var selectedGoal = goals[0]
+    val foundGoal = goals.find { it.id == currentGoal.value }
+    if (foundGoal != null) {
+        selectedGoal = foundGoal
+        selectedIndex.value = goals.indexOf(foundGoal)
+    }
+
     Box(modifier = Modifier
         .wrapContentSize(Alignment.TopStart)
     ) {
-        Text(goals[selectedIndex.value].goal,
+        Text(selectedGoal.goal,
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,6 +54,7 @@ fun GoalDropdown(goals: List<GoalTypeEntity>,
             goals.forEachIndexed { index, s ->
                 DropdownMenuItem(onClick = {
                     selectedIndex.value = index
+                    selectedGoal = s
                     currentGoal.value = s.id
                     expanded.value = false
                 }) {
