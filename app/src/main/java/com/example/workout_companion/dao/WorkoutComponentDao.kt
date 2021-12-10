@@ -20,6 +20,9 @@ interface WorkoutComponentDao {
     @Query("SELECT * FROM workout_component WHERE workout_date=:date")
     suspend fun getWorkoutComponentsForDate(date: LocalDate): List<WorkoutComponentEntity>
 
+    @Query("SELECT * FROM workout_component WHERE id=:id")
+    fun getWorkoutComponentById(id: Int): WorkoutComponentEntity?
+
     /**
      * Adds a workout component to the database
      *

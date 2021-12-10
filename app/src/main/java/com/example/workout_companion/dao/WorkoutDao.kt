@@ -1,5 +1,6 @@
 package com.example.workout_companion.dao
 
+import androidx.core.view.KeyEventDispatcher
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.workout_companion.entity.FrameworkComponentEntity
@@ -88,6 +89,17 @@ interface WorkoutDao {
     @Transaction
     @Query("SELECT * FROM workout WHERE workout.date = :date")
     fun getWorkoutWithComponents(date: LocalDate): LiveData<WorkoutWithComponents>
+
+    /**
+     * Returns a workout component with its sets
+     *
+     * @param id The id of the workout component
+     *
+     * @return The workout component and its sets
+     */
+    @Transaction
+    @Query("SELECT * FROM workout_component WHERE workout_component.id = :id")
+    fun getComponentWithSets(id: Int): LiveData<ComponentWithSets>
 
     /**
      * Returns the number of workouts on the given day

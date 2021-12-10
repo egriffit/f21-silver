@@ -41,10 +41,7 @@ data class WorkoutComponentSetEntity(
     @TypeConverters(ProgressConverter::class)
     @ColumnInfo(name = "status")
     var status: Progress = Progress.IN_PROGRESS,
-
-    @ColumnInfo(name = "wger_id")
-    var wger_id: Int? = null,
 ) {
-    constructor(componentId: Int, reps: Int, weight: Double, status: Progress, wgerId: Int?) :
-            this(0, componentId, reps, weight, status, wgerId)
+    constructor(componentId: Int, reps: Int, weight: Double, status: Progress) :
+            this(0, componentId, reps, weight, status)
 }

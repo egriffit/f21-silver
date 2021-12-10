@@ -87,6 +87,29 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
     }
 
     /**
+     * Updates a workout component in the database
+     *
+     * @param component The workout component to update
+     */
+    suspend fun updateWorkoutComponent(component: WorkoutComponentEntity) {
+        componentDao.updateWorkoutComponent(component)
+    }
+
+    /**
+     * Sets the exercise of the given workout component
+     *
+     * @param id The id of the workout component
+     * @param exerciseId The id of the exercise
+     */
+    suspend fun setWorkoutComponentExercise(id: Int, exerciseId: Int) {
+        val component = componentDao.getWorkoutComponentById(id)
+        if (component != null) {
+            component.wger_id = exerciseId
+            componentDao.updateWorkoutComponent(component)
+        }
+    }
+
+    /**
      * Update a set's status to complete
      *
      * @param set The set to update.
