@@ -66,7 +66,7 @@ fun NutritionStatus(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("Status:${planStatus.value.descName}")
+                Text("Status: ${planStatus.value.descName}")
             }
             Spacer(modifier = Modifier.padding(top = 20.dp))
             Row(
