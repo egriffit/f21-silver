@@ -68,7 +68,7 @@ import kotlinx.coroutines.*
         // Image
         Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center) {
-            Image(painter = painterResource(id = R.drawable.logo),
+            Image(painter = painterResource(id = R.drawable.orange),
                 contentDescription = "Logo",
                 modifier = Modifier.scale(scale.value))
         }
