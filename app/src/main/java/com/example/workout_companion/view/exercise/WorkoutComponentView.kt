@@ -13,15 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.workout_companion.dao.ComponentWithSets
+import com.example.workout_companion.viewmodel.WgerAPIViewModel
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 @Composable
-fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutViewModel: WorkoutViewModel) {
+fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutViewModel: WorkoutViewModel, wgerAPIViewModel: WgerAPIViewModel) {
     Column (
         modifier = Modifier.fillMaxWidth(),
     ) {
         val expandedState = remember { mutableStateOf(false) }
-        WorkoutComponentHeader(navController, componentWithSets, expandedState)
+        WorkoutComponentHeader(navController, wgerAPIViewModel, componentWithSets, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
                 WorkoutComponentSetView(set, workoutViewModel)
@@ -31,10 +32,15 @@ fun WorkoutComponentView(navController: NavController, componentWithSets: Compon
 }
 
 @Composable
-fun WorkoutComponentHeader(navController: NavController, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
+fun WorkoutComponentHeader(navController: NavController, wgerAPIViewModel: WgerAPIViewModel, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
 
     val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
-    val exerciseState by remember { mutableStateOf("Pick an Exercise") }
+    var exerciseState by remember { mutableStateOf("Pick an Exercise") }
+
+    if (exerciseState == "Pick an Exercise" && componentWithSets.component.wger_id != null) {
+        wgerAPIViewModel.getExerciseInfo(componentWithSets.component.wger_id!!)
+        exerciseState = wgerAPIViewModel.exerciseInfo.value.name
+    }
 
     Row(
         horizontalArrangement = Arrangement.Center,

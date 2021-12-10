@@ -70,7 +70,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             if (userGoalState.value != null) {
                 val frameworkId = userGoalState.value!!.FrameWorkWithGoalEntity.id
                 val currentFramework = completeFrameworkViewModel.getFrameworkWithDaysById(frameworkId).observeAsState()
-                ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel)
+                ExerciseOverview(navController, workoutState, currentFramework, workoutViewModel, wgerApiViewModel)
             }
         }
         composable (route = "NutritionOverview") {

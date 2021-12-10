@@ -9,6 +9,7 @@ import com.example.workout_companion.dao.FrameworkWithDays
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.view.exercise.WorkoutView
 import com.example.workout_companion.view.inputfields.TopNavigation
+import com.example.workout_companion.viewmodel.WgerAPIViewModel
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.Job
 import kotlin.reflect.KFunction1
@@ -19,10 +20,11 @@ fun ExerciseOverview(
     workoutState: State<WorkoutWithComponents?>,
     frameworkWithDays: State<FrameworkWithDays?>,
     workoutViewModel: WorkoutViewModel,
+    wgerAPIViewModel: WgerAPIViewModel,
 ){
     Scaffold(
     topBar = { TopNavigation(navController) },
     bottomBar = {},
-    content = { WorkoutView(navController, workoutState, frameworkWithDays, workoutViewModel) }
+    content = { WorkoutView(navController, workoutState, frameworkWithDays, workoutViewModel, wgerAPIViewModel) }
     )
 }
