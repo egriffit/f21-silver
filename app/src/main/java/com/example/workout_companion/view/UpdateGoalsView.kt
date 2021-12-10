@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.workout_companion.entity.*
 import com.example.workout_companion.sampleData.emptyNutritionPlanTypeEntity
+import com.example.workout_companion.utility.estimateCaloricIntake
 import com.example.workout_companion.view.goals.CalorieIncrementor
 import com.example.workout_companion.view.goals.GoalDropdown
 import com.example.workout_companion.view.goals.MacronutrientSelector
@@ -21,6 +22,8 @@ import com.example.workout_companion.view.goals.RecommendFrameworkView
 import com.example.workout_companion.view.inputfields.TopNavigation
 import com.example.workout_companion.viewmodel.*
 import kotlinx.coroutines.*
+import java.time.LocalDate
+import java.time.Period
 
 
 @Composable
@@ -28,24 +31,29 @@ fun UpdateGoalsView(navController: NavController,
                     currentUserGoalViewModel: CurrentUserGoalViewModel,
                     nutritionPlanTypeViewModel: NutritionPlanTypeViewModel,
                     frameworkTypeViewModel: FrameworkTypeViewModel,
+                    userViewModel: UserViewModel,
                     user: UserEntity,
                     goals: List<GoalTypeEntity>,
 ) {
     val selectedGoalID = remember { mutableStateOf(0) }
-    val selectedGoal = remember { mutableStateOf("") }
+    val selectedGoal = remember { mutableStateOf(goals[0].goal) }
     val currentCalories = remember { mutableStateOf(2000) }
+    val theGoal = remember { mutableStateOf(goals[0]) }
+    val inEdit = remember { mutableStateOf(false) }
 
-    if (goals.isNotEmpty()) {
-        selectedGoalID.value = user.goal_id
-        val foundGoal = goals.find { it.id == selectedGoalID.value }
-        if (foundGoal != null) {
-            selectedGoal.value = foundGoal.goal
-            currentCalories.value = 2000 + foundGoal.caloric_addition
-        } else {
-            selectedGoal.value = goals[0].goal
-            currentCalories.value = 2000 + goals[0].caloric_addition
+    if (!inEdit.value) {
+        if (goals.isNotEmpty()) {
+            selectedGoalID.value = user.goal_id
+            val foundGoal = goals.find { it.id == selectedGoalID.value }
+            if (foundGoal != null) {
+                selectedGoal.value = foundGoal.goal
+                theGoal.value = foundGoal
+            }
         }
     }
+
+    val userAge = Period.between(user.birth_date, LocalDate.now()).years
+    currentCalories.value = estimateCaloricIntake(user.weight, user.height, userAge, user.activity_level, user.sex, theGoal.value)
 
     val recommendedFrameworkId = remember { mutableStateOf(1) }
     val currentProtein = remember { mutableStateOf(0) }
@@ -72,7 +80,10 @@ fun UpdateGoalsView(navController: NavController,
                                 .fillMaxWidth()
                                 .padding(start = 20.dp, end = 20.dp)
                         ) {
-                            Button(onClick = { navController.navigate("userForm") }) {
+                            Button(onClick = {
+                                inEdit.value = false
+                                navController.navigate("userForm")
+                            }) {
                                 Text("Update User")
                             }
                         }
@@ -91,7 +102,7 @@ fun UpdateGoalsView(navController: NavController,
                             Text("Pick a goal: ")
                             //create a list of goals
                             if (goals.isNotEmpty()) {
-                                GoalDropdown(goals, selectedGoalID)
+                                GoalDropdown(goals, user, theGoal, currentCalories, inEdit)
                             }
                         }
                         Spacer(modifier = Modifier.padding(bottom = 20.dp))
@@ -173,7 +184,13 @@ fun UpdateGoalsView(navController: NavController,
                             // to be made before letting the user run amuck
                             userGoalJob.join()
 
+                            user.goal_id = theGoal.value.id
+                            val userJob = userViewModel.updateUser(user)
+                            userJob.join()
+
+                            inEdit.value = false
                             navController.navigate("Landing")
+
                         }
                     }) {
                         Text("Submit")

@@ -18,25 +18,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.workout_companion.entity.UserEntity
+import com.example.workout_companion.utility.estimateCaloricIntake
+import java.time.LocalDate
+import java.time.Period
 
 
 @Composable
 fun GoalDropdown(goals: List<GoalTypeEntity>,
-                 currentGoal: MutableState<Int>){
-    var expanded = remember { mutableStateOf(false) }
-    var selectedIndex =  remember { mutableStateOf(0) }
-
-    var selectedGoal = goals[0]
-    val foundGoal = goals.find { it.id == currentGoal.value }
-    if (foundGoal != null) {
-        selectedGoal = foundGoal
-        selectedIndex.value = goals.indexOf(foundGoal)
-    }
+                 user: UserEntity,
+                 theGoal: MutableState<GoalTypeEntity>,
+                 calories: MutableState<Int>,
+                 inEdit: MutableState<Boolean>){
+    val expanded = remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
         .wrapContentSize(Alignment.TopStart)
     ) {
-        Text(selectedGoal.goal,
+        Text(theGoal.value.goal,
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,12 +50,15 @@ fun GoalDropdown(goals: List<GoalTypeEntity>,
                 .fillMaxWidth()
                 .background(Color.LightGray)
         ) {
-            goals.forEachIndexed { index, s ->
+            goals.forEach { s ->
                 DropdownMenuItem(onClick = {
-                    selectedIndex.value = index
-                    selectedGoal = s
-                    currentGoal.value = s.id
+                    theGoal.value = s
+
+                    val userAge = Period.between(user.birth_date, LocalDate.now()).years
+                    calories.value = estimateCaloricIntake(user.weight, user.height, userAge, user.activity_level, user.sex, theGoal.value)
+
                     expanded.value = false
+                    inEdit.value = true
                 }) {
                     Text(text = s.goal)
                 }
