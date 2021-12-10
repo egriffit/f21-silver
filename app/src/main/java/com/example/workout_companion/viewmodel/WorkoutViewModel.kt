@@ -87,8 +87,8 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      * @param id The id of the workout component
      * @param exerciseId The id of the exercise
      */
-    fun setWorkoutComponentExercise(id: Int, exerciseId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        repository.setWorkoutComponentExercise(id, exerciseId)
+    fun setWorkoutComponentExercise(id: Int, exerciseId: Int, exerciseName: String) = viewModelScope.launch(Dispatchers.IO) {
+        repository.setWorkoutComponentExercise(id, exerciseId, exerciseName)
     }
 
     /**

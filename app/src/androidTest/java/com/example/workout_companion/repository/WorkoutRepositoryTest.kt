@@ -131,10 +131,11 @@ class WorkoutRepositoryTest : TestCase() {
 
         val workout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
         val component = workout.components[0].component
-        repository.setWorkoutComponentExercise(component.id, 12)
+        repository.setWorkoutComponentExercise(component.id, 12, "Name")
         val updatedWorkout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
 
         assertEquals(12, updatedWorkout.components[0].component.wger_id)
+        assertEquals("Name", updatedWorkout.components[0].component.wger_name)
     }
 
     @Test

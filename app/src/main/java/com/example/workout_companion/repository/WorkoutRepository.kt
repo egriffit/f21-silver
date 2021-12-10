@@ -101,10 +101,11 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
      * @param id The id of the workout component
      * @param exerciseId The id of the exercise
      */
-    suspend fun setWorkoutComponentExercise(id: Int, exerciseId: Int) {
+    suspend fun setWorkoutComponentExercise(id: Int, exerciseId: Int, exerciseName: String) {
         val component = componentDao.getWorkoutComponentById(id)
         if (component != null) {
             component.wger_id = exerciseId
+            component.wger_name = exerciseName
             componentDao.updateWorkoutComponent(component)
         }
     }

@@ -48,16 +48,18 @@ fun WorkoutView(
                     WorkoutComponentView(navController, component, workoutViewModel, wgerApiViewModel)
             }
 
-            item {
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    SubmitButton(navController, workoutState.value!!, workoutViewModel)
-                    CancelButton(workoutState.value!!, workoutViewModel)
+            if (workoutState.value!!.workout.status != Progress.COMPLETE) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SubmitButton(navController, workoutState.value!!, workoutViewModel)
+                        CancelButton(workoutState.value!!, workoutViewModel)
+                    }
                 }
             }
         }

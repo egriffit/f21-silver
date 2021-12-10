@@ -37,9 +37,8 @@ fun WorkoutComponentHeader(navController: NavController, wgerAPIViewModel: WgerA
     val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
     var exerciseState by remember { mutableStateOf("Pick an Exercise") }
 
-    if (exerciseState == "Pick an Exercise" && componentWithSets.component.wger_id != null) {
-        wgerAPIViewModel.getExerciseInfo(componentWithSets.component.wger_id!!)
-        exerciseState = wgerAPIViewModel.exerciseInfo.value.name
+    if (componentWithSets.component.wger_name != null) {
+        exerciseState = componentWithSets.component.wger_name!!
     }
 
     Row(

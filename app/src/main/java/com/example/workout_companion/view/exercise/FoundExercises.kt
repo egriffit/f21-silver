@@ -58,7 +58,8 @@ fun FoundExercises(
         Row(modifier = Modifier.padding(20.dp),
             horizontalArrangement = Arrangement.Center) {
             Button(onClick = {
-                workoutComponentSE.setWorkoutComponentExercise(componentid, selectedId.value)
+                val selectedExercise = found.value.results[selectedIndex.value]
+                workoutComponentSE.setWorkoutComponentExercise(componentid, selectedExercise.id, selectedExercise.name)
                 navController.navigate("ExerciseOverview") }) {
                 Text("Submit")
             }

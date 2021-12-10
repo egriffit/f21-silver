@@ -12,11 +12,13 @@ class WorkoutComponentEntityTest {
         val componentId = 0
         val id = 0
         val wgerId = 12
-        val workoutComponent = WorkoutComponentEntity(id, date, componentId, wgerId)
+        val wgerName = "Bench Press"
+        val workoutComponent = WorkoutComponentEntity(id, date, componentId, wgerId, wgerName)
 
         assertEquals(date, workoutComponent.workout_date)
         assertEquals(id, workoutComponent.id)
         assertEquals(componentId, workoutComponent.component_id)
         assertEquals(wgerId, workoutComponent.wger_id)
+        assertEquals(wgerName, workoutComponent.wger_name)
     }
 }
