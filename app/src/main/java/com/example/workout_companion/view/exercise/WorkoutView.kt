@@ -16,6 +16,7 @@ import com.example.workout_companion.dao.FrameworkDayWithComponents
 import com.example.workout_companion.dao.FrameworkWithDays
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.enumeration.Progress
+import com.example.workout_companion.viewmodel.WgerAPIViewModel
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.Job
 import kotlin.reflect.KFunction1
@@ -26,6 +27,7 @@ fun WorkoutView(
     workoutState: State<WorkoutWithComponents?>,
     frameworkWithDays: State<FrameworkWithDays?>,
     workoutViewModel: WorkoutViewModel,
+    wgerApiViewModel: WgerAPIViewModel,
 ){
     LazyColumn(
         modifier = Modifier
@@ -42,20 +44,23 @@ fun WorkoutView(
         }
         else {
             item { WorkoutProgress(workoutState.value!!.workout.status) }
+            val workoutCompleted = workoutState.value!!.workout.status == Progress.COMPLETE
             items(workoutState.value!!.components) { component ->
-                    WorkoutComponentView(navController, component, workoutViewModel)
+                    WorkoutComponentView(navController, component, workoutCompleted, workoutViewModel, wgerApiViewModel)
             }
 
-            item {
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    SubmitButton(navController, workoutState.value!!, workoutViewModel)
-                    CancelButton(workoutState.value!!, workoutViewModel)
+            if (!workoutCompleted) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SubmitButton(navController, workoutState.value!!, workoutViewModel)
+                        CancelButton(workoutState.value!!, workoutViewModel)
+                    }
                 }
             }
         }

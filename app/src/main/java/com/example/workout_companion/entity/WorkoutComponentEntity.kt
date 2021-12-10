@@ -41,6 +41,9 @@ data class WorkoutComponentEntity(
 
     @ColumnInfo(name = "wger_id")
     var wger_id: Int? = null,
+
+    @ColumnInfo(name = "wger_name")
+    var wger_name: String? = null,
 ) {
-    constructor(date: LocalDate, componentId: Int) : this(0, date, componentId, null)
+    constructor(date: LocalDate, componentId: Int) : this(0, date, componentId, null, null)
 }

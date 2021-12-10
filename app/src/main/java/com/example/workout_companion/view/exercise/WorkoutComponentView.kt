@@ -13,28 +13,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.workout_companion.dao.ComponentWithSets
+import com.example.workout_companion.viewmodel.WgerAPIViewModel
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 @Composable
-fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutViewModel: WorkoutViewModel) {
+fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutCompleted: Boolean, workoutViewModel: WorkoutViewModel, wgerAPIViewModel: WgerAPIViewModel) {
     Column (
         modifier = Modifier.fillMaxWidth(),
     ) {
         val expandedState = remember { mutableStateOf(false) }
-        WorkoutComponentHeader(navController, componentWithSets, expandedState)
+        WorkoutComponentHeader(navController, workoutCompleted, wgerAPIViewModel, componentWithSets, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
-                WorkoutComponentSetView(set, workoutViewModel)
+                WorkoutComponentSetView(set, workoutCompleted, workoutViewModel)
             }
         }
     }
 }
 
 @Composable
-fun WorkoutComponentHeader(navController: NavController, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
+fun WorkoutComponentHeader(navController: NavController, workoutCompleted: Boolean, wgerAPIViewModel: WgerAPIViewModel, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
 
     val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
-    val exerciseState by remember { mutableStateOf("Pick an Exercise") }
+    var exerciseState by remember { mutableStateOf("Pick an Exercise") }
+
+    if (componentWithSets.component.wger_name != null) {
+        exerciseState = componentWithSets.component.wger_name!!
+    }
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -61,6 +66,7 @@ fun WorkoutComponentHeader(navController: NavController, componentWithSets: Comp
             // Exercise Name
             // Need ComponentWithSets from Here -> MainNav -> FoundExercises as param
             TextButton(
+                enabled = !workoutCompleted,
                 onClick = { navController.navigate("searchExercise/${componentWithSets.muscleGroup.name}/${componentWithSets.component.id}") },
             ) {
                 Text(text = exerciseState)

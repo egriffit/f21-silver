@@ -21,6 +21,7 @@ fun ExerciseView(
     exerciseInfo: ExerciseInfo,
     muscleGroupName: String,
     exerciseId: Int,
+    componentId: Int,
 ) {
     Scaffold(
         topBar = { TopNavigation(navController) },
@@ -31,7 +32,7 @@ fun ExerciseView(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Spacer(modifier = Modifier.padding(start = 30.dp))
-                Button(onClick = { navController.navigate("searchExercise/${muscleGroupName}") }) {
+                Button(onClick = { navController.navigate("searchExercise/${muscleGroupName}/${componentId}") }) {
                     Text("Done")
                 }
             }
