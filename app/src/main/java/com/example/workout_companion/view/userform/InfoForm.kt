@@ -34,6 +34,7 @@ import com.example.workout_companion.enumeration.Sex
 import com.example.workout_companion.utility.*
 import com.example.workout_companion.viewmodel.UserViewModel
 import com.example.workout_companion.viewmodel.UserWithGoalViewModel
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.Month
 import java.util.Locale as Locale
@@ -496,15 +497,18 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
             ) {
                 Button(
                     onClick = {
-                        val user = state.getUser()
-                        if (userIsValid(user)) {
-                            if (userWithGoalInDB.value == null) {
-                                userViewModel.addUser(user)
+                        runBlocking {
+                            val user = state.getUser()
+                            if (userIsValid(user)) {
+                                if (userWithGoalInDB.value == null) {
+                                    val addJob = userViewModel.addUser(user)
+                                    addJob.join()
+                                } else {
+                                    val updateJob = userViewModel.updateUser(user)
+                                    updateJob.join()
+                                }
+                                navController.navigate("UpdateGoals")
                             }
-                            else {
-                                userViewModel.updateUser(user)
-                            }
-                            navController.navigate("UpdateGoals")
                         }
                     }) {
                     Text("Submit")

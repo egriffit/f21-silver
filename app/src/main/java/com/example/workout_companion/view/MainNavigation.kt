@@ -50,7 +50,9 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
     }
 
     val workoutState = workoutViewModel.getTodaysWorkoutWithComponents().observeAsState()
+    val userState = userViewModel.user.observeAsState()
     val userGoalState = currentUserGoalViewModel.getCurrentGoals.observeAsState()
+    val goalsState = goalTypeViewModel.allGoals.observeAsState(listOf())
 
     val navController = rememberNavController()
     NavHost(navController, startDestination = "splashScreen") {
@@ -230,13 +232,18 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             )
         }
         composable (route = "UpdateGoals") {
-            UpdateGoalsView(navController,
-                frameworkTypeViewModel,
-                goalTypeViewModel,
-                currentUserGoalViewModel,
-                userViewModel,
-                nutritionPlanTypeViewModel
-            )
+            // If we don't have a user, don't even try to navigate
+            val currentUser = userViewModel.user.observeAsState()
+            if (currentUser.value != null) {
+                UpdateGoalsView(
+                    navController,
+                    currentUserGoalViewModel,
+                    nutritionPlanTypeViewModel,
+                    frameworkTypeViewModel,
+                    currentUser.value!!,
+                    goalsState.value,
+                )
+            }
         }
         composable (route = "Assessment") {
             AssessmentView(navController, currentUserGoalViewModel, adviceAPIViewModel, nutritionStatusViewModel, workoutViewModel)
