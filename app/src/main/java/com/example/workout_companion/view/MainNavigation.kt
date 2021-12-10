@@ -252,7 +252,8 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
             val m  = backStackEntry.arguments?.getString("muscle")!!
             FoundExercises(navController,
                 m,
-            wgerApiViewModel)
+            wgerApiViewModel,
+            workoutViewModel) // Need ComponentWithSets from WorkoutComponentView -> Here -> FoundExercises as param
         }
 
         composable (route = "ExerciseView/{muscle}/{exerciseId}",

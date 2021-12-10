@@ -107,6 +107,15 @@ class WorkoutRepository(private val workoutDao: WorkoutDao, private val componen
     }
 
     /**
+     * Update a set's status back to in progress
+     *
+     * @param set The set to update.
+     */
+    suspend fun updateWorkoutSet(set: WorkoutComponentSetEntity) {
+        setDao.updateSet(set)
+    }
+
+    /**
      * Deletes a workout from the database
      *
      * @param workout The workout to delete

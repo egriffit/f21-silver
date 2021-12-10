@@ -90,6 +90,15 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     /**
+     * Unlock a set back to in progress
+     *
+     * @param set The set to unlock.
+     */
+    fun updateWorkoutSet(set: WorkoutComponentSetEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateWorkoutSet(set)
+    }
+
+    /**
      * Delete a workout from the database
      *
      * @param workout The workout to delete

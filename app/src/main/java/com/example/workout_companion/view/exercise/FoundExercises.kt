@@ -13,13 +13,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.workout_companion.enumeration.MuscleGroupConverter
 import com.example.workout_companion.viewmodel.WgerAPIViewModel
+import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 //Displays exercises found from WGER
 @Composable
 fun FoundExercises(
     navController: NavController,
     muscle: String?,
-    wgerAPi: WgerAPIViewModel
+    wgerAPi: WgerAPIViewModel,
+    workoutComponentSE: WorkoutViewModel
 ) {
     val selectedId = remember { mutableStateOf(0) }
     val selectedIndex = remember { mutableStateOf(0) }
@@ -54,7 +56,11 @@ fun FoundExercises(
         }
         Row(modifier = Modifier.padding(20.dp),
             horizontalArrangement = Arrangement.Center) {
-            Button(onClick = { navController.navigate("ExerciseOverview") }) {
+            Button(onClick = {
+                // Need ComponentWithSets from WorkoutComponentView -> MainNav -> Here as param
+                // WorkoutComponentSetEntity.wger_id = selectedId
+                // workoutComponentSE.updateWorkoutSet(WorkoutComponentSetEntity)
+                navController.navigate("ExerciseOverview") }) {
                 Text("Submit")
             }
             Spacer(modifier = Modifier.padding(start = 20.dp))
