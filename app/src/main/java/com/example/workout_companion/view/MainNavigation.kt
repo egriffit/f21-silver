@@ -233,13 +233,14 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         }
         composable (route = "UpdateGoals") {
             // If we don't have a user, don't even try to navigate
-            if (userState.value != null) {
+            val currentUser = userViewModel.user.observeAsState()
+            if (currentUser.value != null) {
                 UpdateGoalsView(
                     navController,
                     currentUserGoalViewModel,
                     nutritionPlanTypeViewModel,
                     frameworkTypeViewModel,
-                    userState.value!!,
+                    currentUser.value!!,
                     goalsState.value,
                 )
             }

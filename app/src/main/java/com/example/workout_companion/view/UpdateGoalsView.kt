@@ -31,16 +31,16 @@ fun UpdateGoalsView(navController: NavController,
                     user: UserEntity,
                     goals: List<GoalTypeEntity>,
 ) {
-    val selectedGoalID = remember { mutableStateOf(user.goal_id) }
-    val selectedGoal = remember { mutableStateOf("") }
+    val selectedGoalID = remember { mutableStateOf(0) }
     val currentCalories = remember { mutableStateOf(2000) }
 
     if (goals.isNotEmpty()) {
-        if (selectedGoalID.value != 0) {
-            selectedGoal.value = goals[selectedGoalID.value - 1].goal
-            currentCalories.value = 2000 + goals[selectedGoalID.value - 1].caloric_addition
+        selectedGoalID.value = user.goal_id
+        val foundGoal = goals.find { it.id == selectedGoalID.value }
+        if (foundGoal != null) {
+            currentCalories.value = 2000 + foundGoal.caloric_addition
         } else {
-            selectedGoal.value = goals[0].goal
+            currentCalories.value = 2000 + goals[0].caloric_addition
         }
     }
 
