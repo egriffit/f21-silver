@@ -44,11 +44,12 @@ fun WorkoutView(
         }
         else {
             item { WorkoutProgress(workoutState.value!!.workout.status) }
+            val workoutCompleted = workoutState.value!!.workout.status == Progress.COMPLETE
             items(workoutState.value!!.components) { component ->
-                    WorkoutComponentView(navController, component, workoutViewModel, wgerApiViewModel)
+                    WorkoutComponentView(navController, component, workoutCompleted, workoutViewModel, wgerApiViewModel)
             }
 
-            if (workoutState.value!!.workout.status != Progress.COMPLETE) {
+            if (!workoutCompleted) {
                 item {
                     Row(
                         modifier = Modifier

@@ -23,7 +23,7 @@ import com.example.workout_companion.enumeration.Progress
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 @Composable
-fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: WorkoutViewModel) {
+fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutCompleted: Boolean, workoutViewModel: WorkoutViewModel) {
 
     // NOTE: Keep these items as the string versions here. It makes your life easier
     // Worry about conversion to the proper type when writing stuff to the database
@@ -41,6 +41,7 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: Wo
         // Progress state check box
         Checkbox(
             checked = checkState,
+            enabled = !workoutCompleted,
             onCheckedChange = { checked ->
                 checkState = checked
                 if (checked) {
@@ -69,7 +70,7 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: Wo
                     weightState = newValue
                 }
             },
-            enabled = !checkState,
+            enabled = !checkState && !workoutCompleted,
             singleLine = true,
             textStyle = TextStyle(textAlign = TextAlign.Center),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -92,7 +93,7 @@ fun WorkoutComponentSetView(set: WorkoutComponentSetEntity, workoutViewModel: Wo
             onValueChange = { newValue ->
                 repState = newValue.filter { it.isDigit() }
             },
-            enabled = !checkState,
+            enabled = !checkState && !workoutCompleted,
             singleLine = true,
             textStyle = TextStyle(textAlign = TextAlign.Center),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -17,22 +17,22 @@ import com.example.workout_companion.viewmodel.WgerAPIViewModel
 import com.example.workout_companion.viewmodel.WorkoutViewModel
 
 @Composable
-fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutViewModel: WorkoutViewModel, wgerAPIViewModel: WgerAPIViewModel) {
+fun WorkoutComponentView(navController: NavController, componentWithSets: ComponentWithSets, workoutCompleted: Boolean, workoutViewModel: WorkoutViewModel, wgerAPIViewModel: WgerAPIViewModel) {
     Column (
         modifier = Modifier.fillMaxWidth(),
     ) {
         val expandedState = remember { mutableStateOf(false) }
-        WorkoutComponentHeader(navController, wgerAPIViewModel, componentWithSets, expandedState)
+        WorkoutComponentHeader(navController, workoutCompleted, wgerAPIViewModel, componentWithSets, expandedState)
         if(expandedState.value) {
             for (set in componentWithSets.sets) {
-                WorkoutComponentSetView(set, workoutViewModel)
+                WorkoutComponentSetView(set, workoutCompleted, workoutViewModel)
             }
         }
     }
 }
 
 @Composable
-fun WorkoutComponentHeader(navController: NavController, wgerAPIViewModel: WgerAPIViewModel, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
+fun WorkoutComponentHeader(navController: NavController, workoutCompleted: Boolean, wgerAPIViewModel: WgerAPIViewModel, componentWithSets: ComponentWithSets, expanded: MutableState<Boolean>) {
 
     val muscleGroupState by remember { mutableStateOf(componentWithSets.muscleGroup.name) }
     var exerciseState by remember { mutableStateOf("Pick an Exercise") }
@@ -66,6 +66,7 @@ fun WorkoutComponentHeader(navController: NavController, wgerAPIViewModel: WgerA
             // Exercise Name
             // Need ComponentWithSets from Here -> MainNav -> FoundExercises as param
             TextButton(
+                enabled = !workoutCompleted,
                 onClick = { navController.navigate("searchExercise/${componentWithSets.muscleGroup.name}/${componentWithSets.component.id}") },
             ) {
                 Text(text = exerciseState)
