@@ -240,6 +240,7 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
                     currentUserGoalViewModel,
                     nutritionPlanTypeViewModel,
                     frameworkTypeViewModel,
+                    userViewModel,
                     currentUser.value!!,
                     goalsState.value,
                 )

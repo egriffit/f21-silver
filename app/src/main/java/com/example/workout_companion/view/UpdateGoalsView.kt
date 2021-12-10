@@ -31,6 +31,7 @@ fun UpdateGoalsView(navController: NavController,
                     currentUserGoalViewModel: CurrentUserGoalViewModel,
                     nutritionPlanTypeViewModel: NutritionPlanTypeViewModel,
                     frameworkTypeViewModel: FrameworkTypeViewModel,
+                    userViewModel: UserViewModel,
                     user: UserEntity,
                     goals: List<GoalTypeEntity>,
 ) {
@@ -182,6 +183,10 @@ fun UpdateGoalsView(navController: NavController,
                             // For now, it might slow us down, but let's wait for our user goal
                             // to be made before letting the user run amuck
                             userGoalJob.join()
+
+                            user.goal_id = theGoal.value.id
+                            val userJob = userViewModel.updateUser(user)
+                            userJob.join()
 
                             inEdit.value = false
                             navController.navigate("Landing")
