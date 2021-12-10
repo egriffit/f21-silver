@@ -244,16 +244,19 @@ fun MainNavigation(viewModelProvider: ViewModelProvider) {
         composable (route = "Landing") {
             LandingPage(navController)
         }
-        composable (route = "searchExercise/{muscle}",
+        composable (route = "searchExercise/{muscle}/{componentid}",
                 arguments = listOf(
-                    navArgument("muscle") { type = NavType.StringType },
+                    navArgument("muscle")       { type = NavType.StringType },
+                    navArgument("componentid")  { type = NavType.IntType },
                 )
         ){ backStackEntry ->
-            val m  = backStackEntry.arguments?.getString("muscle")!!
+            val m: String?   = backStackEntry.arguments?.getString("muscle")!!
+            val n: Int       = backStackEntry.arguments?.getInt("componentid")!!
             FoundExercises(navController,
                 m,
-            wgerApiViewModel,
-            workoutViewModel) // Need ComponentWithSets from WorkoutComponentView -> Here -> FoundExercises as param
+                wgerApiViewModel,
+                workoutViewModel,
+                n)
         }
 
         composable (route = "ExerciseView/{muscle}/{exerciseId}",

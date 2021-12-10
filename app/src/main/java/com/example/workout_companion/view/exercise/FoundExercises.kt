@@ -21,7 +21,8 @@ fun FoundExercises(
     navController: NavController,
     muscle: String?,
     wgerAPi: WgerAPIViewModel,
-    workoutComponentSE: WorkoutViewModel
+    workoutComponentSE: WorkoutViewModel,
+    componentid: Int
 ) {
     val selectedId = remember { mutableStateOf(0) }
     val selectedIndex = remember { mutableStateOf(0) }
@@ -57,9 +58,7 @@ fun FoundExercises(
         Row(modifier = Modifier.padding(20.dp),
             horizontalArrangement = Arrangement.Center) {
             Button(onClick = {
-                // Need ComponentWithSets from WorkoutComponentView -> MainNav -> Here as param
-                // WorkoutComponentSetEntity.wger_id = selectedId
-                // workoutComponentSE.updateWorkoutSet(WorkoutComponentSetEntity)
+                workoutComponentSE.setWorkoutComponentExercise(componentid,selectedId.value)
                 navController.navigate("ExerciseOverview") }) {
                 Text("Submit")
             }

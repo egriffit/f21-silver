@@ -61,7 +61,7 @@ fun WorkoutComponentHeader(navController: NavController, componentWithSets: Comp
             // Exercise Name
             // Need ComponentWithSets from Here -> MainNav -> FoundExercises as param
             TextButton(
-                onClick = { navController.navigate("searchExercise/${componentWithSets.muscleGroup.name}") },
+                onClick = { navController.navigate("searchExercise/${componentWithSets.muscleGroup.name}/${componentWithSets.component.id}") },
             ) {
                 Text(text = exerciseState)
             }
