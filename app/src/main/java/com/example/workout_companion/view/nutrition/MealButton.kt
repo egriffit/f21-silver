@@ -5,10 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ExpandMore
 import androidx.compose.material.icons.sharp.NavigateNext
@@ -16,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -55,9 +53,12 @@ fun MealButton(navController: NavController, meal: String, calories: Double,
             modifier = Modifier.fillMaxWidth()
         )
         {
-            Row(modifier = Modifier
-                .fillMaxWidth()){
-                Button(onClick = {open.value = !open.value
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ){
+                OutlinedButton(onClick = {open.value = !open.value
                     runBlocking{
                         val job1: Job = launch(context = Dispatchers.IO){
                             foodInMealViewModel.foundFoods.postValue(null)
@@ -66,8 +67,10 @@ fun MealButton(navController: NavController, meal: String, calories: Double,
                     }
                  },
                     modifier = Modifier.background(color = Color.LightGray),
+//                    Modifier.fillMaxWidth(),
                     border= BorderStroke(1.dp, Color.Black),
-                    colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)) {
+//                    colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.LightGray)
+                ) {
 
                     if(open.value){
                         Icon(

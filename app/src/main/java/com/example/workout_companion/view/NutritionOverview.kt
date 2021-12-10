@@ -46,11 +46,11 @@ fun NutritionOverview(navController: NavController,
                 .fillMaxHeight(),
             )
             {
-                Row(modifier=Modifier.padding(bottom=10.dp)
-                    .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center){
-                    Text("Nutrition Overview Page")
-                }
+//                Row(modifier=Modifier.padding(bottom=10.dp)
+//                    .fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.Center){
+//                    Text("Nutrition Overview Page")
+//                }
                 NutritionStatus(currentUserGoalViewModel, mealViewModel, nutritionStatusViewModel)
                 AddMealForm(navController, foodTypeViewModel, mealViewModel,
                     foodInMealViewModel, nutritionAPIViewModel, recipeViewModel)
