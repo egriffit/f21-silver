@@ -192,29 +192,29 @@ class TestDataGenerator {
 
         private var nextWorkoutComponentId = 1
         val WORKOUT_0_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[0].id, 1),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[1].id, 2),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[0].date, FRAMEWORK_0_DAY_0_COMPONENTS[2].id, 3),
         )
 
         val WORKOUT_1_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[2].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[3].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[4].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[0].id, null),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[1].id, null),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[2].id, null),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[3].id, null),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[1].date, FRAMEWORK_2_DAY_1_COMPONENTS[4].id, null),
         )
 
         val WORKOUT_2_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[0].id, 5),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[1].id, 6),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[2].date, FRAMEWORK_2_DAY_0_COMPONENTS[2].id, 7),
         )
 
         val WORKOUT_3_COMPONENTS: List<WorkoutComponentEntity> = listOf(
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[0].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[1].id),
-            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[2].id),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[0].id, 8),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[1].id, 8),
+            WorkoutComponentEntity(nextWorkoutComponentId++, WORKOUTS[3].date, FRAMEWORK_0_DAY_2_COMPONENTS[2].id, 10),
         )
 
         @JvmStatic
@@ -226,9 +226,9 @@ class TestDataGenerator {
 
         var nextComponentSetId = 1
         val WORKOUT_0_COMPONENT_0_SETS = listOf(
-            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 100.0, Progress.NOT_STARTED, 0),
-            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 110.0, Progress.NOT_STARTED, 0),
-            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 120.0, Progress.NOT_STARTED, 0),
+            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 100.0, Progress.NOT_STARTED),
+            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 110.0, Progress.NOT_STARTED),
+            WorkoutComponentSetEntity(nextComponentSetId++, WORKOUT_0_COMPONENTS[0].id, 8, 120.0, Progress.NOT_STARTED),
         )
 
         @JvmStatic

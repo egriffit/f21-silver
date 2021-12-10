@@ -61,7 +61,6 @@ class WorkoutComponentSetDaoTest : TestCase() {
         set.reps = 14
         set.status = Progress.COMPLETE
         set.weight = 85.0
-        set.wger_id = 10
         dao.updateSet(set)
 
         assertEquals(listOf(set), dao.getAllSets())

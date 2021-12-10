@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.workout_companion.dao.FrameworkDayWithComponents
 import com.example.workout_companion.dao.WorkoutWithComponents
 import com.example.workout_companion.database.WCDatabase
+import com.example.workout_companion.entity.WorkoutComponentEntity
 import com.example.workout_companion.entity.WorkoutComponentSetEntity
 import com.example.workout_companion.entity.WorkoutEntity
 import com.example.workout_companion.repository.WorkoutRepository
@@ -69,6 +70,25 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
      */
     fun updateWorkout(workout: WorkoutEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateWorkout(workout)
+    }
+
+    /**
+     * Updates the workout component
+     *
+     * @param component The workout component being updated
+     */
+    fun updateWorkoutComponent(component: WorkoutComponentEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateWorkoutComponent(component)
+    }
+
+    /**
+     * Sets the exercise for the workout component
+     *
+     * @param id The id of the workout component
+     * @param exerciseId The id of the exercise
+     */
+    fun setWorkoutComponentExercise(id: Int, exerciseId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.setWorkoutComponentExercise(id, exerciseId)
     }
 
     /**

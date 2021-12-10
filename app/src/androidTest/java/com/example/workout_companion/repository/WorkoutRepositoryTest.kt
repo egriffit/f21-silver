@@ -111,6 +111,33 @@ class WorkoutRepositoryTest : TestCase() {
     }
 
     @Test
+    fun updatedComponentTest() = runBlocking {
+        val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
+        repository.createWorkout(frameworkDay1)
+
+        val workout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+        val component = workout.components[0].component
+        component.wger_id = 10
+        repository.updateWorkoutComponent(component)
+
+        val updatedWorkout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+        assertEquals(10, updatedWorkout.components[0].component.wger_id)
+    }
+
+    @Test
+    fun setExerciseTest() = runBlocking {
+        val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
+        repository.createWorkout(frameworkDay1)
+
+        val workout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+        val component = workout.components[0].component
+        repository.setWorkoutComponentExercise(component.id, 12)
+        val updatedWorkout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+
+        assertEquals(12, updatedWorkout.components[0].component.wger_id)
+    }
+
+    @Test
     fun completeSetTest() = runBlocking {
         val frameworkDay1 = framework0WithDays.getOrAwaitValue().days[1]
         repository.createWorkout(frameworkDay1)
@@ -119,7 +146,8 @@ class WorkoutRepositoryTest : TestCase() {
 
         repository.completeWorkoutSet(workout.components[0].sets[0])
 
-        assertEquals(Progress.COMPLETE, workout.components[0].sets[0].status)
+        val updatedWorkout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+        assertEquals(Progress.COMPLETE, updatedWorkout.components[0].sets[0].status)
     }
 
     @Test
@@ -132,7 +160,8 @@ class WorkoutRepositoryTest : TestCase() {
         repository.completeWorkoutSet(workout.components[0].sets[0])
         repository.unlockWorkoutSet(workout.components[0].sets[0])
 
-        assertEquals(Progress.IN_PROGRESS, workout.components[0].sets[0].status)
+        val updatedWorkout = repository.getWorkoutWithComponents(LocalDate.now()).getOrAwaitValue()
+        assertEquals(Progress.IN_PROGRESS, updatedWorkout.components[0].sets[0].status)
     }
 
     @Test
