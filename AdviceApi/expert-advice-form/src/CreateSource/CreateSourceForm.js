@@ -49,7 +49,7 @@ function CreateSourceForm(props){
               }
               else
               {
-                setMessage(response.data.message)
+                setMessage(response.data.response)
               }
             }) 
     }
@@ -81,7 +81,7 @@ function CreateSourceForm(props){
         <div className={props.shouldHide ? undefined : 'hidden'}>
             <br />
             <h1>Create Source Form</h1>
-            
+
              <form id='sourceForm' onSubmit={handleSubmit}>
                 <fieldset>
                 <label>

@@ -22,6 +22,7 @@ function App() {
         <PrivateRoute exact path='/UserForm' component={CreateUserForm}/>  
         <PrivateRoute exact path='/Logout' component={Logout}/>
         <PrivateRoute exact path='/Home' component={Home}/>
+        <PrivateRoute exact path='/' component={Home}/>
      </Switch>
     <Navigation />
     </div>
