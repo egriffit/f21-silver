@@ -32,14 +32,17 @@ fun UpdateGoalsView(navController: NavController,
                     goals: List<GoalTypeEntity>,
 ) {
     val selectedGoalID = remember { mutableStateOf(0) }
+    val selectedGoal = remember { mutableStateOf("") }
     val currentCalories = remember { mutableStateOf(2000) }
 
     if (goals.isNotEmpty()) {
         selectedGoalID.value = user.goal_id
         val foundGoal = goals.find { it.id == selectedGoalID.value }
         if (foundGoal != null) {
+            selectedGoal.value = foundGoal.goal
             currentCalories.value = 2000 + foundGoal.caloric_addition
         } else {
+            selectedGoal.value = goals[0].goal
             currentCalories.value = 2000 + goals[0].caloric_addition
         }
     }
@@ -50,7 +53,7 @@ fun UpdateGoalsView(navController: NavController,
     val currentFat = remember { mutableStateOf(0) }
     val macronutrientStates = listOf(currentCarbohydrates, currentProtein, currentFat)
     val allFrameworks = frameworkTypeViewModel.readAll.observeAsState(listOf())
-    val recommendedFrameworks = frameworkTypeViewModel.getFrameworksWithinMaxWorkouts(user.max_workouts_per_week).observeAsState(listOf())
+    val recommendedFrameworks = frameworkTypeViewModel.getFrameworksWithGoalNameWithinMaxWorkouts(selectedGoal.value, user.max_workouts_per_week).observeAsState(listOf())
     if (recommendedFrameworks.value.isNotEmpty()) {
         recommendedFrameworkId.value = recommendedFrameworks.value[0].id
     }

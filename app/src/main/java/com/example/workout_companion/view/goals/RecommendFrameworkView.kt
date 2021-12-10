@@ -49,10 +49,17 @@ fun FrameworkViewDropdown(frameworks: List<FrameworkTypeEntity>,
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
+
+    var selectedFramework = frameworks[0]
+    val foundFramework = frameworks.find { it.id == recommendedFrameworkId.value }
+    if (foundFramework != null) {
+        selectedFramework = foundFramework
+    }
+
     Box(modifier = Modifier
         .wrapContentSize(Alignment.TopStart)
     ) {
-        Text(frameworks[selectedIndex].name,
+        Text(selectedFramework.name,
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,6 +77,7 @@ fun FrameworkViewDropdown(frameworks: List<FrameworkTypeEntity>,
             frameworks.forEachIndexed { index, s ->
                 DropdownMenuItem(onClick = {
                     selectedIndex = index
+                    selectedFramework = s
                     expanded = false
                     recommendedFrameworkId.value = s.id
                 }) {
