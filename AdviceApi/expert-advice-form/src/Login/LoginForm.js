@@ -3,6 +3,7 @@ import '../App.css'
 import * as utilities from '../utilities/common.js' 
 import { useHistory } from 'react-router-dom';
 import api from '../environment.js';
+import logo from '../WGER.png'
 
 const axios = require('axios').default;
 
@@ -17,6 +18,7 @@ function LoginForm(){
     const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {});
     const [response, setResponse] = useState([]);
+   const  [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -27,7 +29,7 @@ function LoginForm(){
             value: event.target.value,
           });
     }
-    
+
     const handleSubmit = (event) => {
         event.preventDefault();
         setSubmitting(true)
@@ -42,17 +44,20 @@ function LoginForm(){
               {
                 history.push('/Home')
               }
+              else{
+                setMessage(response.data.message);
+	      }
               //setUserSession(response.data.success, formData.username.value);
               //setSubmitting(false)
             })
-	    .catch(function (error) { 
-		if (error.response) { 
+	    .catch(function (error) {
+		if (error.response) {
 		      // The request was made and the server responded with a status code that falls out of the range of 2xx
-     		      console.log(error.response.data); 
-      		      console.log(error.response.headers); 
-   		 } else if (error.request) { 
-      		// The request was made but no response was received <br /> `error.request` is an instance of XMLHttpRequest in the browser 
-      		// and an instance of <h1> Login Form</h1> http.ClientRequest in node.js 
+     		      console.log(error.response.data);
+      		      console.log(error.response.headers);
+   		 } else if (error.request) {
+      		// The request was made but no response was received <br /> `error.request` is an instance of XMLHttpRequest in the browser
+      		// and an instance of <h1> Login Form</h1> http.ClientRequest in node.js
       			console.log(error.request);
 		}else{
 			console.log("error " + error.message);
@@ -65,8 +70,10 @@ function LoginForm(){
 		<br/>
 		<br/>
 		<br />
+    &nbsp;&nbsp;&nbsp;<img src={logo} alt="logo" height="100" width="150" />
+    <br />
+    <br />
 		<h1>Login Form</h1>
-		
             <form onSubmit={handleSubmit}>
                 <fieldset>
                 <label>
@@ -81,6 +88,7 @@ function LoginForm(){
                 </fieldset>
                 <button type='submit' onChange={setFormData}>Log in</button>
             </form>
+	   <p>{message}</p>
         </div>
     )
 }

@@ -56,4 +56,4 @@ exports.removeAllUsers = function(req, res){
         res.json({message: "You are not allowed to delete the ysers"})
     }
 
-}
+};

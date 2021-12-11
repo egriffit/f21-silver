@@ -54,16 +54,16 @@ function AdviceForm(){
         event.preventDefault();
         if((formData.adviceType != null) ||(formData.advice != null) || (formData.source != null)){
             setSubmitting(true)
-            axios.post(api + '/addAdvice', {
-                adviceType: formData.adviceType, 
+            axios.post(api+'/addAdvice', {
+                adviceType: formData.adviceType,
                 advice: formData.advice,
                 sourceId: formData.source,
                 })
             .then(response => {
+              setSubmitting(false);
               setResponse(response.data)
               setMessage(response.data.response)
               cancelForm()
-              setSubmitting(false);
               //setUserSession(response.data.success, formData.username.value);
               //setSubmitting(false)
             })
@@ -75,15 +75,6 @@ function AdviceForm(){
 
     return(
         <div>
-            {/* {formData && (
-                <ul>
-                    <li>AdviceType: {formData.adviceType}</li>
-                    <li>Advice: {formData.advice}</li>
-                    <li>Source: {formData.sourceId}</li>
-                    <li>Api: {api}</li>
-
-                </ul>
-            )} */}
             {sources &&
             <datalist id='sources'>
                 {/* loop over the books */}
