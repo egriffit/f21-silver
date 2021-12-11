@@ -470,22 +470,41 @@ fun InfoForm(navController: NavController, userViewModel: UserViewModel, userWit
         // Max workouts
         item{
             Row{
+                var expanded by remember { mutableStateOf(false) }
+                var textFieldSize by remember { mutableStateOf(Size.Zero) }
+                val icon = Icons.Filled.ArrowDropDown
+
                 OutlinedTextField(
                     value = state.maxWorkouts,
-                    onValueChange = { newValue ->
-                        state.maxWorkouts = newValue.filter { it.isDigit() }
-                    },
-                    singleLine = true,
-                    label = { Text(text = "Max Number of Workouts/Week") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    keyboardActions = KeyboardActions(onDone = {
-                        // Last item so clear focus
-                        focusManager.clearFocus()
-                    }),
+                    onValueChange = { /* Do nothing because users use the menu to edit */ },
+                    readOnly = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to the DropDown the same width
+                            textFieldSize = coordinates.size.toSize()
+                        },
+                    label = { Text(text ="Max Workouts Per Week") },
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { expanded = !expanded })
+                    }
                 )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.
+                    width(with(LocalDensity.current){textFieldSize.width.toDp()})
+                ) {
+                    for (i in 1..7) {
+                        DropdownMenuItem(onClick = {
+                            state.maxWorkouts = i.toString()
+                            expanded = false
+                        }) {
+                            Text(text = i.toString())
+                        }
+                    }
+                }
             }
         }
         // Submit Button
