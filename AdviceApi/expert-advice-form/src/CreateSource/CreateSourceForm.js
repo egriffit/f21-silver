@@ -15,61 +15,89 @@ function CreateSourceForm(props){
     const [authorCount, setAuthorCount] = useState(4);
     const [editorCount, setEditorCount] = useState(4);
     const [submitting, setSubmitting] = useState(false);
-    const [response, setResponse] = useState([]);
-    const [message, setMessage] = useState("");
-
-    const handleSubmit = event=>{
-        event.preventDefault()
-            setSubmitting(true)
-            //handle authors
-            axios.post(api + '/addSource',
-            {
-                    sourceType: formData.sourceType,
-                    title: formData.title,
-                    authors: [
-                        formData.author_1,
-                        formData.author_2
-                    ],
-                    year: formData.year,
-                    journal: formData.journal,
-                    volume: formData.volume,
-                    issue: formData.issue,
-                    editors: [],
-                    bookTitle: formData.bookTitle,
-                    publisher: formData.publisher,
-                    publisherLocation: formData.publisher,
-                    webpage: formData.webpage
-            })
-            .then(response => {
-              setSubmitting(false);
-              setResponse(response.data)
-              if(response.data.success)
-              {
-                setMessage(response.data.response)
-              }
-              else
-              {
-                setMessage(response.data.response)
-              }
-            }) 
-    }
-
-    const validateArticleFields = ()=>{
-        console.log()
-    }
-    
-    const validateBookFields = ()=>{
-        console.log()
-
-    }
-    const validateWebpageFields = ()=>{
-        console.log()
-    }
-   
-    const handleChange = event=>{
-        if(event.target.value === ""){
-            event.target.value = " ";
+    const [message2, setMessage2] = useState("");
+    const validate = (formState, type) =>{
+        if(type === "number"){
+            return (formState === "" || formState === undefined || formState === null) ? 0: formState
+        }else{ //it's a string
+            return (formState === "" || formState === undefined || formState === null) ? " ": formState
         }
+    }
+
+    const handleSubmit = async  (event)=>{
+        event.preventDefault()
+        //handle authors
+        if((formData.sourceType != undefined || formData.sourceType !== null || formData.sourceType !== "")
+            && ((formData.title != undefined && formData.title != null && formData.title !== "")
+                || (formData.bookTitle != undefined || formData.bookTitle != null && formData.bookTitle != "")))
+        {
+
+            // formData.author_1 = (formData.author_1 == "" || formData.author_1 == undefined || formData.author_1 == null)? " " : formData.author_1;
+            // formData.author_2 = (formData.author_2 == "" || formData.author_2 == undefined || formData.author_2 == null)? " " : formData.author_2
+            // formData.journal = (formData.journal == "" || formData.journal == undefined || formData.author_1 === null)? " " : formData.journal;
+            // formData.volume = (formData.volume == "" || formData.volume == undefined || formData.volume == null)? " " : formData.volume;
+            // formData.issue = (formData.issue == "" || formData.issue === undefined || formData.issue === null) ? " " : formData.issue;
+            // formData.bookTitle = (formData.bookTitle == "" || formData.bookTitle === undefined || formData.bookTitle == null)? " " : formData.bookTitle;
+            // formData.title = (formData.title == "" || formData.title === undefined || formData.title === null) ? " " : formData.title;
+            // formData.publisher = (formData.publisher == "" || formData.publisher === undefined || formData.publisher === null) ? " " : formData.publisher;
+            // formData.publisherLocation = (formData.publisherLocation == "" || formData.publisherLocation === undefined || formData.publisherLocation === null) ? " " : formData.publisherLocation;
+            // formData.webpage = (formData.webpage == "" || formData.webpage === undefined || formData.Webpage === null) ? " " : formData.webapge;
+            try{
+                setSubmitting(true)
+                var AuthorsArray = []
+                if(validate(formData.author_1, "string")!= " "){
+                    AuthorsArray.push(formData.author_1);
+                }
+                if(validate(formData.author_2, "string")!= " "){
+                    AuthorsArray.push(formData.author_2);
+                }
+                if(validate(formData.author_3, "string")!= " "){
+                    AuthorsArray.push(formData.author_3);
+                }
+                if(validate(formData.author_4, "string")!= " "){
+                    AuthorsArray.push(formData.author_4);
+                }
+                var EditorsArray = []
+                if(validate(formData.editor_1, "string")!= " "){
+                    EditorsArray.push(formData.editor_1);
+                }
+                if(validate(formData.editor_2, "string")!= " "){
+                    EditorsArray.push(formData.editor_2);
+                }
+                if(validate(formData.editor_3, "string")!= " "){
+                    EditorsArray.push(formData.editor_3);
+                }
+                if(validate(formData.editor_4, "string")!= " "){
+                    EditorsArray.push(formData.editor_4);
+                }
+
+                await axios.post(api + '/addSource',
+                {
+                            sourceType: validate(formData.sourceType, "string"),
+                            title: validate(formData.title, "string"),
+                            authors: AuthorsArray,
+                            year: validate(formData.year, "number"),
+                            journal: validate(formData.journal, "string"),
+                            volume: validate(formData.volume, "string"),
+                            issue: validate(formData.issue, "number"),
+                            editors: EditorsArray,
+                            bookTitle: validate(formData.bookTitle, "string"),
+                            publisher: validate(formData.publisher, "string"),
+                            publisherLocation: validate(formData.publisherLocation, ""),
+                            webpage: validate(formData.webpage, "")
+                    }).then((response)=>{
+                    setMessage2(response.data.response);
+                });
+                setSubmitting(false)
+            }catch(error){
+                setMessage2("Error: " + error);
+            }
+        }else{
+            setMessage2("A title and source type must be filled");
+        }
+    }
+
+    const handleChange = event=>{
         setFormData({
             name: event.target.name,
             value: event.target.value,
@@ -77,17 +105,15 @@ function CreateSourceForm(props){
     }
 
     return(
-        <>
         <div className={props.shouldHide ? undefined : 'hidden'}>
             <br />
             <h1>Create Source Form</h1>
-
              <form id='sourceForm' onSubmit={handleSubmit}>
                 <fieldset>
                 <label>
                     <p>Source Type:</p>
                 </label>
-                <select name='sourceType' 
+                <select name='sourceType'
                 onChange={handleChange}>
                      <option key='1'></option>
                     <option key='2'>Article</option>
@@ -157,11 +183,13 @@ function CreateSourceForm(props){
                 </fieldset>
                 <button type='submit'>Add Advice</button>
             </form>
+            {submitting && (
+                <p>Submitting...</p>
+            )}
             <p>
-                {message}
+                {message2}
             </p>
             </div>
-        </>
     )
 }
 

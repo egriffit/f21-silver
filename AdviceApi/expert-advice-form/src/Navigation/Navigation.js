@@ -1,6 +1,6 @@
 import React from 'react'
 import {Container, Navbar, Nav} from 'react-bootstrap'
-
+import logo from '../WGER.png'
 function Navigation(){
     return(
                 <>
@@ -12,6 +12,14 @@ function Navigation(){
                     />
                     <Navbar collapseOnSelect fixed='top' expand='sm' bg='dark' variant='dark'>
                         <Container>
+                        <Navbar.Brand>
+                                <img
+                                  alt="logo"
+                                  src={logo}
+                                  width="45"
+                                  height="30"
+                                />
+                            </Navbar.Brand>
                             <Navbar.Toggle aria-controls='responsive-navbar-nav' />
                             <Navbar.Collapse id='responsive-navbar-nav'>
                                 <Nav>
