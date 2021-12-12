@@ -23,7 +23,6 @@ import androidx.navigation.NavController
  *
  *  @param navController, a NavController
  *  @param workout, name of workout
- *   ^^ May need to be muscle group
  */
 @Composable
 fun ExerciseSearchBox(navController: NavController, workout: String){
@@ -52,8 +51,6 @@ fun ExerciseSearchBox(navController: NavController, workout: String){
                 Button(onClick = {
 
                     navController.navigate("searchExercise/${exercise.value}/${workout}")
-                    // ^^ still to write, needs to look based on muscle group evidently
-                     // also, what is the route param coming from?
                 }) {
                     Text(
                         "Search",
